@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>العيادة </title>
+<title id="page-title">العيادة</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
@@ -28,14 +28,15 @@
 body{
   background:var(--bg);
   color:var(--dark);
+  transition: background 0.3s, color 0.3s;
 }
+
 .login-btn {
   position: absolute;
   top: 20px;
-  right: 20px; /* عشان RTL */
+  right: 20px;
   z-index: 999;
-
-  background: linear-gradient(135deg, #1a237e, #3949ab);
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
   color: #fff;
   border: none;
   padding: 10px 20px;
@@ -44,7 +45,7 @@ body{
   cursor: pointer;
   transition: 0.3s;
 }
-/* HERO */
+
 .hero{
   position:relative;
   padding:70px 8%;
@@ -53,12 +54,13 @@ body{
   display:flex;
   align-items:center;
 }
+
 .hero-content{
   display:flex;
-  justify-content:center; /* يوسّط العناصر */
+  justify-content:center;
   align-items:center;
 }
-/* NAV inside hero */
+
 .navbar{
   position:absolute;
   top:20px;
@@ -90,11 +92,12 @@ body{
 .hero-text{
   flex:0.8;
   max-width:500px;
-  margin-right:70px; /* زقيه لليمين */
+  margin-right:70px;
 }
 
 .hero-text h1{
   font-size:42px;
+  color:var(--primary);
 }
 
 .hero-text p{
@@ -113,7 +116,6 @@ body{
   border-radius:20px;
 }
 
-/* WA ICON */
 .wa{
   position:fixed;
   bottom:20px;
@@ -129,85 +131,57 @@ body{
   font-size:24px;
 }
 
-/* CARDS */
 .cards{
   display:grid;
-
-  /* 3 كروت كبار في الصف */
   grid-template-columns: repeat(3, 1fr);
-
   gap:25px;
   padding:60px 8%;
 }
-
-/* CARDS */
-.cards{
-  display:grid;
-
-  /* 3 كروت كبار في الصف */
-  grid-template-columns: repeat(3, 1fr);
-
-  gap:25px;
-  padding:60px 8%;
-}
-
 
 .card{
   background:#fff;
   border-radius:20px;
   border:1px solid #eee;
-
-  /* مربعة */
   aspect-ratio:1 / 1;
-
-  /* توسيط المحتوى */
   display:flex;
   align-items:center;
   justify-content:center;
   text-align:center;
-
   font-size:18px;
   font-weight:500;
   transition:0.3s;
 }
 
-/* تأثير فخم */
 .card:hover{
   transform:translateY(-8px);
   box-shadow:0 20px 40px rgba(0,0,0,0.08);
 }
 
-
-/* DOCTOR SECTION */
-
 .doctor{
   display:flex;
   align-items:center;
-  justify-content:center; /* بدل space-between */
+  justify-content:center;
   gap:30px;
   padding:60px 8%;
 }
 
-/* النص */
 .doctor > div{
   flex:0.9;
   max-width:450px;
 }
 
-/* الصورة */
 .doctor img{
   width:280px;
   border-radius:20px;
 }
 
-  
 .doctor > div{
   flex:1;
   max-width:500px;
   text-align:right;
-  margin-right:40px; /* دي الحركة المهمة */
+  margin-right:40px;
 }
-/* GALLERY */
+
 .gallery{
   display:flex;
   overflow-x:auto;
@@ -220,7 +194,6 @@ body{
   border-radius:15px;
 }
 
-/* MEDIA */
 .media{
   padding:50px 8%;
 }
@@ -234,14 +207,13 @@ body{
 .cta{
   margin:60px 8%;
   border-radius:25px;
-  background:linear-gradient(135deg,#1d4ed8,#2563eb);
+  background:linear-gradient(135deg,var(--primary),var(--primary-dark));
   color:#fff;
   padding:40px;
   position:relative;
   overflow:hidden;
 }
 
-/* توزيع داخلي */
 .cta-content{
   display:flex;
   justify-content:space-between;
@@ -250,7 +222,6 @@ body{
   gap:20px;
 }
 
-/* النص */
 .cta-text h2{
   font-size:28px;
   margin-bottom:10px;
@@ -261,7 +232,6 @@ body{
   line-height:1.8;
 }
 
-/* الأزرار */
 .cta-buttons{
   margin-top:20px;
   display:flex;
@@ -271,7 +241,7 @@ body{
 
 .call-btn{
   background:#fff;
-  color:#1d4ed8;
+  color:var(--primary);
   padding:12px 20px;
   border-radius:12px;
   text-decoration:none;
@@ -287,23 +257,21 @@ body{
   font-weight:500;
 }
 
-/* البادج */
 .cta-badge{
   background:#fff;
-  color:#1d4ed8;
+  color:var(--primary);
   padding:10px 18px;
   border-radius:50px;
   font-weight:600;
 }
 
-/* موبايل */
 @media(max-width:600px){
   .cta-content{
     flex-direction:column;
     text-align:center;
   }
 }
-/* CONTACT */
+
 .contact{
   padding:50px 8%;
 }
@@ -315,28 +283,27 @@ body{
   border:1px solid #eee;
 }
 
-  .hero-text{
+.hero-text{
   flex:0.8;
-  margin:0 auto;      /* ده اللي بيخليه في النص */
-  text-align:center;  /* يخلي الكلام نفسه متوسّط */
+  margin:0 auto;
+  text-align:center;
 }
 
-  .hero-img{
+.hero-img{
   flex:0.8;
   text-align:center;
 }
-  
-/* MAP */
+
 .map{
   padding:40px 8%;
 }
 
-/* FOOTER */
 footer{
   text-align:center;
   padding:20px;
   color:#64748b;
 }
+
 .wa-btn{
   background:#25d366;
   color:#fff;
@@ -344,8 +311,9 @@ footer{
   border-radius:12px;
   text-decoration:none;
 }
-  .book-btn{
-  background:#1d4ed8;
+
+.book-btn{
+  background:var(--primary);
   color:#fff;
   padding:12px 22px;
   border:none;
@@ -358,8 +326,9 @@ footer{
 .book-btn:hover{
   transform:translateY(-2px);
   box-shadow:0 10px 20px rgba(0,0,0,0.1);
-}  
-  @media(max-width:900px){
+}
+
+@media(max-width:900px){
   .cards{
     grid-template-columns: repeat(2, 1fr);
   }
@@ -373,164 +342,61 @@ footer{
 </style>
 </head>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-  
 <body>
 
 <!-- HERO -->
-<section class="hero" style="
-  position:relative;
-  background:url('https://images.unsplash.com/photo-1586773860418-d37222d8fce3?auto=format&fit=crop&w=1600&q=80') center/cover no-repeat;
-  min-height:90vh;
-  display:flex;
-  align-items:center;
-  padding:70px 8%;
-">
+<section class="hero" id="hero-section" style="position:relative; min-height:90vh; display:flex; align-items:center; padding:70px 8%; background-size:cover; background-position:center;">
 
-  <a href="https://yel-eng.github.io/MediCare-Clinic/login.html" class="login-btn">
-  تسجيل الدخول
-</a>
+  <a href="login.html" class="login-btn">تسجيل الدخول</a>
   
-<!-- NAV -->
+  <!-- NAV -->
   <div class="navbar">
     <a href="#">الرئيسية</a>
-    <a href="#doctor">عن الدكتور</a>
+    <a href="#doctor" data-setting="nav_about">عن الدكتور</a>
     <a href="#media">المكتبة الطبية</a>
-    <a href="#https://yel-eng.github.io/dr-mona-elmasry/index2.html">تواصل</a>
+    <a href="#contact">تواصل</a>
   </div>
   
-  <!-- overlay فاتح -->
-  <div style="
-    position:absolute;
-    inset:0;
-    background:rgba(255,255,255,0.80);
-  ">
-    
-  </div>
+  <!-- overlay -->
+  <div style="position:absolute; inset:0; background:rgba(255,255,255,0.80);"></div>
   
-
-  <div class="hero-content" style="
-    position:relative;
-    z-index:2;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    width:100%;
-    gap:40px;
-    flex-wrap:wrap;
-  ">
+  <div class="hero-content" style="position:relative; z-index:2; display:flex; justify-content:space-between; align-items:center; width:100%; gap:40px; flex-wrap:wrap;">
   
     <!-- TEXT -->
-    <div class="hero-text" style="
-      flex:1;
-      max-width:520px;
-    ">
-
-      <h1 style="font-size:42px; margin-bottom:10px;">
-        ميديكال كلينك
-      </h1>
-
-      <p style="
-        color:#475569;
-        line-height:1.9;
-        font-size:16px;
-        margin-bottom:20px;
-      ">
-        رعاية طبية بثقة وتنظيم احترافي يضمن لك تجربة مريحة بدون زحام  
-        باستخدام نظام ذكي لإدارة المواعيد بدقة
-      </p>
-
-      <!-- BUTTON -->
-      <button onclick="location.href='https://yel-eng.github.io/MediCare-Clinic/booking.html'"
-        style=" background:#1d4ed8; color:#fff; padding:14px 26px; border:none; border-radius:12px; font-size:15px; cursor:pointer; transition:0.3s; " onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'" >
-      >
-        احجز الآن
-      </button>
-
+    <div class="hero-text" style="flex:1; max-width:520px;">
+      <h1 style="font-size:42px; margin-bottom:10px;" data-setting="hero_title">ميديكال كلينك</h1>
+      <p style="color:#475569; line-height:1.9; font-size:16px; margin-bottom:20px;" data-setting="hero_desc">رعاية طبية بثقة وتنظيم احترافي يضمن لك تجربة مريحة بدون زحام باستخدام نظام ذكي لإدارة المواعيد بدقة</p>
+      <button onclick="location.href='booking.html'" class="book-btn" style="background:var(--primary); color:#fff; padding:14px 26px; border:none; border-radius:12px; font-size:15px; cursor:pointer; transition:0.3s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">احجز الآن</button>
     </div>
 
     <!-- IMAGE -->
-    <div class="hero-img" style="
-      flex:1;
-      display:flex;
-      justify-content:center;
-    ">
-
-      <div style="
-        background:#fff;
-        padding:10px;
-        border-radius:20px;
-        box-shadow:0 20px 40px rgba(0,0,0,0.08);
-      ">
-        <img src="https://i.pravatar.cc/320?img=12"
-          style="width:280px; border-radius:15px;">
+    <div class="hero-img" style="flex:1; display:flex; justify-content:center;">
+      <div style="background:#fff; padding:10px; border-radius:20px; box-shadow:0 20px 40px rgba(0,0,0,0.08);">
+        <img src="" id="hero-image" style="width:280px; border-radius:15px;">
       </div>
-
     </div>
-
   </div>
-
 </section>
-  
-
-  
-    
 
 <!-- CARDS -->
 <section class="cards">
-
-  <div class="card">
-  <div>
-    <div style="font-size:40px;">⭐</div>
-    <h3 style="margin-top:10px;">مستوى خدمة عالي</h3>
-  </div>
-</div>
-
-  <div class="card">
-  <div>
-    <div style="font-size:40px;">🧠</div>
-    <h3 style="margin-top:10px;"> أحدث تقنيات طبية</h3>
-  </div>
-</div>
-
-<div class="card">
-  <div>
-    <div style="font-size:40px;">❤️</div>
-    <h3 style="margin-top:10px;"> اهتمام شخصي بالمرضى</h3>
-  </div>
-</div>
-
+  <div class="card"><div><div style="font-size:40px;">⭐</div><h3 style="margin-top:10px;" data-setting="card1_title">مستوى خدمة عالي</h3></div></div>
+  <div class="card"><div><div style="font-size:40px;">🧠</div><h3 style="margin-top:10px;" data-setting="card2_title">أحدث تقنيات طبية</h3></div></div>
+  <div class="card"><div><div style="font-size:40px;">❤️</div><h3 style="margin-top:10px;" data-setting="card3_title">اهتمام شخصي بالمرضى</h3></div></div>
 </section>
 
 <!-- DOCTOR -->
 <section class="doctor" id="doctor">
-
   <div>
-    <h2>عن الدكتور</h2>
-    <p>د/ حسني حسني - استشاري الباطنة</p>
-    <p style="color:#64748b;line-height:1.8;">
-      خبرة طويلة في التشخيص والعلاج باستخدام أحدث البروتوكولات الطبية.
-    </p>
+    <h2 data-setting="about_heading">عن الدكتور</h2>
+    <p><span data-setting="doctor_name">د/ منى المصري</span> - <span data-setting="doctor_title">استشاري النساء والتوليد</span></p>
+    <p style="color:#64748b;line-height:1.8;" data-setting="about_text">خبرة طويلة في التشخيص والعلاج باستخدام أحدث البروتوكولات الطبية.</p>
   </div>
-
-  <img src="https://i.pravatar.cc/320?img=12">
-
+  <img src="" id="doctor-image" style="width:280px; border-radius:20px;">
 </section>
 
 <!-- GALLERY -->
-<section class="gallery">
+<section class="gallery" id="gallery">
   <img src="https://images.unsplash.com/photo-1588776814546-1ffcf47267a5">
   <img src="https://images.unsplash.com/photo-1587351021759-3e566b6af7cc">
   <img src="https://images.unsplash.com/photo-1588776814546-1ffcf47267a5">
@@ -539,163 +405,200 @@ footer{
 
 <!-- MEDIA -->
 <section class="media" id="media">
-
-<h2>المكتبة الطبية</h2>
-
-
- <section class="media" id="media">
-
-<h2>المكتبة الطبية</h2>
-
-<h3>📸 صور</h3>
-<div class="media-grid" id="imagesContainer"></div>
-
-<h3>🎥 فيديوهات</h3>
-<div class="media-grid" id="videosContainer"></div>
-
-<h3>📄 مقالات</h3>
-<div class="media-grid" id="articlesContainer"></div>
-
+  <h2>المكتبة الطبية</h2>
+  <h3>📸 صور</h3>
+  <div class="media-grid" id="imagesContainer"></div>
+  <h3>🎥 فيديوهات</h3>
+  <div class="media-grid" id="videosContainer"></div>
+  <h3>📄 مقالات</h3>
+  <div class="media-grid" id="articlesContainer"></div>
 </section>
 
-</section>
-
+<!-- CTA -->
 <div class="cta">
-
   <div class="cta-content">
-
     <div class="cta-text">
-      <h2>استشارة مجانية لأول مرة 🎯</h2>
-      <p>
-        احجز الآن – الأماكن محدودة جدًا هذا الشهر  
-        واستفد من تقييم طبي كامل بدون رسوم
-      </p
-
-        <p>
-مواعيد العمل طوال الاسبوع من 12 ص :5 مساءا  <br> متاح الاستشاره اون لاين 
-      </p>
-
-
+      <h2 data-setting="cta_title">استشارة مجانية لأول مرة 🎯</h2>
+      <p data-setting="cta_desc">احجز الآن – الأماكن محدودة جدًا هذا الشهر واستفد من تقييم طبي كامل بدون رسوم</p>
+      <p data-setting="working_hours">مواعيد العمل طوال الاسبوع من 12 ص :5 مساءا <br> متاح الاستشاره اون لاين</p>
       <div class="cta-buttons">
-        <a href="tel:01211538334" class="call-btn">📞 اتصل الآن</a>
-
-        <a href="https://wa.me/201556614498" class="wa-btn">
-          <i class="fab fa-whatsapp"></i> واتساب
-        </a>
+        <a href="" id="phone-link" class="call-btn">📞 اتصل الآن</a>
+        <a href="" id="whatsapp-link" class="wa-btn"><i class="fab fa-whatsapp"></i> واتساب</a>
       </div>
-
     </div>
-
-    <div class="cta-badge">
-      🔥 عرض محدود
-    </div>
-
+    <div class="cta-badge" data-setting="cta_badge">🔥 عرض محدود</div>
   </div>
-
 </div>
 
 <!-- CONTACT -->
 <section class="contact" id="contact">
-
-<div class="contact-box">
-  <h2> : عنوانا</h2>
-  <p>وارقامنا / اتصال مباشر مع العيادة</p>
-</div>
-
+  <div class="contact-box">
+    <h2 data-setting="contact_heading">: عنوانا</h2>
+    <p><span data-setting="address">الإسكندرية، مصر</span> / <span data-setting="contact_note">اتصال مباشر مع العيادة</span></p>
+  </div>
 </section>
 
 <!-- MAP -->
 <section class="map">
-
-  <div style="
-    width:100%;
-    height:350px;
-    border-radius:20px;
-    overflow:hidden;
-    box-shadow:0 10px 30px rgba(0,0,0,0.08);
-  ">
-
-    <iframe 
-      src="https://www.google.com/maps?q=alexandria+egypt&output=embed"
-      width="100%" 
-      height="100%" 
-      style="border:0;" 
-      allowfullscreen=""
-      loading="lazy">
-    </iframe>
-
+  <div style="width:100%; height:350px; border-radius:20px; overflow:hidden; box-shadow:0 10px 30px rgba(0,0,0,0.08);">
+    <iframe id="map-frame" src="" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
   </div>
-
 </section>
 
 <!-- FOOTER -->
-<footer>
-  ميديكال كلينك - جميع الحقوق محفوظة
-</footer>
+<footer id="footer-text">ميديكال كلينك - جميع الحقوق محفوظة</footer>
 
-<!-- WHATSAPP -->
-<a class="wa" href="https://wa.me/201211538334">
-<i class="fab fa-whatsapp"></i>
-</a>
+<!-- WHATSAPP FLOATING -->
+<a class="wa" id="wa-float" href=""><i class="fab fa-whatsapp"></i></a>
+
+<!-- ✅ كود تحميل الإعدادات الديناميكية + المحتوى -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getFirestore, collection, getDocs } 
-from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { getFirestore, doc, getDoc, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
+// ⚠️ كود فايربيس الخاص بالدكتورة منى
 const firebaseConfig = {
-  apiKey: "AIzaSyA8FEgNeXAMZ1Sbg12zFCzwwxUD3sVl99o",
-  authDomain: "mydoctor-clinic.firebaseapp.com",
-  projectId: "mydoctor-clinic"
+  apiKey: "AIzaSyD7B-e65xKC2Q3rY6F0TI55QtYJPqqw4dE",
+  authDomain: "dr-mona-elmasry.firebaseapp.com",
+  databaseURL: "https://dr-mona-elmasry-default-rtdb.firebaseio.com",
+  projectId: "dr-mona-elmasry",
+  storageBucket: "dr-mona-elmasry.firebasestorage.app",
+  messagingSenderId: "40312173388",
+  appId: "1:40312173388:web:d5b75d750ac4b5599195e9",
+  measurementId: "G-MFG6HP7585"
 };
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-// containers
-const imagesContainer = document.getElementById("imagesContainer");
-const videosContainer = document.getElementById("videosContainer");
-const articlesContainer = document.getElementById("articlesContainer");
-
-async function loadData() {
-  const snapshot = await getDocs(collection(db, "content"));
-
-  imagesContainer.innerHTML = "";
-  videosContainer.innerHTML = "";
-  articlesContainer.innerHTML = "";
-
-  snapshot.forEach((docSnap) => {
-    const item = docSnap.data();
-
-    if (item.type === "image") {
-      imagesContainer.innerHTML += `
-        <div class="card">
-          <img src="${item.link}" style="width:100%;border-radius:10px">
-        </div>
-      `;
+// دالة تحميل وتطبيق الإعدادات
+async function loadAndApplySettings() {
+  try {
+    const settingsDoc = await getDoc(doc(db, "settings_mona", "main"));
+    if (!settingsDoc.exists()) {
+      console.warn("⚠️ لا توجد إعدادات بعد، استخدم القيم الافتراضية");
+      applyDefaults();
+      return;
     }
-
-    if (item.type === "video") {
-      videosContainer.innerHTML += `
-        <div class="card">
-          <video controls style="width:100%">
-            <source src="${item.link}">
-          </video>
-        </div>
-      `;
+    
+    const s = settingsDoc.data();
+    
+    // 🎨 تطبيق الألوان
+    if (s.primary_color) {
+      document.documentElement.style.setProperty('--primary', s.primary_color);
+      document.documentElement.style.setProperty('--primary-dark', s.primary_color + 'dd');
     }
-
-    if (item.type === "article") {
-      articlesContainer.innerHTML += `
-        <div class="card">
-          <h3>${item.title}</h3>
-          <p>${item.desc}</p>
-        </div>
-      `;
+    if (s.bg_color) {
+      document.documentElement.style.setProperty('--bg', s.bg_color);
     }
-  });
+    
+    // 🏷️ تطبيق النصوص
+    if (s.clinic_name) {
+      document.title = s.clinic_name + " - نظام الحجز";
+      document.querySelectorAll('[data-setting="clinic_name"]').forEach(el => el.textContent = s.clinic_name);
+    }
+    if (s.doctor_name) {
+      document.querySelectorAll('[data-setting="doctor_name"]').forEach(el => el.textContent = s.doctor_name);
+    }
+    if (s.doctor_title) {
+      document.querySelectorAll('[data-setting="doctor_title"]').forEach(el => el.textContent = s.doctor_title);
+    }
+    if (s.hero_title) document.querySelector('[data-setting="hero_title"]').textContent = s.hero_title;
+    if (s.hero_desc) document.querySelector('[data-setting="hero_desc"]').textContent = s.hero_desc;
+    if (s.about_heading) document.querySelector('[data-setting="about_heading"]').textContent = s.about_heading;
+    if (s.about_text) document.querySelector('[data-setting="about_text"]').textContent = s.about_text;
+    if (s.card1_title) document.querySelector('[data-setting="card1_title"]').textContent = s.card1_title;
+    if (s.card2_title) document.querySelector('[data-setting="card2_title"]').textContent = s.card2_title;
+    if (s.card3_title) document.querySelector('[data-setting="card3_title"]').textContent = s.card3_title;
+    if (s.cta_title) document.querySelector('[data-setting="cta_title"]').textContent = s.cta_title;
+    if (s.cta_desc) document.querySelector('[data-setting="cta_desc"]').textContent = s.cta_desc;
+    if (s.cta_badge) document.querySelector('[data-setting="cta_badge"]').textContent = s.cta_badge;
+    if (s.working_hours) document.querySelector('[data-setting="working_hours"]').innerHTML = s.working_hours;
+    if (s.address) document.querySelector('[data-setting="address"]').textContent = s.address;
+    if (s.contact_note) document.querySelector('[data-setting="contact_note"]').textContent = s.contact_note;
+    if (s.footer_text) document.getElementById('footer-text').textContent = s.footer_text;
+    
+    // 🖼️ تطبيق الصور
+    if (s.hero_image) document.getElementById('hero-image').src = s.hero_image;
+    if (s.doctor_image) document.getElementById('doctor-image').src = s.doctor_image;
+    
+    // 📞 تطبيق أرقام التواصل
+    if (s.phone_number) {
+      document.getElementById('phone-link').href = "tel:" + s.phone_number;
+    }
+    if (s.whatsapp_number) {
+      const waNum = s.whatsapp_number.replace(/^0+/, '').replace(/\s/g, '');
+      const fullWa = waNum.startsWith('20') ? waNum : '20' + waNum;
+      document.getElementById('whatsapp-link').href = "https://wa.me/" + fullWa;
+      document.getElementById('wa-float').href = "https://wa.me/" + fullWa;
+    }
+    
+    // 🗺️ تطبيق الخريطة
+    if (s.map_url) document.getElementById('map-frame').src = s.map_url;
+    
+    // 🎨 تطبيق خلفية الهيدر
+    if (s.hero_bg) {
+      document.getElementById('hero-section').style.backgroundImage = "url('" + s.hero_bg + "')";
+    }
+    
+    console.log("✅ Settings loaded:", s);
+  } catch (err) {
+    console.warn("⚠️ Failed to load settings:", err);
+    applyDefaults();
+  }
 }
 
-loadData();
+// قيم افتراضية لو مفيش إعدادات
+function applyDefaults() {
+  document.documentElement.style.setProperty('--primary', '#1d4ed8');
+  document.documentElement.style.setProperty('--bg', '#f8fafc');
+  document.getElementById('hero-image').src = "https://i.pravatar.cc/320?img=12";
+  document.getElementById('doctor-image').src = "https://i.pravatar.cc/320?img=12";
+  document.getElementById('phone-link').href = "tel:01211538334";
+  document.getElementById('whatsapp-link').href = "https://wa.me/201211538334";
+  document.getElementById('wa-float').href = "https://wa.me/201211538334";
+  document.getElementById('map-frame').src = "https://www.google.com/maps?q=alexandria+egypt&output=embed";
+}
+
+// تحميل المحتوى من كوليكشن content_mona
+async function loadMediaContent() {
+  try {
+    const snapshot = await getDocs(collection(db, "content_mona"));
+    const imagesContainer = document.getElementById("imagesContainer");
+    const videosContainer = document.getElementById("videosContainer");
+    const articlesContainer = document.getElementById("articlesContainer");
+    
+    imagesContainer.innerHTML = "";
+    videosContainer.innerHTML = "";
+    articlesContainer.innerHTML = "";
+    
+    snapshot.forEach((docSnap) => {
+      const item = docSnap.data();
+      if (item.type === "image") {
+        imagesContainer.innerHTML += '<div class="card"><img src="' + item.link + '" style="width:100%;border-radius:10px"></div>';
+      }
+      if (item.type === "video") {
+        videosContainer.innerHTML += '<div class="card"><video controls style="width:100%"><source src="' + item.link + '"></video></div>';
+      }
+      if (item.type === "article") {
+        articlesContainer.innerHTML += '<div class="card"><h3>' + item.title + '</h3><p>' + item.desc + '</p></div>';
+      }
+    });
+  } catch (err) {
+    console.warn("⚠️ Failed to load media content:", err);
+  }
+}
+
+// تشغيل الدوال بعد تحميل الصفحة
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", () => {
+    loadAndApplySettings();
+    loadMediaContent();
+  });
+} else {
+  loadAndApplySettings();
+  loadMediaContent();
+}
 </script>
 </body>
 </html>
