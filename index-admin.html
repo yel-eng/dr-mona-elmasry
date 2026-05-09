@@ -2,208 +2,132 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>لوحة التحكم - إدارة الموقع</title>
 
 <style>
+:root { --main: #1a237e; --main-light: #3949ab; --bg: #f4f7f6; --white: #fff; --text: #333; --text-light: #666; --success: #2e7d32; --warning: #ff9800; --danger: #f44336; --radius: 14px; --shadow: 0 4px 12px rgba(0,0,0,0.1); }
 
-:root { --main: #1a237e; --bg: #f4f7f6; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
 
 body { 
-  font-family: 'Segoe UI', sans-serif; 
+  font-family: 'Segoe UI', Tahoma, Arial, sans-serif; 
   background: var(--bg);
-  margin: 0; 
-  padding: 20px; 
-  overflow-x:hidden;
-  margin-right: 235px;
+  color: var(--text);
+  line-height: 1.6;
+  padding: 20px;
 }
 
-.main-content{ 
-  margin-right:235px;
-  padding:25px; 
-  width:100%; 
-}
-
-h2{
-  margin-right:-25px;
-  margin-left:-25px;
-  padding:15px 25px;
-  color:#fff;
-  border-radius:0;
-  background:linear-gradient(180deg,#1e3a8a,#1d4ed8);
-}
-
-/* FORM */
-input, textarea, select{
-  width:100%;
-  padding:14px 16px;
-  margin:10px 0;
-  border-radius:14px;
-  border:1px solid #e5e7eb;
-  background:#ffffff;
-  font-size:14px;
-  transition: all 0.25s ease;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.03);
-}
-
-input:hover, textarea:hover, select:hover{ border-color:#cbd5f5; }
-input:focus, textarea:focus, select:focus{ border-color:#1d4ed8; box-shadow:0 0 0 4px rgba(29,78,216,0.12); }
-input::placeholder, textarea::placeholder{ color:#94a3b8; }
-
-select{
-  appearance:none;
-  background-image: url("data:image/svg+xml,%3Csvg fill='%2364748b' height='20' viewBox='0 0 24 24' width='20' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
-  background-repeat:no-repeat;
-  background-position:left 12px center;
-  background-size:18px;
-  padding-left:40px;
-}
-
-textarea{ min-height:100px; resize:none; } 
-label{ font-size:13px; color:#64748b; display:block; margin-top:10px; }
-
-button{
-  background:#1d4ed8; 
-  padding:12px 18px; 
-  border:none; 
-  border-radius:10px; 
-  cursor:pointer; 
-  transition:0.3s; 
-  color:#fff;
-  font-size:14px;
-}
-
-button:hover{ transform:translateY(-2px); background:#2563eb; }
-
-/* GRID */
-#list{ 
-  display:grid; 
-  grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); 
-  gap:15px;
-  margin-top:15px;
-}
-
-/* CARD */
-.card{
-  background: linear-gradient(180deg,#ffffff,#f8fafc);
-  padding:20px;
-  border-radius:20px;
-  border:1px solid #eef2f7;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.03), 0 15px 35px rgba(0,0,0,0.06);
-  transition: all 0.3s ease;
-  position:relative;
-  overflow:hidden;
-}
-
-.card::before{
-  content:"";
-  position:absolute;
-  top:0;
-  right:0;
-  width:100%;
-  height:4px;
-  background:linear-gradient(90deg,#1d4ed8,#38bdf8);
-  opacity:0;
-  transition:0.3s;
-}
-
-.card:hover{
-  transform:translateY(-10px) scale(1.01);
-  box-shadow: 0 10px 25px rgba(0,0,0,0.06), 0 25px 50px rgba(0,0,0,0.10);
-}
-
-.card:hover::before{ opacity:1; }
-.card h3{ font-size:17px; margin:12px 0; color:#0f172a; font-weight:600; }
-.card p{ color:#64748b; font-size:13px; line-height:1.7; }
-.card img, .card video{ width:100%; border-radius:14px; margin-top:12px; transition:0.3s; }
-.card:hover img, .card:hover video{ transform:scale(1.03); }
-
-.badge{
-  display:inline-block;
-  padding:5px 12px;
-  font-size:12px;
-  border-radius:20px;
-  background:#e0f2fe;
-  color:#0369a1;
-  font-weight:500;
-  margin-right: 100px;
-}
-
-.del-btn{
-  position:absolute;
-  top:12px;
-  left:12px;
-  background:#ef4444;
-  border:none;
-  color:#fff;
-  border-radius:8px;
-  padding:6px 9px;
-  cursor:pointer;
-  font-size:12px;
-  transition:0.2s;
-}
-.del-btn:hover{ background:#dc2626; }
-
-.card button[onclick^="editItem"]{
-  position:absolute;
-  top:12px;
-  right:12px;
-  background:#0ea5e9;
-  border:none;
-  color:#fff;
-  border-radius:8px;
-  padding:6px 9px;
-  cursor:pointer;
-  font-size:12px;
-  transition:0.2s;
-}
-.card button[onclick^="editItem"]:hover{ background:#0284c7; }
-
-/* NAVBAR */
+/* Sidebar - ثابت على اليمين للكمبيوتر، يختفي في الموبايل */
 .side-nav {
   position: fixed;
   top: 0;
   right: 0;
-  width: 220px;
+  width: 240px;
   height: 100vh;
-  background: linear-gradient(180deg, #1a237e, #3949ab);
+  background: linear-gradient(180deg, var(--main), var(--main-light));
   padding: 25px 15px;
   display: flex;
   flex-direction: column;
-  gap: 15px;
-  z-index: 999;
+  gap: 12px;
+  z-index: 1000;
+  transition: transform 0.3s ease;
 }
 
-.side-nav .logo { color: #fff; text-align: center; margin-bottom: 20px; }
-.side-nav a.active { background: #fff; color: #1a237e; font-weight: bold; }
+.side-nav .logo { color: #fff; text-align: center; margin-bottom: 20px; font-size: 18px; font-weight: bold; }
+.side-nav a { text-decoration: none; color: #fff; padding: 12px 15px; border-radius: 10px; transition: 0.2s; font-size: 14px; }
+.side-nav a.active, .side-nav a:hover { background: rgba(255,255,255,0.2); }
 .side-nav a.disabled { opacity: 0.5; pointer-events: none; }
-.side-nav a {
-  text-decoration: none;
-  color: #fff;
-  padding: 12px;
-  border-radius: 10px;
-  transition: 0.3s;
-  font-size: 15px;
-}
-.side-nav a:hover { background: rgba(255,255,255,0.15); transform: translateX(-5px); }
 
-/* Settings Section */
-.settings-section {
-  background: #fff;
+/* Main Content */
+.main-content { 
+  margin-right: 260px; /* مساحة للسايدبار */
   padding: 20px;
-  border-radius: 15px;
-  margin-top: 20px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  max-width: 1200px;
 }
-.settings-section h3 {
-  color: #1a237e;
-  margin-bottom: 15px;
+
+/* Sections */
+.section { 
+  background: var(--white); 
+  padding: 25px; 
+  border-radius: var(--radius); 
+  box-shadow: var(--shadow); 
+  margin-bottom: 25px; 
+}
+
+.section h2 {
+  color: var(--main);
+  margin-bottom: 20px;
+  padding-bottom: 12px;
   border-bottom: 2px solid #eee;
-  padding-bottom: 10px;
+  font-size: 20px;
 }
+
+/* Form Elements */
+.form-group { margin-bottom: 18px; }
+.form-group label { display: block; margin-bottom: 6px; font-weight: 500; font-size: 14px; color: var(--text); }
+.form-group input, .form-group textarea, .form-group select {
+  width: 100%;
+  padding: 12px 15px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  font-size: 14px;
+  transition: 0.2s;
+  background: #fafafa;
+}
+.form-group input:focus, .form-group textarea:focus, .form-group select:focus {
+  border-color: var(--main);
+  box-shadow: 0 0 0 3px rgba(26,35,126,0.1);
+  outline: none;
+  background: #fff;
+}
+.form-group textarea { min-height: 100px; resize: vertical; }
+
+/* Buttons */
+.btn {
+  background: var(--main);
+  color: #fff;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.btn:hover { background: var(--main-light); transform: translateY(-1px); }
+.btn:active { transform: translateY(0); }
+.btn-success { background: var(--success); }
+.btn-success:hover { background: #388e3c; }
+.btn-warning { background: var(--warning); }
+.btn-danger { background: var(--danger); }
+.btn-danger:hover { background: #d32f2f; }
+.btn-block { width: 100%; justify-content: center; }
+
+/* Grid for Settings */
 .settings-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 15px;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+/* Color Picker */
+.color-picker-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.color-picker-wrapper input[type="color"] {
+  width: 50px;
+  height: 40px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  padding: 0;
+  background: none;
 }
 .color-preview {
   width: 40px;
@@ -211,135 +135,319 @@ button:hover{ transform:translateY(-2px); background:#2563eb; }
   border-radius: 8px;
   border: 2px solid #ddd;
   display: inline-block;
-  vertical-align: middle;
-  margin-right: 10px;
 }
-.save-btn {
-  background: #2e7d32;
-  margin-top: 20px;
-  width: auto;
-  padding: 12px 30px;
+
+/* Content Cards Grid */
+.content-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 18px;
+  margin-top: 15px;
 }
-.save-btn:hover { background: #388e3c; }
+
+/* Card */
+.card {
+  background: #fff;
+  border-radius: 14px;
+  border: 1px solid #eee;
+  padding: 16px;
+  position: relative;
+  transition: 0.2s;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+.card:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0,0,0,0.1); }
+.card img, .card video {
+  width: 100%;
+  border-radius: 10px;
+  margin-top: 10px;
+  max-height: 180px;
+  object-fit: cover;
+}
+.card h3 { font-size: 15px; margin: 10px 0 5px; color: var(--text); }
+.card p { font-size: 13px; color: var(--text-light); margin-bottom: 10px; }
+.card .badge {
+  display: inline-block;
+  padding: 4px 10px;
+  font-size: 11px;
+  border-radius: 20px;
+  background: #e3f2fd;
+  color: #1976d2;
+  font-weight: 500;
+}
+.card .actions {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  display: flex;
+  gap: 6px;
+}
+.card .actions button {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: 0.2s;
+}
+.card .actions .edit-btn { background: #0ea5e9; color: #fff; }
+.card .actions .delete-btn { background: var(--danger); color: #fff; }
+.card .actions button:hover { transform: scale(1.1); }
+
+/* Upload Progress */
+.upload-progress {
+  margin-top: 10px;
+  font-size: 13px;
+  color: var(--text-light);
+  display: none;
+}
+.upload-progress.show { display: block; }
+.progress-bar {
+  height: 6px;
+  background: #eee;
+  border-radius: 3px;
+  margin-top: 6px;
+  overflow: hidden;
+}
+.progress-fill {
+  height: 100%;
+  background: var(--success);
+  width: 0%;
+  transition: width 0.2s;
+}
+
+/* Mobile Menu Toggle */
+.menu-toggle {
+  display: none;
+  position: fixed;
+  top: 15px;
+  right: 15px;
+  z-index: 1001;
+  background: var(--main);
+  color: #fff;
+  border: none;
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  font-size: 20px;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+/* Toast Notification */
+.toast {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%) translateY(100px);
+  background: var(--text);
+  color: #fff;
+  padding: 14px 24px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 500;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+  z-index: 2000;
+  transition: transform 0.3s ease;
+  max-width: 90%;
+  text-align: center;
+}
+.toast.show { transform: translateX(-50%) translateY(0); }
+.toast.success { background: var(--success); }
+.toast.error { background: var(--danger); }
+
+/* Responsive Design */
+@media (max-width: 900px) {
+  .side-nav {
+    transform: translateX(100%); /* إخفاء السايدبار يمين */
+  }
+  .side-nav.open {
+    transform: translateX(0); /* إظهار */
+  }
+  .main-content {
+    margin-right: 0;
+    padding-top: 70px; /* مساحة للزر العلوي */
+  }
+  .menu-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .settings-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 500px) {
+  body { padding: 12px; }
+  .section { padding: 20px 15px; }
+  .content-grid {
+    grid-template-columns: 1fr;
+  }
+  .card .actions {
+    position: static;
+    margin-top: 10px;
+    justify-content: flex-end;
+  }
+}
 </style>
 </head>
 
 <body>
 
-<div class="side-nav">
-  <h2 class="logo">Admin</h2>
+<!-- زر القائمة للموبايل -->
+<button class="menu-toggle" onclick="toggleMenu()">☰</button>
+
+<!-- Sidebar -->
+<div class="side-nav" id="sideNav">
+  <h2 class="logo">⚙️ لوحة التحكم</h2>
   <a href="admin.html">🏠 لوحة المواعيد</a>
   <a href="index-admin.html" class="active">📂 إدارة الموقع</a>
   <a href="#" class="disabled">🚧 قريباً</a>
+  <button onclick="handleLogout()" style="margin-top:auto;background:rgba(255,255,255,0.2);color:#fff;border:none;padding:12px;border-radius:10px;cursor:pointer;">🚪 خروج</button>
 </div>
 
+<!-- Main Content -->
 <div class="main-content">
 
-<!-- قسم إدارة المحتوى (صور/فيديوهات/مقالات) -->
-<h2>📚 إدارة المحتوى</h2>
-
-<select id="type">
-  <option value="article">مقال</option>
-  <option value="video">فيديو</option>
-  <option value="image">صورة</option>
-</select>
-
-<label>العنوان</label>
-<input id="title" placeholder="العنوان">
-
-<label>الرابط</label>
-<input id="link" placeholder="لينك الصورة أو الفيديو">
-
-<label>الوصف</label>
-<textarea id="desc" placeholder="الوصف (اختياري)"></textarea>
-
-<button onclick="addItem()">إضافة</button>
-
-<h2 style="background:linear-gradient(180deg,#1e3a8a,#1d4ed8); margin-top:30px;">المحتوى الحالي</h2>
-<div id="list"></div>
-
-<!-- قسم إعدادات الموقع العامة -->
-<div class="settings-section">
-  <h3>⚙️ إعدادات الموقع العامة</h3>
-  
-  <div class="settings-grid">
-    <div>
-      <label>اسم العيادة</label>
-      <input type="text" id="setting_clinic_name" placeholder="مثال: عيادة د. منى المصري">
+  <!-- قسم إدارة المحتوى -->
+  <div class="section">
+    <h2>📚 إضافة محتوى جديد</h2>
+    
+    <div class="form-group">
+      <label>نوع المحتوى</label>
+      <select id="contentType">
+        <option value="image">🖼️ صورة</option>
+        <option value="video">🎥 فيديو</option>
+        <option value="article">📄 مقال</option>
+      </select>
     </div>
-    <div>
-      <label>اسم الدكتور</label>
-      <input type="text" id="setting_doctor_name" placeholder="د. منى المصري">
+
+    <div class="form-group">
+      <label>العنوان</label>
+      <input type="text" id="contentTitle" placeholder="عنوان المحتوى">
     </div>
-    <div>
-      <label>التخصص</label>
-      <input type="text" id="setting_doctor_title" placeholder="استشاري النساء والتوليد">
+
+    <!-- حقل رفع الصورة (يظهر فقط للصور) -->
+    <div class="form-group" id="uploadGroup">
+      <label>رفع صورة مباشرة</label>
+      <input type="file" id="imageUpload" accept="image/*" style="padding:8px;">
+      <div class="upload-progress" id="uploadProgress">
+        جاري الرفع...
+        <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+      </div>
+      <small style="color:var(--text-light);display:block;margin-top:5px;">أو استخدم الرابط أسفل إذا لم ترد الرفع</small>
     </div>
-    <div>
-      <label>اللون الرئيسي</label>
-      <div style="display:flex;align-items:center;gap:10px;">
-        <input type="color" id="setting_primary_color" value="#1d4ed8" style="height:40px;width:60px;cursor:pointer;border:none;">
-        <span class="color-preview" id="colorPreview"></span>
+
+    <div class="form-group">
+      <label>رابط المحتوى (للفيديو/المقال، أو إذا لم ترفعي صورة)</label>
+      <input type="url" id="contentLink" placeholder="https://...">
+    </div>
+
+    <div class="form-group">
+      <label>الوصف (اختياري)</label>
+      <textarea id="contentDesc" placeholder="وصف مختصر..."></textarea>
+    </div>
+
+    <button class="btn btn-block" onclick="addContent()">➕ إضافة المحتوى</button>
+  </div>
+
+  <!-- عرض المحتوى الحالي -->
+  <div class="section">
+    <h2>📋 المحتوى الحالي</h2>
+    <div class="content-grid" id="contentList"></div>
+  </div>
+
+  <!-- قسم إعدادات الموقع -->
+  <div class="section">
+    <h2>⚙️ إعدادات الموقع العامة</h2>
+    
+    <div class="settings-grid">
+      <div class="form-group">
+        <label>اسم العيادة</label>
+        <input type="text" id="setting_clinic_name" placeholder="عيادة د. منى المصري">
+      </div>
+      <div class="form-group">
+        <label>اسم الدكتور</label>
+        <input type="text" id="setting_doctor_name" placeholder="د. منى المصري">
+      </div>
+      <div class="form-group">
+        <label>التخصص</label>
+        <input type="text" id="setting_doctor_title" placeholder="استشاري النساء والتوليد">
+      </div>
+      <div class="form-group">
+        <label>اللون الرئيسي</label>
+        <div class="color-picker-wrapper">
+          <input type="color" id="setting_primary_color" value="#1d4ed8">
+          <span class="color-preview" id="colorPreview"></span>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>لون الخلفية</label>
+        <input type="color" id="setting_bg_color" value="#f8fafc">
+      </div>
+      <div class="form-group">
+        <label>عنوان الهيدر</label>
+        <input type="text" id="setting_hero_title" placeholder="ميديكال كلينك">
+      </div>
+      <div class="form-group" style="grid-column: span 2;">
+        <label>وصف الهيدر</label>
+        <textarea id="setting_hero_desc" placeholder="رعاية طبية بثقة..."></textarea>
+      </div>
+      <div class="form-group">
+        <label>صورة الهيدر (رابط أو ارفعيها)</label>
+        <input type="url" id="setting_hero_image" placeholder="https://...">
+      </div>
+      <div class="form-group">
+        <label>صورة الدكتور (رابط أو ارفعيها)</label>
+        <input type="url" id="setting_doctor_image" placeholder="https://...">
+      </div>
+      <div class="form-group" style="grid-column: span 2;">
+        <label>نص "عن الدكتور"</label>
+        <textarea id="setting_about_text" placeholder="خبرة طويلة..."></textarea>
+      </div>
+      <div class="form-group">
+        <label>رقم الواتساب</label>
+        <input type="text" id="setting_whatsapp_number" placeholder="201211538334">
+      </div>
+      <div class="form-group">
+        <label>رقم الاتصال</label>
+        <input type="text" id="setting_phone_number" placeholder="01211538334">
+      </div>
+      <div class="form-group">
+        <label>العنوان</label>
+        <input type="text" id="setting_address" placeholder="الإسكندرية، مصر">
+      </div>
+      <div class="form-group" style="grid-column: span 2;">
+        <label>مواعيد العمل</label>
+        <textarea id="setting_working_hours" placeholder="طوال الأسبوع..."></textarea>
+      </div>
+      <div class="form-group" style="grid-column: span 2;">
+        <label>رابط الخريطة</label>
+        <input type="url" id="setting_map_url" placeholder="https://www.google.com/maps?q=...">
+      </div>
+      <div class="form-group" style="grid-column: span 2;">
+        <label>نص الفوتر</label>
+        <input type="text" id="setting_footer_text" placeholder="© 2024...">
       </div>
     </div>
-    <div>
-      <label>لون الخلفية</label>
-      <input type="color" id="setting_bg_color" value="#f8fafc" style="height:40px;width:100%;cursor:pointer;border:none;">
-    </div>
-    <div>
-      <label>عنوان الهيدر الرئيسي</label>
-      <input type="text" id="setting_hero_title" placeholder="ميديكال كلينك">
-    </div>
-    <div style="grid-column: span 2;">
-      <label>وصف الهيدر</label>
-      <textarea id="setting_hero_desc" placeholder="رعاية طبية بثقة..."></textarea>
-    </div>
-    <div>
-      <label>صورة الهيدر (رابط)</label>
-      <input type="url" id="setting_hero_image" placeholder="https://.../image.jpg">
-    </div>
-    <div>
-      <label>صورة الدكتور (رابط)</label>
-      <input type="url" id="setting_doctor_image" placeholder="https://.../doctor.jpg">
-    </div>
-    <div style="grid-column: span 2;">
-      <label>نص "عن الدكتور"</label>
-      <textarea id="setting_about_text" placeholder="خبرة طويلة في التشخيص..."></textarea>
-    </div>
-    <div>
-      <label>رقم الواتساب (بدون +)</label>
-      <input type="text" id="setting_whatsapp_number" placeholder="201211538334">
-    </div>
-    <div>
-      <label>رقم الاتصال</label>
-      <input type="text" id="setting_phone_number" placeholder="01211538334">
-    </div>
-    <div>
-      <label>العنوان</label>
-      <input type="text" id="setting_address" placeholder="الإسكندرية، مصر">
-    </div>
-    <div style="grid-column: span 2;">
-      <label>مواعيد العمل</label>
-      <textarea id="setting_working_hours" placeholder="طوال الأسبوع من 12 ص - 5 م"></textarea>
-    </div>
-    <div style="grid-column: span 2;">
-      <label>رابط الخريطة</label>
-      <input type="url" id="setting_map_url" placeholder="https://www.google.com/maps?q=...">
-    </div>
-    <div style="grid-column: span 2;">
-      <label>نص الفوتر</label>
-      <input type="text" id="setting_footer_text" placeholder="© 2024 عيادة د. منى المصري - جميع الحقوق محفوظة">
-    </div>
+    
+    <button class="btn btn-success btn-block" onclick="saveSettings()">💾 حفظ جميع الإعدادات</button>
   </div>
-  
-  <button class="save-btn" onclick="saveSettings()">💾 حفظ جميع الإعدادات</button>
-</div>
 
 </div>
+
+<!-- Toast Notification -->
+<div class="toast" id="toast"></div>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, updateDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
+import { getAuth, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
 // ⚠️ كود فايربيس الخاص بالدكتورة منى
 const firebaseConfig = {
@@ -355,78 +463,195 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
+const storage = getStorage(app);
+const auth = getAuth(app);
 
 let editingId = null;
-let data = [];
+let contentData = [];
 
-// 🟢 تحميل المحتوى (صور/فيديوهات/مقالات)
-async function loadData(){
-  const snapshot = await getDocs(collection(db, "content_mona"));
-  data = [];
-  snapshot.forEach(docSnap => {
-    data.push({ id: docSnap.id, ...docSnap.data() });
-  });
-  render();
+// 🟢 عرض/إخفاء قائمة الموبايل
+window.toggleMenu = function() {
+  document.getElementById('sideNav').classList.toggle('open');
 }
 
-// 🟢 إضافة / تعديل محتوى
-window.addItem = async function(){
-  const item = {
-    type: document.getElementById("type").value,
-    title: document.getElementById("title").value,
-    link: document.getElementById("link").value,
-    desc: document.getElementById("desc").value
-  };
-
-  if(editingId){
-    await updateDoc(doc(db, "content_mona", editingId), item);
-    editingId = null;
-  }else{
-    await addDoc(collection(db, "content_mona"), item);
+// 🟢 تسجيل الخروج
+window.handleLogout = async function() {
+  try {
+    await signOut(auth);
+    window.location.href = "login.html";
+  } catch (err) {
+    console.error("Logout Error:", err);
   }
-  loadData();
-  // إعادة تعيين الحقول
-  document.getElementById("title").value = "";
-  document.getElementById("link").value = "";
-  document.getElementById("desc").value = "";
+}
+
+// 🟢 عرض رسالة منبثقة
+function showToast(msg, type = 'success') {
+  const toast = document.getElementById('toast');
+  toast.textContent = msg;
+  toast.className = 'toast ' + type + ' show';
+  setTimeout(() => toast.classList.remove('show'), 3000);
+}
+
+// 🟢 تحميل المحتوى من فايربيس
+async function loadContent(){
+  try {
+    const snapshot = await getDocs(collection(db, "content_mona"));
+    contentData = [];
+    snapshot.forEach(docSnap => {
+      contentData.push({ id: docSnap.id, ...docSnap.data() });
+    });
+    renderContent();
+  } catch (err) {
+    console.error("Load Error:", err);
+    showToast("فشل تحميل المحتوى", "error");
+  }
+}
+
+// 🟢 رفع صورة لـ Firebase Storage
+async function uploadImage(file) {
+  return new Promise((resolve, reject) => {
+    const storageRef = ref(storage, 'clinic_images/' + Date.now() + '_' + file.name);
+    const uploadTask = uploadBytesResumable(storageRef, file);
+    
+    const progressEl = document.getElementById('uploadProgress');
+    const fillEl = document.getElementById('progressFill');
+    progressEl.classList.add('show');
+    
+    uploadTask.on('state_changed',
+      (snapshot) => {
+        const percent = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
+        fillEl.style.width = percent + '%';
+      },
+      (error) => {
+        progressEl.classList.remove('show');
+        reject(error);
+      },
+      () => {
+        getDownloadURL(uploadTask.snapshot.ref).then((url) => {
+          progressEl.classList.remove('show');
+          resolve(url);
+        });
+      }
+    );
+  });
+}
+
+// 🟢 إضافة محتوى جديد
+window.addContent = async function(){
+  const type = document.getElementById("contentType").value;
+  const title = document.getElementById("contentTitle").value.trim();
+  const linkInput = document.getElementById("contentLink").value.trim();
+  const desc = document.getElementById("contentDesc").value.trim();
+  const fileInput = document.getElementById("imageUpload");
+  
+  if (!title) {
+    showToast("⚠️ يرجى إدخال عنوان", "error");
+    return;
+  }
+  
+  let finalLink = linkInput;
+  
+  // إذا كان نوع الصورة وتم اختيار ملف للرفع
+  if (type === "image" && fileInput.files[0]) {
+    try {
+      showToast("📤 جاري رفع الصورة...");
+      finalLink = await uploadImage(fileInput.files[0]);
+      showToast("✅ تم رفع الصورة");
+    } catch (err) {
+      showToast("❌ فشل رفع الصورة: " + err.message, "error");
+      return;
+    }
+  }
+  
+  if (!finalLink && type !== "article") {
+    showToast("⚠️ يرجى إدخال رابط أو رفع صورة", "error");
+    return;
+  }
+  
+  const item = { type, title, link: finalLink, desc };
+  
+  try {
+    if (editingId) {
+      await updateDoc(doc(db, "content_mona", editingId), item);
+      editingId = null;
+      showToast("✅ تم تعديل المحتوى");
+    } else {
+      await addDoc(collection(db, "content_mona"), item);
+      showToast("✅ تمت الإضافة");
+    }
+    // إعادة تعيين الحقول
+    document.getElementById("contentTitle").value = "";
+    document.getElementById("contentLink").value = "";
+    document.getElementById("contentDesc").value = "";
+    fileInput.value = "";
+    loadContent();
+  } catch (err) {
+    showToast("❌ خطأ: " + err.message, "error");
+  }
 }
 
 // 🟢 حذف محتوى
-window.deleteItem = async function(id){
-  await deleteDoc(doc(db, "content_mona", id));
-  loadData();
+window.deleteContent = async function(id){
+  if (!confirm("هل أنتِ متأكدة من الحذف؟")) return;
+  try {
+    await deleteDoc(doc(db, "content_mona", id));
+    showToast("✅ تم الحذف");
+    loadContent();
+  } catch (err) {
+    showToast("❌ فشل الحذف", "error");
+  }
 }
 
 // 🟢 تعديل محتوى
-window.editItem = function(id){
-  const item = data.find(i => i.id === id);
-  document.getElementById("type").value = item.type;
-  document.getElementById("title").value = item.title;
-  document.getElementById("link").value = item.link;
-  document.getElementById("desc").value = item.desc;
+window.editContent = function(id){
+  const item = contentData.find(i => i.id === id);
+  if (!item) return;
+  
+  document.getElementById("contentType").value = item.type;
+  document.getElementById("contentTitle").value = item.title;
+  document.getElementById("contentLink").value = item.link || "";
+  document.getElementById("contentDesc").value = item.desc || "";
   editingId = id;
+  
+  // تمرير للشكل
+  document.querySelector('.section:first-child').scrollIntoView({ behavior: 'smooth' });
+  showToast("✏️ عدّلي ثم اضغطي تحديث");
 }
 
 // 🟢 عرض المحتوى
-function render(){
-  const list = document.getElementById("list");
+function renderContent(){
+  const list = document.getElementById("contentList");
   list.innerHTML = "";
-  data.forEach(item => {
+  
+  if (contentData.length === 0) {
+    list.innerHTML = "<p style='color:var(--text-light);text-align:center;padding:20px;'>لا يوجد محتوى بعد</p>";
+    return;
+  }
+  
+  contentData.forEach(item => {
+    let mediaHtml = "";
+    if (item.type === "image") {
+      mediaHtml = `<img src="${item.link}" onerror="this.src='https://via.placeholder.com/300x200?text=Image'">`;
+    } else if (item.type === "video") {
+      mediaHtml = `<video controls><source src="${item.link}"></video>`;
+    }
+    
     list.innerHTML += `
       <div class="card">
-        <button class="del-btn" onclick="deleteItem('${item.id}')">×</button>
-        <button onclick="editItem('${item.id}')" style="position:absolute;top:10px;right:10px;background:#0ea5e9;">✏️</button>
-        <div class="badge">${item.type}</div>
+        <div class="actions">
+          <button class="edit-btn" onclick="editContent('${item.id}')">✏️</button>
+          <button class="delete-btn" onclick="deleteContent('${item.id}')">🗑️</button>
+        </div>
+        <span class="badge">${item.type === "image" ? "🖼️ صورة" : item.type === "video" ? "🎥 فيديو" : "📄 مقال"}</span>
         <h3>${item.title}</h3>
-        ${item.type === "image" ? '<img src="'+item.link+'" style="width:100%">' : ""}
-        ${item.type === "video" ? '<video controls style="width:100%"><source src="'+item.link+'"></video>' : ""}
-        ${item.desc ? '<p>'+item.desc+'</p>' : ""}
+        ${mediaHtml}
+        ${item.desc ? `<p>${item.desc}</p>` : ""}
       </div>
     `;
   });
 }
 
-// 🟢 تحميل الإعدادات الحالية في النموذج
+// 🟢 تحميل الإعدادات في النموذج
 async function loadSettingsForm() {
   try {
     const docSnap = await getDoc(doc(db, "settings_mona", "main"));
@@ -450,14 +675,13 @@ async function loadSettingsForm() {
     document.getElementById("setting_map_url").value = s.map_url || "";
     document.getElementById("setting_footer_text").value = s.footer_text || "";
     
-    // تحديث معاينة اللون
     updateColorPreview(s.primary_color || "#1d4ed8");
   } catch (err) {
-    console.warn("⚠️ Failed to load settings form:", err);
+    console.warn("⚠️ Failed to load settings:", err);
   }
 }
 
-// 🟢 حفظ الإعدادات في فايربيس
+// 🟢 حفظ الإعدادات
 window.saveSettings = async function() {
   const settings = {
     clinic_name: document.getElementById("setting_clinic_name").value,
@@ -480,9 +704,9 @@ window.saveSettings = async function() {
   
   try {
     await setDoc(doc(db, "settings_mona", "main"), settings, { merge: true });
-    alert("✅ تم حفظ الإعدادات بنجاح!\nافتحي الموقع الرئيسي واعملي ري فريش عشان تشوفي التغييرات.");
+    showToast("✅ تم حفظ الإعدادات! افتحي الموقع واعملي ري فريش.");
   } catch (err) {
-    alert("❌ خطأ في الحفظ: " + err.message);
+    showToast("❌ خطأ في الحفظ: " + err.message, "error");
   }
 };
 
@@ -494,14 +718,24 @@ document.getElementById("setting_primary_color").addEventListener("input", (e) =
   updateColorPreview(e.target.value);
 });
 
-// 🟢 تشغيل عند تحميل الصفحة
+// 🟢 إظهار/إخفاء حقل الرفع حسب النوع
+document.getElementById("contentType").addEventListener("change", (e) => {
+  const uploadGroup = document.getElementById("uploadGroup");
+  if (e.target.value === "image") {
+    uploadGroup.style.display = "block";
+  } else {
+    uploadGroup.style.display = "none";
+  }
+});
+
+// 🟢 تشغيل عند التحميل
 if (document.readyState === "loading") {
   document.addEventListener("DOMContentLoaded", () => {
-    loadData();
+    loadContent();
     loadSettingsForm();
   });
 } else {
-  loadData();
+  loadContent();
   loadSettingsForm();
 }
 </script>
