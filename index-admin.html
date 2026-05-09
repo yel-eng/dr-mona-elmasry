@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>لوحة التحكم</title>
+
+<style>
+
+body
+     :root { --main: #1a237e; 
+        --bg: #f4f7f6;
+      }
+  
+body { 
+        font-family: 'Segoe UI', 
+        sans-serif; background: 
+        var(--bg);
+        margin: 0; 
+        padding: 20px; 
+        overflow-x:hidden;
+        margin-right: 235px;
+       }
+
+      
+      //* MAIN */ 
+      .main-content{ margin-right:235px;
+                     padding:25px; 
+                     width:100%; }
+
+    h2{
+  margin-right:-25px;
+  margin-left:-25px;
+  padding:15px 25px;
+  color:#fff;
+  border-radius:0;
+   }
+     
+      
+      /* FORM */
+     input, textarea, select{
+  width:100%;
+  padding:14px 16px;
+  margin:10px 0;
+
+  border-radius:14px;
+  border:1px solid #e5e7eb;
+
+  background:#ffffff;
+
+  font-size:14px;
+  transition: all 0.25s ease;
+
+  box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+}
+
+/* Hover */
+input:hover, textarea:hover, select:hover{
+  border-color:#cbd5f5;
+}
+
+/* Focus (أهم حاجة) */
+input:focus, textarea:focus, select:focus{
+  border-color:#1d4ed8;
+  box-shadow:0 0 0 4px rgba(29,78,216,0.12);
+}
+
+/* Placeholder */
+input::placeholder, textarea::placeholder{
+  color:#94a3b8;
+}
+
+/* Select arrow تحسين */
+select{
+  appearance:none;
+  background-image: url("data:image/svg+xml,%3Csvg fill='%2364748b' height='20' viewBox='0 0 24 24' width='20' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;
+  background-position:left 12px center;
+  background-size:18px;
+  padding-left:40px;
+}
+
+/* Textarea شكل أحلى */
+textarea{
+  min-height:100px;
+  resize:none;
+} 
+
+label{
+  font-size:13px;
+  color:#64748b;
+  display:block;
+  margin-top:10px;
+}
+
+      
+      button{
+              background:#1d4ed8; 
+              padding:12px 18px; 
+              border:none; border-radius:10px; 
+              cursor:pointer; 
+              transition:0.3s; 
+             } 
+
+      
+      button:hover{
+                  transform:translateY(-2px); 
+                  background:#2563eb; 
+                  }
+      
+      /* GRID */ 
+      #list{ 
+             display:grid; 
+             grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); 
+             gap:15px;
+             margin-top:15px;
+            } 
+
+          /* الكارت */
+           .card{
+            background: linear-gradient(180deg,#ffffff,#f8fafc);
+            padding:20px;
+            border-radius:20px;
+            border:1px solid #eef2f7;
+            box-shadow:
+    0 4px 10px rgba(0,0,0,0.03),
+    0 15px 35px rgba(0,0,0,0.06);
+
+            transition: all 0.3s ease;
+            position:relative;
+            overflow:hidden;
+                }
+
+/* خط لامع فوق */
+.card::before{
+  content:"";
+  position:absolute;
+  top:0;
+  right:0;
+  width:100%;
+  height:4px;
+  background:linear-gradient(90deg,#1d4ed8,#38bdf8);
+  opacity:0;
+  transition:0.3s;
+}
+
+/* Hover */
+.card:hover{
+  transform:translateY(-10px) scale(1.01);
+  box-shadow:
+    0 10px 25px rgba(0,0,0,0.06),
+    0 25px 50px rgba(0,0,0,0.10);
+}
+
+.card:hover::before{
+  opacity:1;
+}
+
+/* العنوان */
+.card h3{
+  font-size:17px;
+  margin:12px 0;
+  color:#0f172a;
+  font-weight:600;
+}
+
+/* الوصف */
+.card p{
+  color:#64748b;
+  font-size:13px;
+  line-height:1.7;
+}
+
+/* الصور */
+.card img,
+.card video{
+  width:100%;
+  border-radius:14px;
+  margin-top:12px;
+  transition:0.3s;
+}
+
+/* تكبير خفيف عند hover */
+.card:hover img,
+.card:hover video{
+  transform:scale(1.03);
+}
+
+/* البادج */
+.badge{
+  display:inline-block;
+  padding:5px 12px;
+  font-size:12px;
+  border-radius:20px;
+  background:#e0f2fe;
+  color:#0369a1;
+  font-weight:500;
+   margin-right: 100px;
+}
+
+/* زرار الحذف */
+.del-btn{
+  position:absolute;
+  top:12px;
+  left:12px;
+  background:#ef4444;
+  border:none;
+  color:#fff;
+  border-radius:8px;
+  padding:6px 9px;
+  cursor:pointer;
+  font-size:12px;
+  transition:0.2s;
+}
+
+.del-btn:hover{
+  background:#dc2626;
+}
+
+/* زرار التعديل */
+.card button[onclick^="editItem"]{
+  position:absolute;
+  top:12px;
+  right:12px;
+  background:#0ea5e9;
+  border:none;
+  color:#fff;
+  border-radius:8px;
+  padding:6px 9px;
+  cursor:pointer;
+  font-size:12px;
+  transition:0.2s;
+}
+
+.card button[onclick^="editItem"]:hover{
+  background:#0284c7;
+}
+      /* CARD */
+   /*   .card{ background:#fff; 
+             padding:15px;
+             border-radius:15px; 
+             box-shadow:0 10px 25px rgba(0,0,0,0.06);
+             transition:0.3s; 
+             position:relative; 
+              }
+      
+      .card:hover{
+            transform:translateY(-5px);
+                 }
+     .card h3{
+  font-size:16px;
+  margin:10px 0;
+  color:#0f172a;
+}
+
+     .card h3{
+  font-size:16px;
+  margin:10px 0;
+  color:#0f172a;
+}
+     .card p{
+  color:#64748b;
+  font-size:13px;
+  line-height:1.6;
+}
+     .card img{
+  border-radius:12px;
+  margin-top:10px;
+}
+      */
+      /* TYPE BADGE */ 
+        /* .badge{ 
+               display:inline-block; 
+               padding:4px 10px; 
+               font-size:12px; 
+               border-radius:20px; 
+               background:#e0f2fe; 
+               color:#0369a1; 
+               margin-bottom:8px; 
+         }  */
+      
+      /* DELETE */ 
+         /*  .del-btn{
+                 position:absolute;
+                 top:10px; 
+                 left:10px; 
+                 background:#ef4444;
+                 border:none; 
+                 color:#fff; 
+                 border-radius:8px;
+                 padding:5px 8px; 
+                 cursor:pointer;
+                }  */
+      
+ /* NAVBAR عمودي */
+.side-nav {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 220px;
+  height: 100vh;
+  background: linear-gradient(180deg, #1a237e, #3949ab);
+  padding: 25px 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  z-index: 999;
+  display:flex;
+  flex-direction:column;
+}
+  
+/* اللوجو */
+.side-nav .logo {
+  color: #fff;
+  text-align: center;
+  margin-bottom: 20px;
+}
+  /* الصفحة الحالية */
+.side-nav a.active {
+  background: #fff;
+  color: #1a237e;
+  font-weight: bold;
+}
+
+/* disabled */
+.side-nav a.disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+/* اللينكات */
+.side-nav a {
+  text-decoration: none;
+  color: #fff;
+  padding: 12px;
+  border-radius: 10px;
+  transition: 0.3s;
+  font-size: 15px;
+}
+
+/* hover */
+.side-nav a:hover {
+  background: rgba(255,255,255,0.15);
+  transform: translateX(-5px);
+}
+
+
+</style>
+
+
+
+
+  
+</head>
+
+<body>
+ 
+  
+
+  <div class="side-nav">
+
+  <h2 class="logo">Admin</h2>
+
+  <a href="https://yel-eng.github.io/MediCare-Clinic/admin.html">
+    🏠 لوحة التحكم
+  </a>
+
+  <a href="https://yel-eng.github.io/MediCare-Clinic/index-admin.html">
+    📂 إدارة المحتوى
+  </a>
+
+  <a href="#" class="disabled">
+    🚧 قريباً
+  </a>
+
+</div>
+
+
+
+   <div class="main-content">
+
+<h2 style="background:linear-gradient(180deg,#1e3a8a,#1d4ed8);">
+  
+إضافة محتوى</h2>
+
+<select id="type">
+  <option value="article">مقال</option>
+  <option value="video">فيديو</option>
+  <option value="image">صورة</option>
+</select>
+        
+ <label>العنوان</label>
+<input id="title" placeholder="العنوان">
+
+        
+ <label>الرابط</label>
+<input id="link" placeholder="لينك الصورة أو الفيديو">
+
+        
+ <label>الوصف</label>
+<textarea id="desc" placeholder="الوصف (اختياري)"></textarea>
+
+<button onclick="addItem()">إضافة</button>
+
+<h2 style="background:linear-gradient(180deg,#1e3a8a,#1d4ed8);">
+  المحتوى الحالي
+</h2>
+  <div id="list">  
+
+ </div>   
+</div>
+  <script type="module">
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, updateDoc } 
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyA8FEgNeXAMZ1Sbg12zFCzwwxUD3sVl99o",
+  authDomain: "mydoctor-clinic.firebaseapp.com",
+  projectId: "mydoctor-clinic"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+let editingId = null;
+let data = [];
+
+// 🟢 تحميل البيانات
+async function loadData(){
+  const snapshot = await getDocs(collection(db, "content"));
+
+  data = [];
+
+  snapshot.forEach(docSnap=>{
+    data.push({ id: docSnap.id, ...docSnap.data() });
+  });
+
+  render();
+}
+
+// 🟢 إضافة / تعديل
+window.addItem = async function(){
+
+  const item = {
+    type: type.value,
+    title: title.value,
+    link: link.value,
+    desc: desc.value
+  };
+
+  if(editingId){
+    await updateDoc(doc(db, "content", editingId), item);
+    editingId = null;
+  }else{
+    await addDoc(collection(db, "content"), item);
+  }
+  const type = document.getElementById("type");
+const title = document.getElementById("title");
+const link = document.getElementById("link");
+const desc = document.getElementById("desc");
+  loadData();
+}
+
+// 🟢 حذف
+window.deleteItem = async function(id){
+  await deleteDoc(doc(db, "content", id));
+  loadData();
+}
+
+// 🟢 تعديل
+window.editItem = function(id){
+  const item = data.find(i => i.id === id);
+
+  type.value = item.type;
+  title.value = item.title;
+  link.value = item.link;
+  desc.value = item.desc;
+
+  editingId = id;
+}
+
+// 🟢 عرض
+function render(){
+  const list = document.getElementById("list");
+  list.innerHTML = "";
+
+  data.forEach(item=>{
+    list.innerHTML += `
+      <div class="card">
+
+        <button class="del-btn" onclick="deleteItem('${item.id}')">×</button>
+
+        <button onclick="editItem('${item.id}')"
+          style="position:absolute;top:10px;right:10px;background:#0ea5e9;">
+          ✏️
+        </button>
+
+        <div class="badge">${item.type}</div>
+
+        <h3>${item.title}</h3>
+
+        ${item.type === "image" ? `<img src="${item.link}" style="width:100%">` : ""}
+
+        ${item.type === "video" ? `
+          <video controls style="width:100%">
+            <source src="${item.link}">
+          </video>` : ""}
+
+        ${item.desc ? `<p>${item.desc}</p>` : ""}
+
+      </div>
+    `;
+  });
+}
+
+// تشغيل
+loadData();
+
+</script>
+
+</body>
+</html>
