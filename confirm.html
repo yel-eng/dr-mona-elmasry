@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+<meta charset="UTF-8">
+<title>Confirmation</title>
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<h2>تم الحجز بنجاح ✅</h2>
+
+<p id="data"></p>
+
+<script>
+document.getElementById("data").innerHTML =
+`
+${localStorage.getItem("name")}<br>
+${localStorage.getItem("phone")}<br>
+${localStorage.getItem("date")}<br>
+${localStorage.getItem("time")}
+`;
+</script>
+
+</body>
+</html>
