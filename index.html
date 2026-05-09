@@ -12,23 +12,27 @@
 body{background:var(--bg);color:var(--dark);transition:background 0.3s,color 0.3s;}
 .login-btn{position:absolute;top:20px;right:20px;z-index:999;background:linear-gradient(135deg,var(--primary),var(--primary-dark));color:#fff;border:none;padding:10px 20px;font-size:14px;border-radius:10px;cursor:pointer;transition:0.3s;text-decoration:none;}
 .hero{position:relative;padding:70px 8%;background:linear-gradient(135deg,#e0f2fe,#ffffff);min-height:90vh;display:flex;align-items:center;}
-.navbar{position:absolute;top:20px;left:50%;transform:translateX(-50%);background:#fff;padding:12px 20px;border-radius:50px;display:flex;gap:20px;box-shadow:0 10px 30px rgba(0,0,0,0.08);}
-.navbar a{text-decoration:none;color:var(--dark);font-weight:500;font-size:14px;}
+.navbar{position:absolute;top:20px;left:50%;transform:translateX(-50%);background:#fff;padding:12px 20px;border-radius:50px;display:flex;gap:20px;box-shadow:0 10px 30px rgba(0,0,0,0.08);flex-wrap:wrap;justify-content:center;}
+.navbar a{text-decoration:none;color:var(--dark);font-weight:500;font-size:14px;padding:5px 10px;}
 .hero-content{display:flex;width:100%;justify-content:space-between;align-items:center;gap:40px;flex-wrap:wrap;}
-.hero-text{flex:1;max-width:520px;}
+.hero-text{flex:1;max-width:520px;text-align:center;}
 .hero-text h1{font-size:42px;margin-bottom:10px;color:var(--primary);}
 .hero-text p{color:var(--muted);line-height:1.9;font-size:16px;margin-bottom:20px;}
 .hero-img{flex:1;display:flex;justify-content:center;}
 .hero-img img{width:280px;border-radius:20px;}
 .wa{position:fixed;bottom:20px;right:20px;background:#25d366;color:#fff;width:55px;height:55px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:24px;}
-.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:25px;padding:60px 8%;}
-.card{background:#fff;border-radius:20px;border:1px solid #eee;aspect-ratio:1/1;display:flex;align-items:center;justify-content:center;text-align:center;font-size:18px;font-weight:500;transition:0.3s;}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:25px;padding:60px 8%;}
+.card{background:#fff;border-radius:20px;border:1px solid #eee;aspect-ratio:1/1;display:flex;align-items:center;justify-content:center;text-align:center;font-size:18px;font-weight:500;transition:0.3s;flex-direction:column;padding:15px;}
+.card .icon{font-size:40px;margin-bottom:10px;}
 .card:hover{transform:translateY(-8px);box-shadow:0 20px 40px rgba(0,0,0,0.08);}
-.doctor{display:flex;align-items:center;justify-content:center;gap:30px;padding:60px 8%;}
-.doctor>div{flex:0.9;max-width:450px;}
+.doctor{display:flex;align-items:center;justify-content:center;gap:30px;padding:60px 8%;flex-wrap:wrap;}
+.doctor>div{flex:1;max-width:450px;}
 .doctor img{width:280px;border-radius:20px;}
-.gallery{display:flex;overflow-x:auto;gap:15px;padding:40px 8%;}
-.gallery img{width:250px;border-radius:15px;}
+.gallery{position:relative;padding:40px 8%;overflow:hidden;}
+.gallery-track{display:flex;gap:15px;animation:scroll 30s linear infinite;width:max-content;}
+.gallery-track:hover{animation-play-state:paused;}
+@keyframes scroll{0%{transform:translateX(0);}100%{transform:translateX(-50%);}}
+.gallery img{width:250px;border-radius:15px;flex-shrink:0;}
 .media{padding:50px 8%;}
 .media-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:15px;}
 .cta{margin:60px 8%;border-radius:25px;background:linear-gradient(135deg,var(--primary),var(--primary-dark));color:#fff;padding:40px;position:relative;overflow:hidden;}
@@ -42,11 +46,14 @@ body{background:var(--bg);color:var(--dark);transition:background 0.3s,color 0.3
 .contact{padding:50px 8%;}
 .contact-box{background:#fff;padding:20px;border-radius:15px;border:1px solid #eee;}
 .map{padding:40px 8%;}
+.map iframe{width:100%;height:350px;border-radius:20px;border:0;}
 footer{text-align:center;padding:20px;color:#64748b;}
 .book-btn{background:var(--primary);color:#fff;padding:12px 22px;border:none;border-radius:12px;font-size:15px;cursor:pointer;transition:0.3s;}
 .book-btn:hover{transform:translateY(-2px);box-shadow:0 10px 20px rgba(0,0,0,0.1);}
-@media(max-width:900px){.cards{grid-template-columns:repeat(2,1fr);}}
-@media(max-width:500px){.cards{grid-template-columns:1fr;}}
+/* إخفاء الأقسام */
+.section-hidden{display:none!important;}
+@media(max-width:900px){.cards{grid-template-columns:repeat(2,1fr);}.hero-content{flex-direction:column;text-align:center;}.doctor{flex-direction:column;}.cta-content{flex-direction:column;text-align:center;}}
+@media(max-width:500px){.cards{grid-template-columns:1fr;}.navbar{gap:10px;}}
 </style>
 </head>
 <body>
@@ -54,15 +61,8 @@ footer{text-align:center;padding:20px;color:#64748b;}
 <!-- HERO -->
 <section class="hero" id="hero-section" style="position:relative;min-height:90vh;display:flex;align-items:center;padding:70px 8%;background-size:cover;background-position:center;">
   <a href="login.html" class="login-btn">تسجيل الدخول</a>
-  <div class="navbar">
-    <a href="#">الرئيسية</a>
-    <a href="#doctor">عن الدكتور</a>
-    <a href="#media">المكتبة الطبية</a>
-    <a href="#contact">تواصل</a>
-  </div>
-  <!-- overlay شفاف يسمح بالتفاعل -->
+  <div class="navbar" id="navbar"></div>
   <div style="position:absolute;inset:0;background:rgba(255,255,255,0.80);pointer-events:none;z-index:1;"></div>
-  
   <div class="hero-content" style="position:relative;z-index:2;display:flex;justify-content:space-between;align-items:center;width:100%;gap:40px;flex-wrap:wrap;">
     <div class="hero-text" style="flex:1;max-width:520px;">
       <h1 style="font-size:42px;margin-bottom:10px;" data-setting="hero_title">ميديكال كلينك</h1>
@@ -78,11 +78,7 @@ footer{text-align:center;padding:20px;color:#64748b;}
 </section>
 
 <!-- CARDS -->
-<section class="cards">
-  <div class="card"><div><div style="font-size:40px;">⭐</div><h3 style="margin-top:10px;" data-setting="card1_title">مستوى خدمة عالي</h3></div></div>
-  <div class="card"><div><div style="font-size:40px;">🧠</div><h3 style="margin-top:10px;" data-setting="card2_title">أحدث تقنيات طبية</h3></div></div>
-  <div class="card"><div><div style="font-size:40px;">❤️</div><h3 style="margin-top:10px;" data-setting="card3_title">اهتمام شخصي بالمرضى</h3></div></div>
-</section>
+<section class="cards" id="cards-section"></section>
 
 <!-- DOCTOR -->
 <section class="doctor" id="doctor">
@@ -95,11 +91,8 @@ footer{text-align:center;padding:20px;color:#64748b;}
 </section>
 
 <!-- GALLERY -->
-<section class="gallery" id="gallery">
-  <img src="https://images.unsplash.com/photo-1588776814546-1ffcf47267a5">
-  <img src="https://images.unsplash.com/photo-1587351021759-3e566b6af7cc">
-  <img src="https://images.unsplash.com/photo-1588776814546-1ffcf47267a5">
-  <img src="https://images.unsplash.com/photo-1587351021759-3e566b6af7cc">
+<section class="gallery" id="gallery-section">
+  <div class="gallery-track" id="gallery-track"></div>
 </section>
 
 <!-- MEDIA -->
@@ -111,7 +104,7 @@ footer{text-align:center;padding:20px;color:#64748b;}
 </section>
 
 <!-- CTA -->
-<div class="cta">
+<div class="cta" id="cta-section">
   <div class="cta-content">
     <div class="cta-text">
       <h2 data-setting="cta_title">استشارة مجانية لأول مرة 🎯</h2>
@@ -135,10 +128,8 @@ footer{text-align:center;padding:20px;color:#64748b;}
 </section>
 
 <!-- MAP -->
-<section class="map">
-  <div style="width:100%;height:350px;border-radius:20px;overflow:hidden;box-shadow:0 10px 30px rgba(0,0,0,0.08);">
-    <iframe id="map-frame" src="" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
-  </div>
+<section class="map" id="map-section">
+  <iframe id="map-frame" src="" allowfullscreen="" loading="lazy"></iframe>
 </section>
 
 <!-- FOOTER -->
@@ -147,7 +138,7 @@ footer{text-align:center;padding:20px;color:#64748b;}
 <!-- WHATSAPP FLOATING -->
 <a class="wa" id="wa-float" href=""><i class="fab fa-whatsapp"></i></a>
 
-<!-- ✅ كود تحميل الإعدادات (بدون أي تحقق من الدخول) -->
+<!-- ✅ كود تحميل الإعدادات -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getFirestore, doc, getDoc, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
@@ -166,47 +157,37 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-// دالة تحميل وتطبيق الإعدادات (بدون تحقق من الدخول)
 async function loadAndApplySettings() {
   try {
     const settingsDoc = await getDoc(doc(db, "settings_mona", "main"));
     if (!settingsDoc.exists()) { applyDefaults(); return; }
     const s = settingsDoc.data();
     
-    // 🎨 تطبيق الألوان
-    if (s.primary_color) {
-      document.documentElement.style.setProperty('--primary', s.primary_color);
-      document.documentElement.style.setProperty('--primary-dark', s.primary_color + 'dd');
-    }
+    // 🎨 الألوان
+    if (s.primary_color) { document.documentElement.style.setProperty('--primary', s.primary_color); document.documentElement.style.setProperty('--primary-dark', s.primary_color + 'dd'); }
     if (s.bg_color) document.documentElement.style.setProperty('--bg', s.bg_color);
     
-    // 🏷️ تطبيق النصوص
-    if (s.clinic_name) {
-      document.title = s.clinic_name + " - نظام الحجز";
-      document.querySelectorAll('[data-setting="clinic_name"]').forEach(el => el.textContent = s.clinic_name);
-    }
+    // 🏷️ النصوص
+    if (s.clinic_name) { document.title = s.clinic_name + " - نظام الحجز"; document.querySelectorAll('[data-setting="clinic_name"]').forEach(el => el.textContent = s.clinic_name); }
     if (s.doctor_name) document.querySelectorAll('[data-setting="doctor_name"]').forEach(el => el.textContent = s.doctor_name);
     if (s.doctor_title) document.querySelectorAll('[data-setting="doctor_title"]').forEach(el => el.textContent = s.doctor_title);
-    if (s.hero_title) document.querySelector('[data-setting="hero_title"]').textContent = s.hero_title;
-    if (s.hero_desc) document.querySelector('[data-setting="hero_desc"]').textContent = s.hero_desc;
-    if (s.about_heading) document.querySelector('[data-setting="about_heading"]').textContent = s.about_heading;
-    if (s.about_text) document.querySelector('[data-setting="about_text"]').textContent = s.about_text;
-    if (s.card1_title) document.querySelector('[data-setting="card1_title"]').textContent = s.card1_title;
-    if (s.card2_title) document.querySelector('[data-setting="card2_title"]').textContent = s.card2_title;
-    if (s.card3_title) document.querySelector('[data-setting="card3_title"]').textContent = s.card3_title;
-    if (s.cta_title) document.querySelector('[data-setting="cta_title"]').textContent = s.cta_title;
-    if (s.cta_desc) document.querySelector('[data-setting="cta_desc"]').textContent = s.cta_desc;
-    if (s.cta_badge) document.querySelector('[data-setting="cta_badge"]').textContent = s.cta_badge;
-    if (s.working_hours) document.querySelector('[data-setting="working_hours"]').innerHTML = s.working_hours;
-    if (s.address) document.querySelector('[data-setting="address"]').textContent = s.address;
-    if (s.contact_note) document.querySelector('[data-setting="contact_note"]').textContent = s.contact_note;
+    if (s.hero_title) document.querySelector('[data-setting="hero_title"]')?.textContent = s.hero_title;
+    if (s.hero_desc) document.querySelector('[data-setting="hero_desc"]')?.textContent = s.hero_desc;
+    if (s.about_heading) document.querySelector('[data-setting="about_heading"]')?.textContent = s.about_heading;
+    if (s.about_text) document.querySelector('[data-setting="about_text"]')?.textContent = s.about_text;
+    if (s.cta_title) document.querySelector('[data-setting="cta_title"]')?.textContent = s.cta.title || s.cta_title;
+    if (s.cta_desc) document.querySelector('[data-setting="cta_desc"]')?.textContent = s.cta.desc || s.cta_desc;
+    if (s.working_hours) document.querySelector('[data-setting="working_hours"]')?.innerHTML = s.cta.working_hours || s.working_hours;
+    if (s.cta_badge) document.querySelector('[data-setting="cta_badge"]')?.textContent = s.cta.badge || s.cta_badge;
+    if (s.address) document.querySelector('[data-setting="address"]')?.textContent = s.address;
+    if (s.contact_note) document.querySelector('[data-setting="contact_note"]')?.textContent = s.contact_note;
     if (s.footer_text) document.getElementById('footer-text').textContent = s.footer_text;
     
-    // 🖼️ تطبيق الصور
+    // 🖼️ الصور
     if (s.hero_image) document.getElementById('hero-image').src = s.hero_image;
     if (s.doctor_image) document.getElementById('doctor-image').src = s.doctor_image;
     
-    // 📞 تطبيق أرقام التواصل
+    // 📞 أرقام التواصل
     if (s.phone_number) document.getElementById('phone-link').href = "tel:" + s.phone_number;
     if (s.whatsapp_number) {
       const waNum = s.whatsapp_number.replace(/^0+/,'').replace(/\s/g,'');
@@ -217,16 +198,54 @@ async function loadAndApplySettings() {
     if (s.map_url) document.getElementById('map-frame').src = s.map_url;
     if (s.hero_bg) {
       const heroSection = document.getElementById('hero-section');
-      if (heroSection) {
-        heroSection.style.backgroundImage = "url('" + s.hero_bg + "')";
-        heroSection.style.backgroundSize = "cover";
-        heroSection.style.backgroundPosition = "center";
-      }
+      if (heroSection) { heroSection.style.backgroundImage = "url('" + s.hero_bg + "')"; heroSection.style.backgroundSize = "cover"; heroSection.style.backgroundPosition = "center"; }
     }
-  } catch (err) {
-    console.warn("⚠️ Failed to load settings:", err);
-    applyDefaults();
-  }
+    
+    // 🔗 الناف بار
+    if (s.navbar_links?.length) {
+      const navbar = document.getElementById('navbar');
+      navbar.innerHTML = "";
+      s.navbar_links.filter(l => l.visible).forEach(link => {
+        navbar.innerHTML += `<a href="${link.href}">${link.text}</a>`;
+      });
+    }
+    
+    // 🃏 الكروت
+    if (s.cards?.length) {
+      const cardsSection = document.getElementById('cards-section');
+      cardsSection.innerHTML = "";
+      s.cards.filter(c => c.visible).forEach(card => {
+        cardsSection.innerHTML += `<div class="card"><div class="icon">${card.icon}</div><h3>${card.title}</h3></div>`;
+      });
+    }
+    
+    // 🖼️ الجاليري مع تمرير لا نهائي
+    if (s.gallery_images?.length) {
+      const track = document.getElementById('gallery-track');
+      // نكرر الصور عشان التمرير اللا نهائي يكون سلس
+      const images = s.gallery_images.map(url => `<img src="${url}" onerror="this.src='https://via.placeholder.com/250x200?text=Image'">`).join('');
+      track.innerHTML = images + images; // نكرر عشان الـ infinite scroll
+      if (s.gallery_auto_scroll !== false) { track.style.animation = 'scroll 40s linear infinite'; }
+      else { track.style.animation = 'none'; track.style.overflowX = 'auto'; track.style.padding = '10px 0'; }
+    }
+    
+    // 🎯 قسم الاستشارات
+    if (s.cta?.visible === false) document.getElementById('cta-section').classList.add('section-hidden');
+    
+    // 👁️ إخفاء الأقسام
+    if (s.sections) {
+      if (s.sections.hero === false) document.getElementById('hero-section').classList.add('section-hidden');
+      if (s.sections.cards === false) document.getElementById('cards-section').classList.add('section-hidden');
+      if (s.sections.doctor === false) document.getElementById('doctor').classList.add('section-hidden');
+      if (s.sections.gallery === false) document.getElementById('gallery-section').classList.add('section-hidden');
+      if (s.sections.media === false) document.getElementById('media').classList.add('section-hidden');
+      if (s.sections.cta === false) document.getElementById('cta-section').classList.add('section-hidden');
+      if (s.sections.contact === false) document.getElementById('contact').classList.add('section-hidden');
+      if (s.sections.map === false) document.getElementById('map-section').classList.add('section-hidden');
+      if (s.sections.footer === false) document.getElementById('footer-text').closest('footer')?.classList.add('section-hidden');
+    }
+    
+  } catch (err) { console.warn("⚠️ Failed to load settings:", err); applyDefaults(); }
 }
 
 function applyDefaults() {
@@ -238,9 +257,15 @@ function applyDefaults() {
   document.getElementById('whatsapp-link').href = "https://wa.me/201211538334";
   document.getElementById('wa-float').href = "https://wa.me/201211538334";
   document.getElementById('map-frame').src = "https://www.google.com/maps?q=alexandria+egypt&output=embed";
+  // Navbar default
+  const navbar = document.getElementById('navbar');
+  navbar.innerHTML = `<a href="#">الرئيسية</a><a href="#doctor">عن الدكتور</a><a href="#media">المكتبة الطبية</a><a href="#contact">تواصل</a>`;
+  // Cards default
+  const cardsSection = document.getElementById('cards-section');
+  cardsSection.innerHTML = `<div class="card"><div class="icon">⭐</div><h3>مستوى خدمة عالي</h3></div><div class="card"><div class="icon">🧠</div><h3>أحدث تقنيات طبية</h3></div><div class="card"><div class="icon">❤️</div><h3>اهتمام شخصي بالمرضى</h3></div>`;
 }
 
-// تحميل المحتوى من كوليكشن content_mona
+// تحميل المحتوى من content_mona
 async function loadMediaContent() {
   try {
     const snapshot = await getDocs(collection(db, "content_mona"));
@@ -257,7 +282,6 @@ async function loadMediaContent() {
   } catch (err) { console.warn("⚠️ Failed to load media content:", err); }
 }
 
-// تشغيل الدوال بعد تحميل الصفحة (بدون أي تحقق من الدخول)
 if (document.readyState === "loading") {
   document.addEventListener("DOMContentLoaded", () => { loadAndApplySettings(); loadMediaContent(); });
 } else { loadAndApplySettings(); loadMediaContent(); }
