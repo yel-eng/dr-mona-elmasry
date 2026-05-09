@@ -599,6 +599,16 @@ if (document.readyState === "loading") {
   loadAndApplySettings();
   loadMediaContent();
 }
+
+  // 🎨 تطبيق خلفية الهيدر
+if (s.hero_bg) {
+  const heroSection = document.getElementById('hero-section');
+  if (heroSection) {
+    heroSection.style.backgroundImage = "url('" + s.hero_bg + "')";
+    heroSection.style.backgroundSize = "cover";
+    heroSection.style.backgroundPosition = "center";
+  }
+}
 </script>
 </body>
 </html>
