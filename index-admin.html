@@ -18,7 +18,7 @@ body {
   padding: 20px;
 }
 
-/* Sidebar - ثابت على اليمين للكمبيوتر، يختفي في الموبايل */
+/* Sidebar */
 .side-nav {
   position: fixed;
   top: 0;
@@ -41,7 +41,7 @@ body {
 
 /* Main Content */
 .main-content { 
-  margin-right: 260px; /* مساحة للسايدبار */
+  margin-right: 260px; 
   padding: 20px;
   max-width: 1200px;
 }
@@ -235,6 +235,8 @@ body {
   font-size: 20px;
   cursor: pointer;
   box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  align-items: center;
+  justify-content: center;
 }
 
 /* Toast Notification */
@@ -259,39 +261,33 @@ body {
 .toast.success { background: var(--success); }
 .toast.error { background: var(--danger); }
 
+/* Preview Image */
+.preview-box {
+  margin-top: 10px;
+  text-align: center;
+  display: none;
+}
+.preview-box img {
+  max-width: 100%;
+  max-height: 150px;
+  border-radius: 8px;
+  border: 1px solid #eee;
+}
+
 /* Responsive Design */
 @media (max-width: 900px) {
-  .side-nav {
-    transform: translateX(100%); /* إخفاء السايدبار يمين */
-  }
-  .side-nav.open {
-    transform: translateX(0); /* إظهار */
-  }
-  .main-content {
-    margin-right: 0;
-    padding-top: 70px; /* مساحة للزر العلوي */
-  }
-  .menu-toggle {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  .settings-grid {
-    grid-template-columns: 1fr;
-  }
+  .side-nav { transform: translateX(100%); }
+  .side-nav.open { transform: translateX(0); }
+  .main-content { margin-right: 0; padding-top: 70px; }
+  .menu-toggle { display: flex; }
+  .settings-grid { grid-template-columns: 1fr; }
 }
 
 @media (max-width: 500px) {
   body { padding: 12px; }
   .section { padding: 20px 15px; }
-  .content-grid {
-    grid-template-columns: 1fr;
-  }
-  .card .actions {
-    position: static;
-    margin-top: 10px;
-    justify-content: flex-end;
-  }
+  .content-grid { grid-template-columns: 1fr; }
+  .card .actions { position: static; margin-top: 10px; justify-content: flex-end; }
 }
 </style>
 </head>
@@ -397,12 +393,28 @@ body {
         <label>وصف الهيدر</label>
         <textarea id="setting_hero_desc" placeholder="رعاية طبية بثقة..."></textarea>
       </div>
-      <div class="form-group">
-        <label>صورة الهيدر (رابط أو ارفعيها)</label>
-        <input type="url" id="setting_hero_image" placeholder="https://...">
+      
+      <!-- 🆕 حقل صورة الغلاف للهيرو (مع رفع مباشر) -->
+      <div class="form-group" style="grid-column: span 2;">
+        <label>🖼️ صورة الغلاف للهيرو (خلفية القسم الأول)</label>
+        <div style="margin-bottom:10px;">
+          <label style="font-size:13px;color:var(--text-light);">رفع صورة جديدة:</label>
+          <input type="file" id="heroBgUpload" accept="image/*" style="padding:8px;margin-top:5px;">
+          <div class="upload-progress" id="heroBgProgress">
+            <span style="font-size:12px;">جاري رفع صورة الغلاف...</span>
+            <div class="progress-bar"><div class="progress-fill" id="heroBgFill"></div></div>
+          </div>
+        </div>
+        <label style="font-size:13px;color:var(--text-light);">أو استخدمي رابط صورة:</label>
+        <input type="url" id="setting_hero_bg" placeholder="https://.../cover.jpg">
+        <div class="preview-box" id="heroBgPreviewBox">
+          <span style="font-size:12px;color:var(--text-light);">معاينة:</span><br>
+          <img id="heroBgPreviewImg" src="" style="max-width:100%;max-height:100px;border-radius:8px;margin-top:5px;">
+        </div>
       </div>
+      
       <div class="form-group">
-        <label>صورة الدكتور (رابط أو ارفعيها)</label>
+        <label>صورة الدكتور (رابط)</label>
         <input type="url" id="setting_doctor_image" placeholder="https://...">
       </div>
       <div class="form-group" style="grid-column: span 2;">
@@ -445,7 +457,7 @@ body {
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, updateDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, updateDoc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
 import { getAuth, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
@@ -507,30 +519,19 @@ async function loadContent(){
   }
 }
 
-// 🟢 رفع صورة لـ Firebase Storage
-async function uploadImage(file) {
+// 🟢 رفع صورة عامة لـ Firebase Storage
+async function uploadImage(file, path) {
   return new Promise((resolve, reject) => {
-    const storageRef = ref(storage, 'clinic_images/' + Date.now() + '_' + file.name);
+    const storageRef = ref(storage, path + '/' + Date.now() + '_' + file.name);
     const uploadTask = uploadBytesResumable(storageRef, file);
-    
-    const progressEl = document.getElementById('uploadProgress');
-    const fillEl = document.getElementById('progressFill');
-    progressEl.classList.add('show');
     
     uploadTask.on('state_changed',
       (snapshot) => {
-        const percent = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
-        fillEl.style.width = percent + '%';
+        // يمكن إضافة تحديث للـ progress bar هنا إذا لزم
       },
-      (error) => {
-        progressEl.classList.remove('show');
-        reject(error);
-      },
+      (error) => reject(error),
       () => {
-        getDownloadURL(uploadTask.snapshot.ref).then((url) => {
-          progressEl.classList.remove('show');
-          resolve(url);
-        });
+        getDownloadURL(uploadTask.snapshot.ref).then((url) => resolve(url));
       }
     );
   });
@@ -544,10 +545,7 @@ window.addContent = async function(){
   const desc = document.getElementById("contentDesc").value.trim();
   const fileInput = document.getElementById("imageUpload");
   
-  if (!title) {
-    showToast("⚠️ يرجى إدخال عنوان", "error");
-    return;
-  }
+  if (!title) { showToast("⚠️ يرجى إدخال عنوان", "error"); return; }
   
   let finalLink = linkInput;
   
@@ -555,7 +553,7 @@ window.addContent = async function(){
   if (type === "image" && fileInput.files[0]) {
     try {
       showToast("📤 جاري رفع الصورة...");
-      finalLink = await uploadImage(fileInput.files[0]);
+      finalLink = await uploadImage(fileInput.files[0], 'clinic_images');
       showToast("✅ تم رفع الصورة");
     } catch (err) {
       showToast("❌ فشل رفع الصورة: " + err.message, "error");
@@ -613,7 +611,6 @@ window.editContent = function(id){
   document.getElementById("contentDesc").value = item.desc || "";
   editingId = id;
   
-  // تمرير للشكل
   document.querySelector('.section:first-child').scrollIntoView({ behavior: 'smooth' });
   showToast("✏️ عدّلي ثم اضغطي تحديث");
 }
@@ -665,7 +662,7 @@ async function loadSettingsForm() {
     document.getElementById("setting_bg_color").value = s.bg_color || "#f8fafc";
     document.getElementById("setting_hero_title").value = s.hero_title || "";
     document.getElementById("setting_hero_desc").value = s.hero_desc || "";
-    document.getElementById("setting_hero_image").value = s.hero_image || "";
+    document.getElementById("setting_hero_bg").value = s.hero_bg || "";
     document.getElementById("setting_doctor_image").value = s.doctor_image || "";
     document.getElementById("setting_about_text").value = s.about_text || "";
     document.getElementById("setting_whatsapp_number").value = s.whatsapp_number || "";
@@ -676,13 +673,42 @@ async function loadSettingsForm() {
     document.getElementById("setting_footer_text").value = s.footer_text || "";
     
     updateColorPreview(s.primary_color || "#1d4ed8");
+    
+    // عرض معاينة لصورة الغلاف لو موجودة
+    if (s.hero_bg) {
+      const previewBox = document.getElementById("heroBgPreviewBox");
+      const previewImg = document.getElementById("heroBgPreviewImg");
+      previewImg.src = s.hero_bg;
+      previewBox.style.display = "block";
+    }
   } catch (err) {
     console.warn("⚠️ Failed to load settings:", err);
   }
 }
 
-// 🟢 حفظ الإعدادات
+// 🟢 حفظ الإعدادات (مع دعم رفع صورة الغلاف)
 window.saveSettings = async function() {
+  // أولاً: نتحقق لو في صورة غلاف مرفوعة جديدة
+  const heroBgFile = document.getElementById('heroBgUpload').files[0];
+  let heroBgUrl = document.getElementById('setting_hero_bg').value.trim();
+  
+  if (heroBgFile) {
+    try {
+      showToast("📤 جاري رفع صورة الغلاف...");
+      const progressEl = document.getElementById('heroBgProgress');
+      const fillEl = document.getElementById('heroBgFill');
+      progressEl.classList.add('show');
+      
+      heroBgUrl = await uploadImage(heroBgFile, 'clinic_covers');
+      
+      progressEl.classList.remove('show');
+      showToast("✅ تم رفع صورة الغلاف");
+    } catch (err) {
+      showToast("❌ فشل رفع صورة الغلاف: " + err.message, "error");
+      return;
+    }
+  }
+  
   const settings = {
     clinic_name: document.getElementById("setting_clinic_name").value,
     doctor_name: document.getElementById("setting_doctor_name").value,
@@ -691,6 +717,7 @@ window.saveSettings = async function() {
     bg_color: document.getElementById("setting_bg_color").value,
     hero_title: document.getElementById("setting_hero_title").value,
     hero_desc: document.getElementById("setting_hero_desc").value,
+    hero_bg: heroBgUrl,  // ← الحقل الجديد
     hero_image: document.getElementById("setting_hero_image").value,
     doctor_image: document.getElementById("setting_doctor_image").value,
     about_text: document.getElementById("setting_about_text").value,
@@ -725,6 +752,21 @@ document.getElementById("contentType").addEventListener("change", (e) => {
     uploadGroup.style.display = "block";
   } else {
     uploadGroup.style.display = "none";
+  }
+});
+
+// 🟢 معاينة فورية لصورة الغلاف عند الاختيار
+document.getElementById('heroBgUpload').addEventListener('change', function(e) {
+  const file = e.target.files[0];
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = function(evt) {
+      const previewBox = document.getElementById("heroBgPreviewBox");
+      const previewImg = document.getElementById("heroBgPreviewImg");
+      previewImg.src = evt.target.result;
+      previewBox.style.display = "block";
+    };
+    reader.readAsDataURL(file);
   }
 });
 
