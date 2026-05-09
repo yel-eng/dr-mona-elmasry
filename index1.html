@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>العيادة </title>
+
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+
+:root{
+  --primary:#1d4ed8;
+  --dark:#0f172a;
+  --bg:#f8fafc;
+  --card:#ffffff;
+  --muted:#64748b;
+}
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:'Tajawal',sans-serif;
+}
+
+body{
+  background:var(--bg);
+  color:var(--dark);
+}
+.login-btn {
+  position: absolute;
+  top: 20px;
+  right: 20px; /* عشان RTL */
+  z-index: 999;
+
+  background: linear-gradient(135deg, #1a237e, #3949ab);
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  font-size: 14px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+/* HERO */
+.hero{
+  position:relative;
+  padding:70px 8%;
+  background:linear-gradient(135deg,#e0f2fe,#ffffff);
+  min-height:90vh;
+  display:flex;
+  align-items:center;
+}
+.hero-content{
+  display:flex;
+  justify-content:center; /* يوسّط العناصر */
+  align-items:center;
+}
+/* NAV inside hero */
+.navbar{
+  position:absolute;
+  top:20px;
+  left:50%;
+  transform:translateX(-50%);
+  background:#fff;
+  padding:12px 20px;
+  border-radius:50px;
+  display:flex;
+  gap:20px;
+  box-shadow:0 10px 30px rgba(0,0,0,0.08);
+}
+
+.navbar a{
+  text-decoration:none;
+  color:var(--dark);
+  font-weight:500;
+  font-size:14px;
+}
+
+.hero-content{
+  display:flex;
+  width:100%;
+  justify-content:space-between;
+  align-items:left;
+  flex-wrap:wrap;
+}
+
+.hero-text{
+  flex:0.8;
+  max-width:500px;
+  margin-right:70px; /* زقيه لليمين */
+}
+
+.hero-text h1{
+  font-size:42px;
+}
+
+.hero-text p{
+  color:var(--muted);
+  margin-top:10px;
+  line-height:1.8;
+}
+
+.hero-img{
+  flex:1;
+  text-align:left;
+}
+
+.hero-img img{
+  width:320px;
+  border-radius:20px;
+}
+
+/* WA ICON */
+.wa{
+  position:fixed;
+  bottom:20px;
+  right:20px;
+  background:#25d366;
+  color:#fff;
+  width:55px;
+  height:55px;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:24px;
+}
+
+/* CARDS */
+.cards{
+  display:grid;
+
+  /* 3 كروت كبار في الصف */
+  grid-template-columns: repeat(3, 1fr);
+
+  gap:25px;
+  padding:60px 8%;
+}
+
+/* CARDS */
+.cards{
+  display:grid;
+
+  /* 3 كروت كبار في الصف */
+  grid-template-columns: repeat(3, 1fr);
+
+  gap:25px;
+  padding:60px 8%;
+}
+
+
+.card{
+  background:#fff;
+  border-radius:20px;
+  border:1px solid #eee;
+
+  /* مربعة */
+  aspect-ratio:1 / 1;
+
+  /* توسيط المحتوى */
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+
+  font-size:18px;
+  font-weight:500;
+  transition:0.3s;
+}
+
+/* تأثير فخم */
+.card:hover{
+  transform:translateY(-8px);
+  box-shadow:0 20px 40px rgba(0,0,0,0.08);
+}
+
+
+/* DOCTOR SECTION */
+
+.doctor{
+  display:flex;
+  align-items:center;
+  justify-content:center; /* بدل space-between */
+  gap:30px;
+  padding:60px 8%;
+}
+
+/* النص */
+.doctor > div{
+  flex:0.9;
+  max-width:450px;
+}
+
+/* الصورة */
+.doctor img{
+  width:280px;
+  border-radius:20px;
+}
+
+  
+.doctor > div{
+  flex:1;
+  max-width:500px;
+  text-align:right;
+  margin-right:40px; /* دي الحركة المهمة */
+}
+/* GALLERY */
+.gallery{
+  display:flex;
+  overflow-x:auto;
+  gap:15px;
+  padding:40px 8%;
+}
+
+.gallery img{
+  width:250px;
+  border-radius:15px;
+}
+
+/* MEDIA */
+.media{
+  padding:50px 8%;
+}
+
+.media-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+  gap:15px;
+}
+
+.cta{
+  margin:60px 8%;
+  border-radius:25px;
+  background:linear-gradient(135deg,#1d4ed8,#2563eb);
+  color:#fff;
+  padding:40px;
+  position:relative;
+  overflow:hidden;
+}
+
+/* توزيع داخلي */
+.cta-content{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:20px;
+}
+
+/* النص */
+.cta-text h2{
+  font-size:28px;
+  margin-bottom:10px;
+}
+
+.cta-text p{
+  opacity:0.9;
+  line-height:1.8;
+}
+
+/* الأزرار */
+.cta-buttons{
+  margin-top:20px;
+  display:flex;
+  gap:15px;
+  flex-wrap:wrap;
+}
+
+.call-btn{
+  background:#fff;
+  color:#1d4ed8;
+  padding:12px 20px;
+  border-radius:12px;
+  text-decoration:none;
+  font-weight:500;
+}
+
+.wa-btn{
+  background:#25d366;
+  color:#fff;
+  padding:12px 20px;
+  border-radius:12px;
+  text-decoration:none;
+  font-weight:500;
+}
+
+/* البادج */
+.cta-badge{
+  background:#fff;
+  color:#1d4ed8;
+  padding:10px 18px;
+  border-radius:50px;
+  font-weight:600;
+}
+
+/* موبايل */
+@media(max-width:600px){
+  .cta-content{
+    flex-direction:column;
+    text-align:center;
+  }
+}
+/* CONTACT */
+.contact{
+  padding:50px 8%;
+}
+
+.contact-box{
+  background:#fff;
+  padding:20px;
+  border-radius:15px;
+  border:1px solid #eee;
+}
+
+  .hero-text{
+  flex:0.8;
+  margin:0 auto;      /* ده اللي بيخليه في النص */
+  text-align:center;  /* يخلي الكلام نفسه متوسّط */
+}
+
+  .hero-img{
+  flex:0.8;
+  text-align:center;
+}
+  
+/* MAP */
+.map{
+  padding:40px 8%;
+}
+
+/* FOOTER */
+footer{
+  text-align:center;
+  padding:20px;
+  color:#64748b;
+}
+.wa-btn{
+  background:#25d366;
+  color:#fff;
+  padding:14px 20px;
+  border-radius:12px;
+  text-decoration:none;
+}
+  .book-btn{
+  background:#1d4ed8;
+  color:#fff;
+  padding:12px 22px;
+  border:none;
+  border-radius:12px;
+  font-size:15px;
+  cursor:pointer;
+  transition:0.3s;
+}
+
+.book-btn:hover{
+  transform:translateY(-2px);
+  box-shadow:0 10px 20px rgba(0,0,0,0.1);
+}  
+  @media(max-width:900px){
+  .cards{
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media(max-width:500px){
+  .cards{
+    grid-template-columns: 1fr;
+  }
+}
+</style>
+</head>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+<body>
+
+<!-- HERO -->
+<section class="hero" style="
+  position:relative;
+  background:url('https://images.unsplash.com/photo-1586773860418-d37222d8fce3?auto=format&fit=crop&w=1600&q=80') center/cover no-repeat;
+  min-height:90vh;
+  display:flex;
+  align-items:center;
+  padding:70px 8%;
+">
+
+  <a href="https://yel-eng.github.io/MediCare-Clinic/login.html" class="login-btn">
+  تسجيل الدخول
+</a>
+  
+<!-- NAV -->
+  <div class="navbar">
+    <a href="#">الرئيسية</a>
+    <a href="#doctor">عن الدكتور</a>
+    <a href="#media">المكتبة الطبية</a>
+    <a href="#contact">تواصل</a>
+  </div>
+  
+  <!-- overlay فاتح -->
+  <div style="
+    position:absolute;
+    inset:0;
+    background:rgba(255,255,255,0.80);
+  ">
+    
+  </div>
+  
+
+  <div class="hero-content" style="
+    position:relative;
+    z-index:2;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    width:100%;
+    gap:40px;
+    flex-wrap:wrap;
+  ">
+  
+    <!-- TEXT -->
+    <div class="hero-text" style="
+      flex:1;
+      max-width:520px;
+    ">
+
+      <h1 style="font-size:42px; margin-bottom:10px;">
+        ميديكال كلينك
+      </h1>
+
+      <p style="
+        color:#475569;
+        line-height:1.9;
+        font-size:16px;
+        margin-bottom:20px;
+      ">
+        رعاية طبية بثقة وتنظيم احترافي يضمن لك تجربة مريحة بدون زحام  
+        باستخدام نظام ذكي لإدارة المواعيد بدقة
+      </p>
+
+      <!-- BUTTON -->
+      <button onclick="location.href='https://yel-eng.github.io/MediCare-Clinic/booking.html'"
+        style=" background:#1d4ed8; color:#fff; padding:14px 26px; border:none; border-radius:12px; font-size:15px; cursor:pointer; transition:0.3s; " onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'" >
+      >
+        احجز الآن
+      </button>
+
+    </div>
+
+    <!-- IMAGE -->
+    <div class="hero-img" style="
+      flex:1;
+      display:flex;
+      justify-content:center;
+    ">
+
+      <div style="
+        background:#fff;
+        padding:10px;
+        border-radius:20px;
+        box-shadow:0 20px 40px rgba(0,0,0,0.08);
+      ">
+        <img src="https://i.pravatar.cc/320?img=12"
+          style="width:280px; border-radius:15px;">
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+  
+
+  
+    
+
+<!-- CARDS -->
+<section class="cards">
+
+  <div class="card">
+  <div>
+    <div style="font-size:40px;">⭐</div>
+    <h3 style="margin-top:10px;">مستوى خدمة عالي</h3>
+  </div>
+</div>
+
+  <div class="card">
+  <div>
+    <div style="font-size:40px;">🧠</div>
+    <h3 style="margin-top:10px;"> أحدث تقنيات طبية</h3>
+  </div>
+</div>
+
+<div class="card">
+  <div>
+    <div style="font-size:40px;">❤️</div>
+    <h3 style="margin-top:10px;"> اهتمام شخصي بالمرضى</h3>
+  </div>
+</div>
+
+</section>
+
+<!-- DOCTOR -->
+<section class="doctor" id="doctor">
+
+  <div>
+    <h2>عن الدكتور</h2>
+    <p>د/ حسني حسني - استشاري الباطنة</p>
+    <p style="color:#64748b;line-height:1.8;">
+      خبرة طويلة في التشخيص والعلاج باستخدام أحدث البروتوكولات الطبية.
+    </p>
+  </div>
+
+  <img src="https://i.pravatar.cc/320?img=12">
+
+</section>
+
+<!-- GALLERY -->
+<section class="gallery">
+  <img src="https://images.unsplash.com/photo-1588776814546-1ffcf47267a5">
+  <img src="https://images.unsplash.com/photo-1587351021759-3e566b6af7cc">
+  <img src="https://images.unsplash.com/photo-1588776814546-1ffcf47267a5">
+  <img src="https://images.unsplash.com/photo-1587351021759-3e566b6af7cc">
+</section>
+
+<!-- MEDIA -->
+<section class="media" id="media">
+
+<h2>المكتبة الطبية</h2>
+
+
+ <section class="media" id="media">
+
+<h2>المكتبة الطبية</h2>
+
+<h3>📸 صور</h3>
+<div class="media-grid" id="imagesContainer"></div>
+
+<h3>🎥 فيديوهات</h3>
+<div class="media-grid" id="videosContainer"></div>
+
+<h3>📄 مقالات</h3>
+<div class="media-grid" id="articlesContainer"></div>
+
+</section>
+
+</section>
+
+<div class="cta">
+
+  <div class="cta-content">
+
+    <div class="cta-text">
+      <h2>استشارة مجانية لأول مرة 🎯</h2>
+      <p>
+        احجز الآن – الأماكن محدودة جدًا هذا الشهر  
+        واستفد من تقييم طبي كامل بدون رسوم
+      </p
+
+        <p>
+مواعيد العمل طوال الاسبوع من 12 ص :5 مساءا  <br> متاح الاستشاره اون لاين 
+      </p>
+
+
+      <div class="cta-buttons">
+        <a href="tel:01211538334" class="call-btn">📞 اتصل الآن</a>
+
+        <a href="https://wa.me/201556614498" class="wa-btn">
+          <i class="fab fa-whatsapp"></i> واتساب
+        </a>
+      </div>
+
+    </div>
+
+    <div class="cta-badge">
+      🔥 عرض محدود
+    </div>
+
+  </div>
+
+</div>
+
+<!-- CONTACT -->
+<section class="contact" id="contact">
+
+<div class="contact-box">
+  <h2> : عنوانا</h2>
+  <p>وارقامنا / اتصال مباشر مع العيادة</p>
+</div>
+
+</section>
+
+<!-- MAP -->
+<section class="map">
+
+  <div style="
+    width:100%;
+    height:350px;
+    border-radius:20px;
+    overflow:hidden;
+    box-shadow:0 10px 30px rgba(0,0,0,0.08);
+  ">
+
+    <iframe 
+      src="https://www.google.com/maps?q=alexandria+egypt&output=embed"
+      width="100%" 
+      height="100%" 
+      style="border:0;" 
+      allowfullscreen=""
+      loading="lazy">
+    </iframe>
+
+  </div>
+
+</section>
+
+<!-- FOOTER -->
+<footer>
+  ميديكال كلينك - جميع الحقوق محفوظة
+</footer>
+
+<!-- WHATSAPP -->
+<a class="wa" href="https://wa.me/201211538334">
+<i class="fab fa-whatsapp"></i>
+</a>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getFirestore, collection, getDocs } 
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyA8FEgNeXAMZ1Sbg12zFCzwwxUD3sVl99o",
+  authDomain: "mydoctor-clinic.firebaseapp.com",
+  projectId: "mydoctor-clinic"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+// containers
+const imagesContainer = document.getElementById("imagesContainer");
+const videosContainer = document.getElementById("videosContainer");
+const articlesContainer = document.getElementById("articlesContainer");
+
+async function loadData() {
+  const snapshot = await getDocs(collection(db, "content"));
+
+  imagesContainer.innerHTML = "";
+  videosContainer.innerHTML = "";
+  articlesContainer.innerHTML = "";
+
+  snapshot.forEach((docSnap) => {
+    const item = docSnap.data();
+
+    if (item.type === "image") {
+      imagesContainer.innerHTML += `
+        <div class="card">
+          <img src="${item.link}" style="width:100%;border-radius:10px">
+        </div>
+      `;
+    }
+
+    if (item.type === "video") {
+      videosContainer.innerHTML += `
+        <div class="card">
+          <video controls style="width:100%">
+            <source src="${item.link}">
+          </video>
+        </div>
+      `;
+    }
+
+    if (item.type === "article") {
+      articlesContainer.innerHTML += `
+        <div class="card">
+          <h3>${item.title}</h3>
+          <p>${item.desc}</p>
+        </div>
+      `;
+    }
+  });
+}
+
+loadData();
+</script>
+</body>
+</html>
