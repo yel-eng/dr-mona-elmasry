@@ -2,74 +2,53 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<title>لوحة التحكم</title>
+<title>لوحة التحكم - إدارة الموقع</title>
 
 <style>
 
-body
-     :root { --main: #1a237e; 
-        --bg: #f4f7f6;
-      }
-  
+:root { --main: #1a237e; --bg: #f4f7f6; }
+
 body { 
-        font-family: 'Segoe UI', 
-        sans-serif; background: 
-        var(--bg);
-        margin: 0; 
-        padding: 20px; 
-        overflow-x:hidden;
-        margin-right: 235px;
-       }
+  font-family: 'Segoe UI', sans-serif; 
+  background: var(--bg);
+  margin: 0; 
+  padding: 20px; 
+  overflow-x:hidden;
+  margin-right: 235px;
+}
 
-      
-      //* MAIN */ 
-      .main-content{ margin-right:235px;
-                     padding:25px; 
-                     width:100%; }
+.main-content{ 
+  margin-right:235px;
+  padding:25px; 
+  width:100%; 
+}
 
-    h2{
+h2{
   margin-right:-25px;
   margin-left:-25px;
   padding:15px 25px;
   color:#fff;
   border-radius:0;
-   }
-     
-      
-      /* FORM */
-     input, textarea, select{
+  background:linear-gradient(180deg,#1e3a8a,#1d4ed8);
+}
+
+/* FORM */
+input, textarea, select{
   width:100%;
   padding:14px 16px;
   margin:10px 0;
-
   border-radius:14px;
   border:1px solid #e5e7eb;
-
   background:#ffffff;
-
   font-size:14px;
   transition: all 0.25s ease;
-
   box-shadow: 0 2px 8px rgba(0,0,0,0.03);
 }
 
-/* Hover */
-input:hover, textarea:hover, select:hover{
-  border-color:#cbd5f5;
-}
+input:hover, textarea:hover, select:hover{ border-color:#cbd5f5; }
+input:focus, textarea:focus, select:focus{ border-color:#1d4ed8; box-shadow:0 0 0 4px rgba(29,78,216,0.12); }
+input::placeholder, textarea::placeholder{ color:#94a3b8; }
 
-/* Focus (أهم حاجة) */
-input:focus, textarea:focus, select:focus{
-  border-color:#1d4ed8;
-  box-shadow:0 0 0 4px rgba(29,78,216,0.12);
-}
-
-/* Placeholder */
-input::placeholder, textarea::placeholder{
-  color:#94a3b8;
-}
-
-/* Select arrow تحسين */
 select{
   appearance:none;
   background-image: url("data:image/svg+xml,%3Csvg fill='%2364748b' height='20' viewBox='0 0 24 24' width='20' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
@@ -79,58 +58,42 @@ select{
   padding-left:40px;
 }
 
-/* Textarea شكل أحلى */
-textarea{
-  min-height:100px;
-  resize:none;
-} 
+textarea{ min-height:100px; resize:none; } 
+label{ font-size:13px; color:#64748b; display:block; margin-top:10px; }
 
-label{
-  font-size:13px;
-  color:#64748b;
-  display:block;
-  margin-top:10px;
+button{
+  background:#1d4ed8; 
+  padding:12px 18px; 
+  border:none; 
+  border-radius:10px; 
+  cursor:pointer; 
+  transition:0.3s; 
+  color:#fff;
+  font-size:14px;
 }
 
-      
-      button{
-              background:#1d4ed8; 
-              padding:12px 18px; 
-              border:none; border-radius:10px; 
-              cursor:pointer; 
-              transition:0.3s; 
-             } 
+button:hover{ transform:translateY(-2px); background:#2563eb; }
 
-      
-      button:hover{
-                  transform:translateY(-2px); 
-                  background:#2563eb; 
-                  }
-      
-      /* GRID */ 
-      #list{ 
-             display:grid; 
-             grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); 
-             gap:15px;
-             margin-top:15px;
-            } 
+/* GRID */
+#list{ 
+  display:grid; 
+  grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); 
+  gap:15px;
+  margin-top:15px;
+}
 
-          /* الكارت */
-           .card{
-            background: linear-gradient(180deg,#ffffff,#f8fafc);
-            padding:20px;
-            border-radius:20px;
-            border:1px solid #eef2f7;
-            box-shadow:
-    0 4px 10px rgba(0,0,0,0.03),
-    0 15px 35px rgba(0,0,0,0.06);
+/* CARD */
+.card{
+  background: linear-gradient(180deg,#ffffff,#f8fafc);
+  padding:20px;
+  border-radius:20px;
+  border:1px solid #eef2f7;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.03), 0 15px 35px rgba(0,0,0,0.06);
+  transition: all 0.3s ease;
+  position:relative;
+  overflow:hidden;
+}
 
-            transition: all 0.3s ease;
-            position:relative;
-            overflow:hidden;
-                }
-
-/* خط لامع فوق */
 .card::before{
   content:"";
   position:absolute;
@@ -143,49 +106,17 @@ label{
   transition:0.3s;
 }
 
-/* Hover */
 .card:hover{
   transform:translateY(-10px) scale(1.01);
-  box-shadow:
-    0 10px 25px rgba(0,0,0,0.06),
-    0 25px 50px rgba(0,0,0,0.10);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.06), 0 25px 50px rgba(0,0,0,0.10);
 }
 
-.card:hover::before{
-  opacity:1;
-}
+.card:hover::before{ opacity:1; }
+.card h3{ font-size:17px; margin:12px 0; color:#0f172a; font-weight:600; }
+.card p{ color:#64748b; font-size:13px; line-height:1.7; }
+.card img, .card video{ width:100%; border-radius:14px; margin-top:12px; transition:0.3s; }
+.card:hover img, .card:hover video{ transform:scale(1.03); }
 
-/* العنوان */
-.card h3{
-  font-size:17px;
-  margin:12px 0;
-  color:#0f172a;
-  font-weight:600;
-}
-
-/* الوصف */
-.card p{
-  color:#64748b;
-  font-size:13px;
-  line-height:1.7;
-}
-
-/* الصور */
-.card img,
-.card video{
-  width:100%;
-  border-radius:14px;
-  margin-top:12px;
-  transition:0.3s;
-}
-
-/* تكبير خفيف عند hover */
-.card:hover img,
-.card:hover video{
-  transform:scale(1.03);
-}
-
-/* البادج */
 .badge{
   display:inline-block;
   padding:5px 12px;
@@ -194,10 +125,9 @@ label{
   background:#e0f2fe;
   color:#0369a1;
   font-weight:500;
-   margin-right: 100px;
+  margin-right: 100px;
 }
 
-/* زرار الحذف */
 .del-btn{
   position:absolute;
   top:12px;
@@ -211,12 +141,8 @@ label{
   font-size:12px;
   transition:0.2s;
 }
+.del-btn:hover{ background:#dc2626; }
 
-.del-btn:hover{
-  background:#dc2626;
-}
-
-/* زرار التعديل */
 .card button[onclick^="editItem"]{
   position:absolute;
   top:12px;
@@ -230,68 +156,9 @@ label{
   font-size:12px;
   transition:0.2s;
 }
+.card button[onclick^="editItem"]:hover{ background:#0284c7; }
 
-.card button[onclick^="editItem"]:hover{
-  background:#0284c7;
-}
-      /* CARD */
-   /*   .card{ background:#fff; 
-             padding:15px;
-             border-radius:15px; 
-             box-shadow:0 10px 25px rgba(0,0,0,0.06);
-             transition:0.3s; 
-             position:relative; 
-              }
-      
-      .card:hover{
-            transform:translateY(-5px);
-                 }
-     .card h3{
-  font-size:16px;
-  margin:10px 0;
-  color:#0f172a;
-}
-
-     .card h3{
-  font-size:16px;
-  margin:10px 0;
-  color:#0f172a;
-}
-     .card p{
-  color:#64748b;
-  font-size:13px;
-  line-height:1.6;
-}
-     .card img{
-  border-radius:12px;
-  margin-top:10px;
-}
-      */
-      /* TYPE BADGE */ 
-        /* .badge{ 
-               display:inline-block; 
-               padding:4px 10px; 
-               font-size:12px; 
-               border-radius:20px; 
-               background:#e0f2fe; 
-               color:#0369a1; 
-               margin-bottom:8px; 
-         }  */
-      
-      /* DELETE */ 
-         /*  .del-btn{
-                 position:absolute;
-                 top:10px; 
-                 left:10px; 
-                 background:#ef4444;
-                 border:none; 
-                 color:#fff; 
-                 border-radius:8px;
-                 padding:5px 8px; 
-                 cursor:pointer;
-                }  */
-      
- /* NAVBAR عمودي */
+/* NAVBAR */
 .side-nav {
   position: fixed;
   top: 0;
@@ -304,30 +171,11 @@ label{
   flex-direction: column;
   gap: 15px;
   z-index: 999;
-  display:flex;
-  flex-direction:column;
-}
-  
-/* اللوجو */
-.side-nav .logo {
-  color: #fff;
-  text-align: center;
-  margin-bottom: 20px;
-}
-  /* الصفحة الحالية */
-.side-nav a.active {
-  background: #fff;
-  color: #1a237e;
-  font-weight: bold;
 }
 
-/* disabled */
-.side-nav a.disabled {
-  opacity: 0.5;
-  pointer-events: none;
-}
-
-/* اللينكات */
+.side-nav .logo { color: #fff; text-align: center; margin-bottom: 20px; }
+.side-nav a.active { background: #fff; color: #1a237e; font-weight: bold; }
+.side-nav a.disabled { opacity: 0.5; pointer-events: none; }
 .side-nav a {
   text-decoration: none;
   color: #fff;
@@ -336,88 +184,173 @@ label{
   transition: 0.3s;
   font-size: 15px;
 }
+.side-nav a:hover { background: rgba(255,255,255,0.15); transform: translateX(-5px); }
 
-/* hover */
-.side-nav a:hover {
-  background: rgba(255,255,255,0.15);
-  transform: translateX(-5px);
+/* Settings Section */
+.settings-section {
+  background: #fff;
+  padding: 20px;
+  border-radius: 15px;
+  margin-top: 20px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
-
-
+.settings-section h3 {
+  color: #1a237e;
+  margin-bottom: 15px;
+  border-bottom: 2px solid #eee;
+  padding-bottom: 10px;
+}
+.settings-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 15px;
+}
+.color-preview {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  border: 2px solid #ddd;
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: 10px;
+}
+.save-btn {
+  background: #2e7d32;
+  margin-top: 20px;
+  width: auto;
+  padding: 12px 30px;
+}
+.save-btn:hover { background: #388e3c; }
 </style>
-
-
-
-
-  
 </head>
 
 <body>
- 
-  
 
-  <div class="side-nav">
-
+<div class="side-nav">
   <h2 class="logo">Admin</h2>
-
-  <a href="https://yel-eng.github.io/MediCare-Clinic/admin.html">
-    🏠 لوحة التحكم
-  </a>
-
-  <a href="https://yel-eng.github.io/MediCare-Clinic/index-admin.html">
-    📂 إدارة المحتوى
-  </a>
-
-  <a href="#" class="disabled">
-    🚧 قريباً
-  </a>
-
+  <a href="admin.html">🏠 لوحة المواعيد</a>
+  <a href="index-admin.html" class="active">📂 إدارة الموقع</a>
+  <a href="#" class="disabled">🚧 قريباً</a>
 </div>
 
+<div class="main-content">
 
-
-   <div class="main-content">
-
-<h2 style="background:linear-gradient(180deg,#1e3a8a,#1d4ed8);">
-  
-إضافة محتوى</h2>
+<!-- قسم إدارة المحتوى (صور/فيديوهات/مقالات) -->
+<h2>📚 إدارة المحتوى</h2>
 
 <select id="type">
   <option value="article">مقال</option>
   <option value="video">فيديو</option>
   <option value="image">صورة</option>
 </select>
-        
- <label>العنوان</label>
+
+<label>العنوان</label>
 <input id="title" placeholder="العنوان">
 
-        
- <label>الرابط</label>
+<label>الرابط</label>
 <input id="link" placeholder="لينك الصورة أو الفيديو">
 
-        
- <label>الوصف</label>
+<label>الوصف</label>
 <textarea id="desc" placeholder="الوصف (اختياري)"></textarea>
 
 <button onclick="addItem()">إضافة</button>
 
-<h2 style="background:linear-gradient(180deg,#1e3a8a,#1d4ed8);">
-  المحتوى الحالي
-</h2>
-  <div id="list">  
+<h2 style="background:linear-gradient(180deg,#1e3a8a,#1d4ed8); margin-top:30px;">المحتوى الحالي</h2>
+<div id="list"></div>
 
- </div>   
+<!-- قسم إعدادات الموقع العامة -->
+<div class="settings-section">
+  <h3>⚙️ إعدادات الموقع العامة</h3>
+  
+  <div class="settings-grid">
+    <div>
+      <label>اسم العيادة</label>
+      <input type="text" id="setting_clinic_name" placeholder="مثال: عيادة د. منى المصري">
+    </div>
+    <div>
+      <label>اسم الدكتور</label>
+      <input type="text" id="setting_doctor_name" placeholder="د. منى المصري">
+    </div>
+    <div>
+      <label>التخصص</label>
+      <input type="text" id="setting_doctor_title" placeholder="استشاري النساء والتوليد">
+    </div>
+    <div>
+      <label>اللون الرئيسي</label>
+      <div style="display:flex;align-items:center;gap:10px;">
+        <input type="color" id="setting_primary_color" value="#1d4ed8" style="height:40px;width:60px;cursor:pointer;border:none;">
+        <span class="color-preview" id="colorPreview"></span>
+      </div>
+    </div>
+    <div>
+      <label>لون الخلفية</label>
+      <input type="color" id="setting_bg_color" value="#f8fafc" style="height:40px;width:100%;cursor:pointer;border:none;">
+    </div>
+    <div>
+      <label>عنوان الهيدر الرئيسي</label>
+      <input type="text" id="setting_hero_title" placeholder="ميديكال كلينك">
+    </div>
+    <div style="grid-column: span 2;">
+      <label>وصف الهيدر</label>
+      <textarea id="setting_hero_desc" placeholder="رعاية طبية بثقة..."></textarea>
+    </div>
+    <div>
+      <label>صورة الهيدر (رابط)</label>
+      <input type="url" id="setting_hero_image" placeholder="https://.../image.jpg">
+    </div>
+    <div>
+      <label>صورة الدكتور (رابط)</label>
+      <input type="url" id="setting_doctor_image" placeholder="https://.../doctor.jpg">
+    </div>
+    <div style="grid-column: span 2;">
+      <label>نص "عن الدكتور"</label>
+      <textarea id="setting_about_text" placeholder="خبرة طويلة في التشخيص..."></textarea>
+    </div>
+    <div>
+      <label>رقم الواتساب (بدون +)</label>
+      <input type="text" id="setting_whatsapp_number" placeholder="201211538334">
+    </div>
+    <div>
+      <label>رقم الاتصال</label>
+      <input type="text" id="setting_phone_number" placeholder="01211538334">
+    </div>
+    <div>
+      <label>العنوان</label>
+      <input type="text" id="setting_address" placeholder="الإسكندرية، مصر">
+    </div>
+    <div style="grid-column: span 2;">
+      <label>مواعيد العمل</label>
+      <textarea id="setting_working_hours" placeholder="طوال الأسبوع من 12 ص - 5 م"></textarea>
+    </div>
+    <div style="grid-column: span 2;">
+      <label>رابط الخريطة</label>
+      <input type="url" id="setting_map_url" placeholder="https://www.google.com/maps?q=...">
+    </div>
+    <div style="grid-column: span 2;">
+      <label>نص الفوتر</label>
+      <input type="text" id="setting_footer_text" placeholder="© 2024 عيادة د. منى المصري - جميع الحقوق محفوظة">
+    </div>
+  </div>
+  
+  <button class="save-btn" onclick="saveSettings()">💾 حفظ جميع الإعدادات</button>
 </div>
-  <script type="module">
 
+</div>
+
+<script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, updateDoc } 
-from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, updateDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
+// ⚠️ كود فايربيس الخاص بالدكتورة منى
 const firebaseConfig = {
-  apiKey: "AIzaSyA8FEgNeXAMZ1Sbg12zFCzwwxUD3sVl99o",
-  authDomain: "mydoctor-clinic.firebaseapp.com",
-  projectId: "mydoctor-clinic"
+  apiKey: "AIzaSyD7B-e65xKC2Q3rY6F0TI55QtYJPqqw4dE",
+  authDomain: "dr-mona-elmasry.firebaseapp.com",
+  databaseURL: "https://dr-mona-elmasry-default-rtdb.firebaseio.com",
+  projectId: "dr-mona-elmasry",
+  storageBucket: "dr-mona-elmasry.firebasestorage.app",
+  messagingSenderId: "40312173388",
+  appId: "1:40312173388:web:d5b75d750ac4b5599195e9",
+  measurementId: "G-MFG6HP7585"
 };
 
 const app = initializeApp(firebaseConfig);
@@ -426,97 +359,151 @@ const db = getFirestore(app);
 let editingId = null;
 let data = [];
 
-// 🟢 تحميل البيانات
+// 🟢 تحميل المحتوى (صور/فيديوهات/مقالات)
 async function loadData(){
-  const snapshot = await getDocs(collection(db, "content"));
-
+  const snapshot = await getDocs(collection(db, "content_mona"));
   data = [];
-
-  snapshot.forEach(docSnap=>{
+  snapshot.forEach(docSnap => {
     data.push({ id: docSnap.id, ...docSnap.data() });
   });
-
   render();
 }
 
-// 🟢 إضافة / تعديل
+// 🟢 إضافة / تعديل محتوى
 window.addItem = async function(){
-
   const item = {
-    type: type.value,
-    title: title.value,
-    link: link.value,
-    desc: desc.value
+    type: document.getElementById("type").value,
+    title: document.getElementById("title").value,
+    link: document.getElementById("link").value,
+    desc: document.getElementById("desc").value
   };
 
   if(editingId){
-    await updateDoc(doc(db, "content", editingId), item);
+    await updateDoc(doc(db, "content_mona", editingId), item);
     editingId = null;
   }else{
-    await addDoc(collection(db, "content"), item);
+    await addDoc(collection(db, "content_mona"), item);
   }
-  const type = document.getElementById("type");
-const title = document.getElementById("title");
-const link = document.getElementById("link");
-const desc = document.getElementById("desc");
   loadData();
+  // إعادة تعيين الحقول
+  document.getElementById("title").value = "";
+  document.getElementById("link").value = "";
+  document.getElementById("desc").value = "";
 }
 
-// 🟢 حذف
+// 🟢 حذف محتوى
 window.deleteItem = async function(id){
-  await deleteDoc(doc(db, "content", id));
+  await deleteDoc(doc(db, "content_mona", id));
   loadData();
 }
 
-// 🟢 تعديل
+// 🟢 تعديل محتوى
 window.editItem = function(id){
   const item = data.find(i => i.id === id);
-
-  type.value = item.type;
-  title.value = item.title;
-  link.value = item.link;
-  desc.value = item.desc;
-
+  document.getElementById("type").value = item.type;
+  document.getElementById("title").value = item.title;
+  document.getElementById("link").value = item.link;
+  document.getElementById("desc").value = item.desc;
   editingId = id;
 }
 
-// 🟢 عرض
+// 🟢 عرض المحتوى
 function render(){
   const list = document.getElementById("list");
   list.innerHTML = "";
-
-  data.forEach(item=>{
+  data.forEach(item => {
     list.innerHTML += `
       <div class="card">
-
         <button class="del-btn" onclick="deleteItem('${item.id}')">×</button>
-
-        <button onclick="editItem('${item.id}')"
-          style="position:absolute;top:10px;right:10px;background:#0ea5e9;">
-          ✏️
-        </button>
-
+        <button onclick="editItem('${item.id}')" style="position:absolute;top:10px;right:10px;background:#0ea5e9;">✏️</button>
         <div class="badge">${item.type}</div>
-
         <h3>${item.title}</h3>
-
-        ${item.type === "image" ? `<img src="${item.link}" style="width:100%">` : ""}
-
-        ${item.type === "video" ? `
-          <video controls style="width:100%">
-            <source src="${item.link}">
-          </video>` : ""}
-
-        ${item.desc ? `<p>${item.desc}</p>` : ""}
-
+        ${item.type === "image" ? '<img src="'+item.link+'" style="width:100%">' : ""}
+        ${item.type === "video" ? '<video controls style="width:100%"><source src="'+item.link+'"></video>' : ""}
+        ${item.desc ? '<p>'+item.desc+'</p>' : ""}
       </div>
     `;
   });
 }
 
-// تشغيل
-loadData();
+// 🟢 تحميل الإعدادات الحالية في النموذج
+async function loadSettingsForm() {
+  try {
+    const docSnap = await getDoc(doc(db, "settings_mona", "main"));
+    if (!docSnap.exists()) return;
+    const s = docSnap.data();
+    
+    document.getElementById("setting_clinic_name").value = s.clinic_name || "";
+    document.getElementById("setting_doctor_name").value = s.doctor_name || "";
+    document.getElementById("setting_doctor_title").value = s.doctor_title || "";
+    document.getElementById("setting_primary_color").value = s.primary_color || "#1d4ed8";
+    document.getElementById("setting_bg_color").value = s.bg_color || "#f8fafc";
+    document.getElementById("setting_hero_title").value = s.hero_title || "";
+    document.getElementById("setting_hero_desc").value = s.hero_desc || "";
+    document.getElementById("setting_hero_image").value = s.hero_image || "";
+    document.getElementById("setting_doctor_image").value = s.doctor_image || "";
+    document.getElementById("setting_about_text").value = s.about_text || "";
+    document.getElementById("setting_whatsapp_number").value = s.whatsapp_number || "";
+    document.getElementById("setting_phone_number").value = s.phone_number || "";
+    document.getElementById("setting_address").value = s.address || "";
+    document.getElementById("setting_working_hours").value = s.working_hours || "";
+    document.getElementById("setting_map_url").value = s.map_url || "";
+    document.getElementById("setting_footer_text").value = s.footer_text || "";
+    
+    // تحديث معاينة اللون
+    updateColorPreview(s.primary_color || "#1d4ed8");
+  } catch (err) {
+    console.warn("⚠️ Failed to load settings form:", err);
+  }
+}
 
+// 🟢 حفظ الإعدادات في فايربيس
+window.saveSettings = async function() {
+  const settings = {
+    clinic_name: document.getElementById("setting_clinic_name").value,
+    doctor_name: document.getElementById("setting_doctor_name").value,
+    doctor_title: document.getElementById("setting_doctor_title").value,
+    primary_color: document.getElementById("setting_primary_color").value,
+    bg_color: document.getElementById("setting_bg_color").value,
+    hero_title: document.getElementById("setting_hero_title").value,
+    hero_desc: document.getElementById("setting_hero_desc").value,
+    hero_image: document.getElementById("setting_hero_image").value,
+    doctor_image: document.getElementById("setting_doctor_image").value,
+    about_text: document.getElementById("setting_about_text").value,
+    whatsapp_number: document.getElementById("setting_whatsapp_number").value,
+    phone_number: document.getElementById("setting_phone_number").value,
+    address: document.getElementById("setting_address").value,
+    working_hours: document.getElementById("setting_working_hours").value,
+    map_url: document.getElementById("setting_map_url").value,
+    footer_text: document.getElementById("setting_footer_text").value
+  };
+  
+  try {
+    await setDoc(doc(db, "settings_mona", "main"), settings, { merge: true });
+    alert("✅ تم حفظ الإعدادات بنجاح!\nافتحي الموقع الرئيسي واعملي ري فريش عشان تشوفي التغييرات.");
+  } catch (err) {
+    alert("❌ خطأ في الحفظ: " + err.message);
+  }
+};
+
+// 🟢 معاينة اللون
+function updateColorPreview(color) {
+  document.getElementById("colorPreview").style.backgroundColor = color;
+}
+document.getElementById("setting_primary_color").addEventListener("input", (e) => {
+  updateColorPreview(e.target.value);
+});
+
+// 🟢 تشغيل عند تحميل الصفحة
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", () => {
+    loadData();
+    loadSettingsForm();
+  });
+} else {
+  loadData();
+  loadSettingsForm();
+}
 </script>
 
 </body>
