@@ -16,7 +16,6 @@ body { font-family: 'Segoe UI', Tahoma, Arial, sans-serif; background: var(--bg)
 .main-content { margin-right: 260px; padding: 20px; max-width: 1200px; }
 .section { background: var(--white); padding: 25px; border-radius: var(--radius); box-shadow: var(--shadow); margin-bottom: 25px; }
 .section h2 { color: var(--main); margin-bottom: 20px; padding-bottom: 12px; border-bottom: 2px solid #eee; font-size: 20px; display: flex; align-items: center; gap: 10px; }
-.section h2 .toggle { margin-right: auto; }
 .form-group { margin-bottom: 18px; }
 .form-group label { display: block; margin-bottom: 6px; font-weight: 500; font-size: 14px; color: var(--text); }
 .form-group input, .form-group textarea, .form-group select { width: 100%; padding: 12px 15px; border: 1px solid #ddd; border-radius: 10px; font-size: 14px; transition: 0.2s; background: #fafafa; }
@@ -49,23 +48,19 @@ body { font-family: 'Segoe UI', Tahoma, Arial, sans-serif; background: var(--bg)
 .toast.error { background: var(--danger); }
 .preview-box { margin-top: 10px; text-align: center; display: none; }
 .preview-box img { max-width: 100%; max-height: 150px; border-radius: 8px; border: 1px solid #eee; }
-/* Dynamic Lists */
 .dynamic-list { border: 1px dashed #ccc; border-radius: 10px; padding: 15px; margin-top: 10px; }
 .dynamic-item { background: #f8f9fa; padding: 12px; border-radius: 8px; margin-bottom: 10px; border-right: 3px solid var(--main); }
 .dynamic-item-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
 .dynamic-item input, .dynamic-item textarea { margin: 5px 0; }
 .checkbox-group { display: flex; align-items: center; gap: 8px; margin: 5px 0; }
 .checkbox-group input { width: auto; }
-/* Tabs */
 .tabs { display: flex; gap: 5px; margin-bottom: 20px; flex-wrap: wrap; }
 .tab { padding: 10px 20px; background: #eee; border-radius: 10px 10px 0 0; cursor: pointer; transition: 0.2s; font-size: 14px; }
 .tab.active { background: var(--main); color: #fff; }
 .tab-content { display: none; }
 .tab-content.active { display: block; }
-/* Section Toggle */
 .section-toggle { display: flex; align-items: center; gap: 10px; padding: 10px; background: #f8f9fa; border-radius: 8px; margin-bottom: 8px; }
 .section-toggle input { width: auto; }
-/* Gallery Preview */
 .gallery-preview { display: flex; gap: 10px; overflow-x: auto; padding: 10px 0; }
 .gallery-preview img { width: 80px; height: 80px; object-fit: cover; border-radius: 8px; border: 2px solid #eee; }
 @media (max-width: 900px) { .side-nav { transform: translateX(100%); } .side-nav.open { transform: translateX(0); } .main-content { margin-right: 0; padding-top: 70px; } .menu-toggle { display: flex; } .settings-grid { grid-template-columns: 1fr; } }
@@ -75,7 +70,6 @@ body { font-family: 'Segoe UI', Tahoma, Arial, sans-serif; background: var(--bg)
 <body>
 
 <button class="menu-toggle" onclick="toggleMenu()">☰</button>
-
 <div class="side-nav" id="sideNav">
   <h2 class="logo">⚙️ لوحة التحكم</h2>
   <a href="admin.html">🏠 لوحة المواعيد</a>
@@ -85,8 +79,6 @@ body { font-family: 'Segoe UI', Tahoma, Arial, sans-serif; background: var(--bg)
 </div>
 
 <div class="main-content">
-
-  <!-- 🔐 تسجيل الدخول -->
   <div id="loginSection" class="section" style="display:none; border: 2px solid var(--warning);">
     <h2 style="color: var(--warning);">🔐 تسجيل الدخول مطلوب</h2>
     <p>عشان تقدرى تحفظي الإعدادات، لازم تسجلي دخول بحساب الأدمن أولاً.</p>
@@ -96,18 +88,17 @@ body { font-family: 'Segoe UI', Tahoma, Arial, sans-serif; background: var(--bg)
     <p id="loginError" style="color:var(--danger);margin-top:10px;display:none;"></p>
   </div>
 
-  <!-- 🔀 Tabs -->
   <div class="tabs" id="adminTabs">
-    <div class="tab active" onclick="switchTab('general')">⚙️ عام</div>
-    <div class="tab" onclick="switchTab('navbar')">🔗 الناف بار</div>
-    <div class="tab" onclick="switchTab('cards')">🃏 الكروت</div>
-    <div class="tab" onclick="switchTab('gallery')">🖼️ الجاليري</div>
-    <div class="tab" onclick="switchTab('cta')">🎯 الاستشارات</div>
-    <div class="tab" onclick="switchTab('visibility')">👁️ إخفاء الأقسام</div>
-    <div class="tab" onclick="switchTab('content')">📚 المحتوى</div>
+    <div class="tab active" data-tab="general">⚙️ عام</div>
+    <div class="tab" data-tab="navbar">🔗 الناف بار</div>
+    <div class="tab" data-tab="cards">🃏 الكروت</div>
+    <div class="tab" data-tab="gallery">🖼️ الجاليري</div>
+    <div class="tab" data-tab="cta">🎯 الاستشارات</div>
+    <div class="tab" data-tab="visibility">👁️ إخفاء الأقسام</div>
+    <div class="tab" data-tab="content">📚 المحتوى</div>
   </div>
 
-  <!-- ⚙️ Tab: إعدادات عامة -->
+  <!-- ⚙️ Tab: عام -->
   <div id="tab-general" class="tab-content active">
     <div class="section">
       <h2>⚙️ إعدادات الموقع العامة</h2>
@@ -168,7 +159,7 @@ body { font-family: 'Segoe UI', Tahoma, Arial, sans-serif; background: var(--bg)
     </div>
   </div>
 
-  <!-- 🎯 Tab: قسم الاستشارات -->
+  <!-- 🎯 Tab: الاستشارات -->
   <div id="tab-cta" class="tab-content">
     <div class="section">
       <h2>🎯 قسم الاستشارات المجانية</h2>
@@ -191,7 +182,7 @@ body { font-family: 'Segoe UI', Tahoma, Arial, sans-serif; background: var(--bg)
     </div>
   </div>
 
-  <!-- 📚 Tab: المحتوى (المكتبة الطبية) -->
+  <!-- 📚 Tab: المحتوى -->
   <div id="tab-content" class="tab-content">
     <div class="section">
       <h2>📚 إضافة محتوى جديد</h2>
@@ -207,11 +198,9 @@ body { font-family: 'Segoe UI', Tahoma, Arial, sans-serif; background: var(--bg)
     </div>
   </div>
 
-  <!-- زر الحفظ -->
   <div style="position:sticky;bottom:20px;z-index:100;">
     <button class="btn btn-success btn-block" onclick="saveAllSettings()" style="box-shadow:0 10px 30px rgba(0,0,0,0.2);">💾 حفظ جميع الإعدادات</button>
   </div>
-
 </div>
 
 <div class="toast" id="toast"></div>
@@ -235,27 +224,27 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const auth = getAuth(app);
-
 let editingId = null, contentData = [], navbarData = [], cardsData = [], galleryData = [], sectionsData = {};
 
-// 🔀 تبديل التبويبات
+// 🔀 تبديل التبويبات - النسخة الثانية (data-tab + addEventListener)
 window.switchTab = function(tabName) {
   document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
   document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-  document.querySelector(`.tab[onclick="switchTab('${tabName}')"]`).classList.add('active');
-  document.getElementById(`tab-${tabName}`).classList.add('active');
+  const clickedTab = document.querySelector(`.tab[data-tab="${tabName}"]`);
+  if (clickedTab) clickedTab.classList.add('active');
+  const content = document.getElementById(`tab-${tabName}`);
+  if (content) content.classList.add('active');
+  localStorage.setItem('activeTab', tabName);
 };
 
 window.toggleMenu = function() { document.getElementById('sideNav').classList.toggle('open'); }
 window.handleLogout = async function() { await signOut(auth); window.location.reload(); }
-
 function showToast(msg, type = 'success') {
   const toast = document.getElementById('toast');
   toast.textContent = msg;
   toast.className = 'toast ' + type + ' show';
   setTimeout(() => toast.classList.remove('show'), 3000);
 }
-
 window.quickLogin = async function() {
   const email = document.getElementById('loginEmail').value;
   const password = document.getElementById('loginPassword').value;
@@ -265,30 +254,19 @@ window.quickLogin = async function() {
     showToast("✅ تم تسجيل الدخول بنجاح");
     document.getElementById('loginSection').style.display = 'none';
     loadAllSettings();
-  } catch (err) {
-    errorEl.textContent = "❌ " + err.message;
-    errorEl.style.display = 'block';
-  }
+  } catch (err) { errorEl.textContent = "❌ " + err.message; errorEl.style.display = 'block'; }
 };
-
 window.checkAuth = function() {
   const user = auth.currentUser;
-  if (!user) {
-    document.getElementById('loginSection').style.display = 'block';
-  } else {
-    document.getElementById('loginSection').style.display = 'none';
-    loadAllSettings();
-  }
+  if (!user) { document.getElementById('loginSection').style.display = 'block'; }
+  else { document.getElementById('loginSection').style.display = 'none'; loadAllSettings(); }
 };
 
-// 📥 تحميل كل الإعدادات
 async function loadAllSettings() {
   try {
     const docSnap = await getDoc(doc(db, "settings_mona", "main"));
     if (!docSnap.exists()) { loadDefaults(); return; }
     const s = docSnap.data();
-    
-    // General
     document.getElementById("setting_clinic_name").value = s.clinic_name || "";
     document.getElementById("setting_doctor_name").value = s.doctor_name || "";
     document.getElementById("setting_doctor_title").value = s.doctor_title || "";
@@ -307,37 +285,23 @@ async function loadAllSettings() {
     updateColorPreview(s.primary_color || "#1d4ed8");
     if (s.hero_bg) { const pb = document.getElementById("heroBgPreviewBox"), pi = document.getElementById("heroBgPreviewImg"); pi.src = s.hero_bg; pb.style.display = "block"; }
     if (s.doctor_image) { const pb = document.getElementById("doctorPreviewBox"), pi = document.getElementById("doctorPreviewImg"); pi.src = s.doctor_image; pb.style.display = "block"; }
-    
-    // Navbar
     navbarData = s.navbar_links || [{ text: "الرئيسية", href: "#", visible: true }, { text: "عن الدكتور", href: "#doctor", visible: true }, { text: "المكتبة الطبية", href: "#media", visible: true }, { text: "تواصل", href: "#contact", visible: true }];
     renderNavbarList();
-    
-    // Cards
     cardsData = s.cards || [{ icon: "⭐", title: "مستوى خدمة عالي", visible: true }, { icon: "🧠", title: "أحدث تقنيات طبية", visible: true }, { icon: "❤️", title: "اهتمام شخصي بالمرضى", visible: true }];
     renderCardsList();
-    
-    // Gallery
     galleryData = s.gallery_images || [];
     document.getElementById("galleryAutoScroll").checked = s.gallery_auto_scroll !== false;
     renderGalleryPreview();
-    
-    // CTA
     document.getElementById("cta_title").value = s.cta?.title || "";
     document.getElementById("cta_desc").value = s.cta?.desc || "";
     document.getElementById("cta_working_hours").value = s.cta?.working_hours || "";
     document.getElementById("cta_badge").value = s.cta?.badge || "";
     document.getElementById("cta_visible").checked = s.cta?.visible !== false;
-    
-    // Sections Visibility
     sectionsData = s.sections || { hero: true, cards: true, doctor: true, gallery: true, media: true, cta: true, contact: true, map: true, footer: true };
     renderSectionsToggle();
-    
-    // Content
     loadContent();
-    
   } catch (err) { console.warn("⚠️ Failed to load settings:", err); loadDefaults(); }
 }
-
 function loadDefaults() {
   document.getElementById("setting_primary_color").value = "#1d4ed8";
   updateColorPreview("#1d4ed8");
@@ -350,19 +314,9 @@ function loadDefaults() {
 
 // 🔗 Navbar Functions
 function renderNavbarList() {
-  const list = document.getElementById("navbarList");
-  list.innerHTML = "";
+  const list = document.getElementById("navbarList"); list.innerHTML = "";
   navbarData.forEach((item, idx) => {
-    list.innerHTML += `
-      <div class="dynamic-item">
-        <div class="dynamic-item-header">
-          <strong>رابط #${idx + 1}</strong>
-          <button class="btn btn-sm btn-danger" onclick="removeNavbarItem(${idx})">🗑️</button>
-        </div>
-        <input type="text" placeholder="النص" value="${item.text}" onchange="updateNavbarItem(${idx}, 'text', this.value)">
-        <input type="text" placeholder="الرابط" value="${item.href}" onchange="updateNavbarItem(${idx}, 'href', this.value)">
-        <label class="checkbox-group"><input type="checkbox" ${item.visible ? 'checked' : ''} onchange="updateNavbarItem(${idx}, 'visible', this.checked)"> إظهار</label>
-      </div>`;
+    list.innerHTML += `<div class="dynamic-item"><div class="dynamic-item-header"><strong>رابط #${idx + 1}</strong><button class="btn btn-sm btn-danger" onclick="removeNavbarItem(${idx})">🗑️</button></div><input type="text" placeholder="النص" value="${item.text}" onchange="updateNavbarItem(${idx}, 'text', this.value)"><input type="text" placeholder="الرابط" value="${item.href}" onchange="updateNavbarItem(${idx}, 'href', this.value)"><label class="checkbox-group"><input type="checkbox" ${item.visible ? 'checked' : ''} onchange="updateNavbarItem(${idx}, 'visible', this.checked)"> إظهار</label></div>`;
   });
 }
 window.addNavbarItem = function() { navbarData.push({ text: "جديد", href: "#", visible: true }); renderNavbarList(); }
@@ -371,19 +325,9 @@ window.updateNavbarItem = function(idx, field, value) { navbarData[idx][field] =
 
 // 🃏 Cards Functions
 function renderCardsList() {
-  const list = document.getElementById("cardsList");
-  list.innerHTML = "";
+  const list = document.getElementById("cardsList"); list.innerHTML = "";
   cardsData.forEach((item, idx) => {
-    list.innerHTML += `
-      <div class="dynamic-item">
-        <div class="dynamic-item-header">
-          <strong>كارت #${idx + 1}</strong>
-          <button class="btn btn-sm btn-danger" onclick="removeCardItem(${idx})">🗑️</button>
-        </div>
-        <input type="text" placeholder="أيقونة (مثل: ⭐)" value="${item.icon}" onchange="updateCardItem(${idx}, 'icon', this.value)" style="width:80px;">
-        <input type="text" placeholder="العنوان" value="${item.title}" onchange="updateCardItem(${idx}, 'title', this.value)">
-        <label class="checkbox-group"><input type="checkbox" ${item.visible ? 'checked' : ''} onchange="updateCardItem(${idx}, 'visible', this.checked)"> إظهار</label>
-      </div>`;
+    list.innerHTML += `<div class="dynamic-item"><div class="dynamic-item-header"><strong>كارت #${idx + 1}</strong><button class="btn btn-sm btn-danger" onclick="removeCardItem(${idx})">🗑️</button></div><input type="text" placeholder="أيقونة" value="${item.icon}" onchange="updateCardItem(${idx}, 'icon', this.value)" style="width:80px;"><input type="text" placeholder="العنوان" value="${item.title}" onchange="updateCardItem(${idx}, 'title', this.value)"><label class="checkbox-group"><input type="checkbox" ${item.visible ? 'checked' : ''} onchange="updateCardItem(${idx}, 'visible', this.checked)"> إظهار</label></div>`;
   });
 }
 window.addCardItem = function() { cardsData.push({ icon: "⭐", title: "عنوان جديد", visible: true }); renderCardsList(); }
@@ -392,8 +336,7 @@ window.updateCardItem = function(idx, field, value) { cardsData[idx][field] = va
 
 // 🖼️ Gallery Functions
 function renderGalleryPreview() {
-  const preview = document.getElementById("galleryPreview");
-  preview.innerHTML = "";
+  const preview = document.getElementById("galleryPreview"); preview.innerHTML = "";
   galleryData.forEach((url, idx) => {
     preview.innerHTML += `<img src="${url}" onerror="this.src='https://via.placeholder.com/80?text=Error'" style="position:relative;"><button class="btn btn-sm btn-danger" onclick="removeGalleryImage(${idx})" style="position:absolute;top:2px;right:2px;width:20px;height:20px;padding:0;font-size:10px;border-radius:50%;">×</button>`;
   });
@@ -411,25 +354,9 @@ window.removeGalleryImage = function(idx) { galleryData.splice(idx, 1); renderGa
 // 👁️ Sections Visibility
 function renderSectionsToggle() {
   const container = document.getElementById("sectionsToggle");
-  const sections = [
-    { key: "hero", label: "🏠 قسم الهيدر (الرئيسي)" },
-    { key: "cards", label: "🃏 قسم الكروت" },
-    { key: "doctor", label: "👨‍⚕️ قسم عن الدكتور" },
-    { key: "gallery", label: "🖼️ قسم الجاليري" },
-    { key: "media", label: "📚 المكتبة الطبية" },
-    { key: "cta", label: "🎯 قسم الاستشارات" },
-    { key: "contact", label: "📍 قسم التواصل" },
-    { key: "map", label: "🗺️ قسم الخريطة" },
-    { key: "footer", label: "🦶 الفوتر" }
-  ];
+  const sections = [{ key: "hero", label: "🏠 قسم الهيدر" }, { key: "cards", label: "🃏 قسم الكروت" }, { key: "doctor", label: "👨‍⚕️ قسم عن الدكتور" }, { key: "gallery", label: "🖼️ قسم الجاليري" }, { key: "media", label: "📚 المكتبة الطبية" }, { key: "cta", label: "🎯 قسم الاستشارات" }, { key: "contact", label: "📍 قسم التواصل" }, { key: "map", label: "🗺️ قسم الخريطة" }, { key: "footer", label: "🦶 الفوتر" }];
   container.innerHTML = "";
-  sections.forEach(sec => {
-    container.innerHTML += `
-      <label class="section-toggle">
-        <input type="checkbox" id="vis_${sec.key}" ${sectionsData[sec.key] !== false ? 'checked' : ''}>
-        <span>${sec.label}</span>
-      </label>`;
-  });
+  sections.forEach(sec => { container.innerHTML += `<label class="section-toggle"><input type="checkbox" id="vis_${sec.key}" ${sectionsData[sec.key] !== false ? 'checked' : ''}><span>${sec.label}</span></label>`; });
 }
 
 // 📚 Content Functions
@@ -460,24 +387,10 @@ window.addContent = async function(){
     loadContent();
   } catch (err) { showToast("❌ خطأ: " + err.message, "error"); }
 }
-window.deleteContent = async function(id){
-  if (!confirm("هل أنتِ متأكدة من الحذف؟")) return;
-  try { await deleteDoc(doc(db, "content_mona", id)); showToast("✅ تم الحذف"); loadContent(); } 
-  catch (err) { showToast("❌ فشل الحذف", "error"); }
-}
-window.editContent = function(id){
-  const item = contentData.find(i => i.id === id);
-  if (!item) return;
-  document.getElementById("contentType").value = item.type;
-  document.getElementById("contentTitle").value = item.title;
-  document.getElementById("contentLink").value = item.link || "";
-  document.getElementById("contentDesc").value = item.desc || "";
-  editingId = id;
-  showToast("✏️ عدّلي ثم اضغطي إضافة");
-}
+window.deleteContent = async function(id){ if (!confirm("هل أنتِ متأكدة من الحذف؟")) return; try { await deleteDoc(doc(db, "content_mona", id)); showToast("✅ تم الحذف"); loadContent(); } catch (err) { showToast("❌ فشل الحذف", "error"); } }
+window.editContent = function(id){ const item = contentData.find(i => i.id === id); if (!item) return; document.getElementById("contentType").value = item.type; document.getElementById("contentTitle").value = item.title; document.getElementById("contentLink").value = item.link || ""; document.getElementById("contentDesc").value = item.desc || ""; editingId = id; showToast("✏️ عدّلي ثم اضغطي إضافة"); }
 function renderContent(){
-  const list = document.getElementById("contentList");
-  list.innerHTML = "";
+  const list = document.getElementById("contentList"); list.innerHTML = "";
   if (contentData.length === 0) { list.innerHTML = "<p style='color:var(--text-light);text-align:center;padding:20px;'>لا يوجد محتوى بعد</p>"; return; }
   contentData.forEach(item => {
     let mediaHtml = item.type === "image" ? `<img src="${item.link}" onerror="this.src='https://via.placeholder.com/300x200?text=Image'">` : (item.type === "video" ? `<video controls><source src="${item.link}"></video>` : "");
@@ -488,7 +401,6 @@ function renderContent(){
 // 💾 حفظ كل الإعدادات
 window.saveAllSettings = async function() {
   if (!auth.currentUser) { showToast("⚠️ يرجى تسجيل الدخول أولاً", "error"); document.getElementById('loginSection').style.display = 'block'; return; }
-  
   try {
     const settings = {
       clinic_name: document.getElementById("setting_clinic_name")?.value || "",
@@ -510,41 +422,35 @@ window.saveAllSettings = async function() {
       cards: cardsData,
       gallery_images: galleryData,
       gallery_auto_scroll: document.getElementById("galleryAutoScroll").checked,
-      cta: {
-        title: document.getElementById("cta_title")?.value || "",
-        desc: document.getElementById("cta_desc")?.value || "",
-        working_hours: document.getElementById("cta_working_hours")?.value || "",
-        badge: document.getElementById("cta_badge")?.value || "",
-        visible: document.getElementById("cta_visible")?.checked !== false
-      },
-      sections: {
-        hero: document.getElementById("vis_hero")?.checked !== false,
-        cards: document.getElementById("vis_cards")?.checked !== false,
-        doctor: document.getElementById("vis_doctor")?.checked !== false,
-        gallery: document.getElementById("vis_gallery")?.checked !== false,
-        media: document.getElementById("vis_media")?.checked !== false,
-        cta: document.getElementById("vis_cta")?.checked !== false,
-        contact: document.getElementById("vis_contact")?.checked !== false,
-        map: document.getElementById("vis_map")?.checked !== false,
-        footer: document.getElementById("vis_footer")?.checked !== false
-      }
+      cta: { title: document.getElementById("cta_title")?.value || "", desc: document.getElementById("cta_desc")?.value || "", working_hours: document.getElementById("cta_working_hours")?.value || "", badge: document.getElementById("cta_badge")?.value || "", visible: document.getElementById("cta_visible")?.checked !== false },
+      sections: { hero: document.getElementById("vis_hero")?.checked !== false, cards: document.getElementById("vis_cards")?.checked !== false, doctor: document.getElementById("vis_doctor")?.checked !== false, gallery: document.getElementById("vis_gallery")?.checked !== false, media: document.getElementById("vis_media")?.checked !== false, cta: document.getElementById("vis_cta")?.checked !== false, contact: document.getElementById("vis_contact")?.checked !== false, map: document.getElementById("vis_map")?.checked !== false, footer: document.getElementById("vis_footer")?.checked !== false }
     };
-    
     await setDoc(doc(db, "settings_mona", "main"), settings, { merge: true });
     showToast("✅ تم حفظ جميع الإعدادات! افتحي الموقع واعملي ري فريش.");
-  } catch (err) {
-    console.error("Save settings error:", err);
-    showToast("❌ خطأ في الحفظ: " + err.message, "error");
-  }
+  } catch (err) { console.error("Save settings error:", err); showToast("❌ خطأ في الحفظ: " + err.message, "error"); }
 };
 
 function updateColorPreview(color) { const preview = document.getElementById("colorPreview"); if (preview) preview.style.backgroundColor = color; }
 const primaryColorInput = document.getElementById("setting_primary_color");
 if (primaryColorInput) primaryColorInput.addEventListener("input", (e) => updateColorPreview(e.target.value));
 const heroBgInput = document.getElementById('setting_hero_bg');
-if (heroBgInput) heroBgInput.addEventListener('input', function(e) { const pb = document.getElementById("heroBgPreviewBox"), pi = document.getElementById("heroBgPreviewImg"); if (e.target.value && pi && pb) { pi.src = e.target.value; pb.style.display = "block"; } else if (pb) pb.style.display = "none"; }});
+if (heroBgInput) heroBgInput.addEventListener('input', function(e) { const pb = document.getElementById("heroBgPreviewBox"), pi = document.getElementById("heroBgPreviewImg"); if (e.target.value && pi && pb) { pi.src = e.target.value; pb.style.display = "block"; } else if (pb) pb.style.display = "none"; });
 const doctorImageInput = document.getElementById('setting_doctor_image');
-if (doctorImageInput) doctorImageInput.addEventListener('input', function(e) { const pb = document.getElementById("doctorPreviewBox"), pi = document.getElementById("doctorPreviewImg"); if (e.target.value && pi && pb) { pi.src = e.target.value; pb.style.display = "block"; } else if (pb) pb.style.display = "none"; }});
+if (doctorImageInput) doctorImageInput.addEventListener('input', function(e) { const pb = document.getElementById("doctorPreviewBox"), pi = document.getElementById("doctorPreviewImg"); if (e.target.value && pi && pb) { pi.src = e.target.value; pb.style.display = "block"; } else if (pb) pb.style.display = "none"; });
+
+// 🖱️ تفعيل التبويبات بالكليك (للنسخة الثانية فقط)
+document.querySelectorAll('.tab[data-tab]').forEach(tab => {
+  tab.addEventListener('click', function() {
+    const tabName = this.getAttribute('data-tab');
+    window.switchTab(tabName);
+  });
+});
+
+// 🔄 استعادة آخر تبويب مفتوح
+document.addEventListener('DOMContentLoaded', function() {
+  const savedTab = localStorage.getItem('activeTab');
+  if (savedTab) { setTimeout(() => { window.switchTab(savedTab); }, 100); }
+});
 
 if (document.readyState === "loading") { document.addEventListener("DOMContentLoaded", () => { checkAuth(); }); } 
 else { checkAuth(); }
