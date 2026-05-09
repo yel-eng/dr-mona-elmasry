@@ -519,7 +519,7 @@ async function loadContent(){
   }
 }
 
-// 🟢 رفع صورة عامة لـ Firebase Storage
+// 🟢 رفع صورة عامة لـ Firebase Storage (مع معالجة CORS)
 async function uploadImage(file, path) {
   return new Promise((resolve, reject) => {
     const storageRef = ref(storage, path + '/' + Date.now() + '_' + file.name);
@@ -529,9 +529,15 @@ async function uploadImage(file, path) {
       (snapshot) => {
         // يمكن إضافة تحديث للـ progress bar هنا إذا لزم
       },
-      (error) => reject(error),
+      (error) => {
+        console.error("Upload error:", error);
+        reject(error);
+      },
       () => {
-        getDownloadURL(uploadTask.snapshot.ref).then((url) => resolve(url));
+        getDownloadURL(uploadTask.snapshot.ref).then((url) => {
+          console.log("File available at", url);
+          resolve(url);
+        }).catch(reject);
       }
     );
   });
@@ -686,89 +692,101 @@ async function loadSettingsForm() {
   }
 }
 
-// 🟢 حفظ الإعدادات (مع دعم رفع صورة الغلاف)
+// 🟢 حفظ الإعدادات (مع دعم رفع صورة الغلاف ومعالجة الأخطاء)
 window.saveSettings = async function() {
-  // أولاً: نتحقق لو في صورة غلاف مرفوعة جديدة
-  const heroBgFile = document.getElementById('heroBgUpload').files[0];
-  let heroBgUrl = document.getElementById('setting_hero_bg').value.trim();
-  
-  if (heroBgFile) {
-    try {
-      showToast("📤 جاري رفع صورة الغلاف...");
-      const progressEl = document.getElementById('heroBgProgress');
-      const fillEl = document.getElementById('heroBgFill');
-      progressEl.classList.add('show');
-      
-      heroBgUrl = await uploadImage(heroBgFile, 'clinic_covers');
-      
-      progressEl.classList.remove('show');
-      showToast("✅ تم رفع صورة الغلاف");
-    } catch (err) {
-      showToast("❌ فشل رفع صورة الغلاف: " + err.message, "error");
-      return;
-    }
-  }
-  
-  const settings = {
-    clinic_name: document.getElementById("setting_clinic_name").value,
-    doctor_name: document.getElementById("setting_doctor_name").value,
-    doctor_title: document.getElementById("setting_doctor_title").value,
-    primary_color: document.getElementById("setting_primary_color").value,
-    bg_color: document.getElementById("setting_bg_color").value,
-    hero_title: document.getElementById("setting_hero_title").value,
-    hero_desc: document.getElementById("setting_hero_desc").value,
-    hero_bg: heroBgUrl,  // ← الحقل الجديد
-    hero_image: document.getElementById("setting_hero_image").value,
-    doctor_image: document.getElementById("setting_doctor_image").value,
-    about_text: document.getElementById("setting_about_text").value,
-    whatsapp_number: document.getElementById("setting_whatsapp_number").value,
-    phone_number: document.getElementById("setting_phone_number").value,
-    address: document.getElementById("setting_address").value,
-    working_hours: document.getElementById("setting_working_hours").value,
-    map_url: document.getElementById("setting_map_url").value,
-    footer_text: document.getElementById("setting_footer_text").value
-  };
-  
   try {
+    // أولاً: نتحقق لو في صورة غلاف مرفوعة جديدة
+    const heroBgUpload = document.getElementById('heroBgUpload');
+    const heroBgFile = heroBgUpload?.files?.[0];
+    let heroBgUrl = document.getElementById('setting_hero_bg')?.value?.trim() || "";
+    
+    if (heroBgFile) {
+      try {
+        showToast("📤 جاري رفع صورة الغلاف...");
+        const progressEl = document.getElementById('heroBgProgress');
+        const fillEl = document.getElementById('heroBgFill');
+        if (progressEl) progressEl.classList.add('show');
+        
+        heroBgUrl = await uploadImage(heroBgFile, 'clinic_covers');
+        
+        if (progressEl) progressEl.classList.remove('show');
+        showToast("✅ تم رفع صورة الغلاف");
+      } catch (err) {
+        showToast("❌ فشل رفع صورة الغلاف: " + err.message, "error");
+        return;
+      }
+    }
+    
+    const settings = {
+      clinic_name: document.getElementById("setting_clinic_name")?.value || "",
+      doctor_name: document.getElementById("setting_doctor_name")?.value || "",
+      doctor_title: document.getElementById("setting_doctor_title")?.value || "",
+      primary_color: document.getElementById("setting_primary_color")?.value || "#1d4ed8",
+      bg_color: document.getElementById("setting_bg_color")?.value || "#f8fafc",
+      hero_title: document.getElementById("setting_hero_title")?.value || "",
+      hero_desc: document.getElementById("setting_hero_desc")?.value || "",
+      hero_bg: heroBgUrl,  // ← الحقل الجديد
+      hero_image: document.getElementById("setting_hero_image")?.value || "",
+      doctor_image: document.getElementById("setting_doctor_image")?.value || "",
+      about_text: document.getElementById("setting_about_text")?.value || "",
+      whatsapp_number: document.getElementById("setting_whatsapp_number")?.value || "",
+      phone_number: document.getElementById("setting_phone_number")?.value || "",
+      address: document.getElementById("setting_address")?.value || "",
+      working_hours: document.getElementById("setting_working_hours")?.value || "",
+      map_url: document.getElementById("setting_map_url")?.value || "",
+      footer_text: document.getElementById("setting_footer_text")?.value || ""
+    };
+    
     await setDoc(doc(db, "settings_mona", "main"), settings, { merge: true });
     showToast("✅ تم حفظ الإعدادات! افتحي الموقع واعملي ري فريش.");
   } catch (err) {
+    console.error("Save settings error:", err);
     showToast("❌ خطأ في الحفظ: " + err.message, "error");
   }
 };
 
 // 🟢 معاينة اللون
 function updateColorPreview(color) {
-  document.getElementById("colorPreview").style.backgroundColor = color;
+  const preview = document.getElementById("colorPreview");
+  if (preview) preview.style.backgroundColor = color;
 }
-document.getElementById("setting_primary_color").addEventListener("input", (e) => {
-  updateColorPreview(e.target.value);
-});
+const primaryColorInput = document.getElementById("setting_primary_color");
+if (primaryColorInput) {
+  primaryColorInput.addEventListener("input", (e) => {
+    updateColorPreview(e.target.value);
+  });
+}
 
 // 🟢 إظهار/إخفاء حقل الرفع حسب النوع
-document.getElementById("contentType").addEventListener("change", (e) => {
-  const uploadGroup = document.getElementById("uploadGroup");
-  if (e.target.value === "image") {
-    uploadGroup.style.display = "block";
-  } else {
-    uploadGroup.style.display = "none";
-  }
-});
+const contentTypeSelect = document.getElementById("contentType");
+if (contentTypeSelect) {
+  contentTypeSelect.addEventListener("change", (e) => {
+    const uploadGroup = document.getElementById("uploadGroup");
+    if (uploadGroup) {
+      uploadGroup.style.display = (e.target.value === "image") ? "block" : "none";
+    }
+  });
+}
 
 // 🟢 معاينة فورية لصورة الغلاف عند الاختيار
-document.getElementById('heroBgUpload').addEventListener('change', function(e) {
-  const file = e.target.files[0];
-  if (file) {
-    const reader = new FileReader();
-    reader.onload = function(evt) {
-      const previewBox = document.getElementById("heroBgPreviewBox");
-      const previewImg = document.getElementById("heroBgPreviewImg");
-      previewImg.src = evt.target.result;
-      previewBox.style.display = "block";
-    };
-    reader.readAsDataURL(file);
-  }
-});
+const heroBgUpload = document.getElementById('heroBgUpload');
+if (heroBgUpload) {
+  heroBgUpload.addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = function(evt) {
+        const previewBox = document.getElementById("heroBgPreviewBox");
+        const previewImg = document.getElementById("heroBgPreviewImg");
+        if (previewImg && previewBox) {
+          previewImg.src = evt.target.result;
+          previewBox.style.display = "block";
+        }
+      };
+      reader.readAsDataURL(file);
+    }
+  });
+}
 
 // 🟢 تشغيل عند التحميل
 if (document.readyState === "loading") {
