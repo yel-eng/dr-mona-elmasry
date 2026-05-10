@@ -121,7 +121,7 @@ body { font-family: 'Segoe UI', Tahoma, Arial, sans-serif; background: var(--bg)
           </div>
         </div>
         
-        <div class="form-group"><label>👩‍️ صورة الدكتور</label><input type="url" id="setting_doctor_image" placeholder="https://..."><div class="preview-box" id="doctorPreviewBox"><img id="doctorPreviewImg" src="" style="max-width:100%;max-height:150px;border-radius:8px;margin-top:5px;"></div></div>
+        <div class="form-group"><label>👩‍⚕️ صورة الدكتور</label><input type="url" id="setting_doctor_image" placeholder="https://..."><div class="preview-box" id="doctorPreviewBox"><img id="doctorPreviewImg" src="" style="max-width:100%;max-height:150px;border-radius:8px;margin-top:5px;"></div></div>
         <div class="form-group" style="grid-column: span 2;"><label>نص "عن الدكتور"</label><textarea id="setting_about_text" placeholder="خبرة طويلة..."></textarea></div>
         <div class="form-group"><label>رقم الواتساب</label><input type="text" id="setting_whatsapp_number" placeholder="201211538334"></div>
         <div class="form-group"><label>رقم الاتصال</label><input type="text" id="setting_phone_number" placeholder="01211538334"></div>
@@ -245,7 +245,6 @@ const heroImages = [
   { url: "https://images.unsplash.com/photo-1505751172876-fa1923c5c528?w=1600&h=600&fit=crop", thumb: "https://images.unsplash.com/photo-1505751172876-fa1923c5c528?w=400&h=200&fit=crop", label: "minimal" }
 ];
 
-// 🔀 تبديل التبويبات
 window.switchTab = function(tabName) {
   document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
   document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
@@ -257,19 +256,13 @@ window.switchTab = function(tabName) {
 };
 
 window.toggleMenu = function() { document.getElementById('sideNav').classList.toggle('open'); }
-
-window.handleLogout = async function() { 
-  await signOut(auth); 
-  window.location.reload(); 
-}
-
+window.handleLogout = async function() { await signOut(auth); window.location.reload(); }
 function showToast(msg, type = 'success') {
   const toast = document.getElementById('toast');
   toast.textContent = msg;
   toast.className = 'toast ' + type + ' show';
   setTimeout(() => toast.classList.remove('show'), 3000);
 }
-
 window.quickLogin = async function() {
   const email = document.getElementById('loginEmail').value;
   const password = document.getElementById('loginPassword').value;
@@ -281,14 +274,12 @@ window.quickLogin = async function() {
     loadAllSettings();
   } catch (err) { errorEl.textContent = "❌ " + err.message; errorEl.style.display = 'block'; }
 };
-
 window.checkAuth = function() {
   const user = auth.currentUser;
   if (!user) { document.getElementById('loginSection').style.display = 'block'; }
   else { document.getElementById('loginSection').style.display = 'none'; loadAllSettings(); }
 };
 
-// 🎨 معرض صور الغلاف
 function renderHeroGallery() {
   const gallery = document.getElementById('heroGallery');
   if(!gallery) return;
@@ -301,7 +292,6 @@ function renderHeroGallery() {
     gallery.appendChild(item);
   });
 }
-
 window.selectHeroImage = function(url, element) {
   document.getElementById('setting_hero_bg').value = url;
   const pb = document.getElementById("heroBgPreviewBox");
@@ -381,7 +371,6 @@ if (heroBgInput) heroBgInput.addEventListener('input', function(e) { const pb = 
 const doctorImageInput = document.getElementById('setting_doctor_image');
 if (doctorImageInput) doctorImageInput.addEventListener('input', function(e) { const pb = document.getElementById("doctorPreviewBox"), pi = document.getElementById("doctorPreviewImg"); if (e.target.value && pi && pb) { pi.src = e.target.value; pb.style.display = "block"; } else if (pb) pb.style.display = "none"; });
 
-// 🔗 Navbar Functions
 function renderNavbarList() {
   const list = document.getElementById("navbarList"); list.innerHTML = "";
   navbarData.forEach((item, idx) => {
@@ -392,7 +381,6 @@ window.addNavbarItem = function() { navbarData.push({ text: "جديد", href: "#
 window.removeNavbarItem = function(idx) { navbarData.splice(idx, 1); renderNavbarList(); }
 window.updateNavbarItem = function(idx, field, value) { navbarData[idx][field] = value; }
 
-// 🃏 Cards Functions
 function renderCardsList() {
   const list = document.getElementById("cardsList"); list.innerHTML = "";
   cardsData.forEach((item, idx) => {
@@ -403,7 +391,6 @@ window.addCardItem = function() { cardsData.push({ icon: "⭐", title: "عنوا
 window.removeCardItem = function(idx) { cardsData.splice(idx, 1); renderCardsList(); }
 window.updateCardItem = function(idx, field, value) { cardsData[idx][field] = value; }
 
-// 🖼️ Gallery Functions
 function renderGalleryPreview() {
   const preview = document.getElementById("galleryPreview"); preview.innerHTML = "";
   galleryData.forEach((url, idx) => {
@@ -420,7 +407,6 @@ window.addGalleryImage = function() {
 }
 window.removeGalleryImage = function(idx) { galleryData.splice(idx, 1); renderGalleryPreview(); }
 
-// 👁️ Sections Visibility
 function renderSectionsToggle() {
   const container = document.getElementById("sectionsToggle");
   const sections = [{ key: "hero", label: "🏠 قسم الهيدر" }, { key: "cards", label: "🃏 قسم الكروت" }, { key: "doctor", label: "👨‍⚕️ قسم عن الدكتور" }, { key: "gallery", label: "🖼️ قسم الجاليري" }, { key: "media", label: "📚 المكتبة الطبية" }, { key: "cta", label: "🎯 قسم الاستشارات" }, { key: "contact", label: "📍 قسم التواصل" }, { key: "map", label: "🗺️ قسم الخريطة" }, { key: "footer", label: "🦶 الفوتر" }];
@@ -428,7 +414,6 @@ function renderSectionsToggle() {
   sections.forEach(sec => { container.innerHTML += `<label class="section-toggle"><input type="checkbox" id="vis_${sec.key}" ${sectionsData[sec.key] !== false ? 'checked' : ''}><span>${sec.label}</span></label>`; });
 }
 
-// 📚 Content Functions
 async function loadContent(){
   try {
     const snapshot = await getDocs(collection(db, "content_mona"));
@@ -467,7 +452,6 @@ function renderContent(){
   });
 }
 
-// 💾 حفظ كل الإعدادات
 window.saveAllSettings = async function() {
   if (!auth.currentUser) { showToast("⚠️ يرجى تسجيل الدخول أولاً", "error"); document.getElementById('loginSection').style.display = 'block'; return; }
   try {
@@ -499,7 +483,6 @@ window.saveAllSettings = async function() {
   } catch (err) { console.error("Save settings error:", err); showToast("❌ خطأ في الحفظ: " + err.message, "error"); }
 };
 
-// 🔄 استعادة آخر تبويب مفتوح
 document.addEventListener('DOMContentLoaded', function() {
   const savedTab = localStorage.getItem('activeTab');
   if (savedTab) { setTimeout(() => { window.switchTab(savedTab); }, 100); }
