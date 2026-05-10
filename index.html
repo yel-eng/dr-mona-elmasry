@@ -137,7 +137,7 @@ footer{text-align:center;padding:20px;color:#64748b;}
 <!-- WHATSAPP FLOATING -->
 <a class="wa" id="wa-float" href=""><i class="fab fa-whatsapp"></i></a>
 
-<!-- ✅ كود تحميل الإعدادات (محدث وداعم للنسخ القديمة والجديدة) -->
+<!-- ✅ كود تحميل الإعدادات (نسخة آمنة بدون أخطاء) -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getFirestore, doc, getDoc, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
@@ -172,29 +172,46 @@ async function loadAndApplySettings() {
     // 🏷️ النصوص
     if (s.clinic_name) { 
       document.title = s.clinic_name + " - نظام الحجز"; 
-      document.querySelectorAll('[data-setting="clinic_name"]').forEach(el => el.textContent = s.clinic_name); 
+      var clinicEls = document.querySelectorAll('[data-setting="clinic_name"]');
+      for (var i = 0; i < clinicEls.length; i++) clinicEls[i].textContent = s.clinic_name;
     }
-    if (s.doctor_name) document.querySelectorAll('[data-setting="doctor_name"]').forEach(el => el.textContent = s.doctor_name);
-    if (s.doctor_title) document.querySelectorAll('[data-setting="doctor_title"]').forEach(el => el.textContent = s.doctor_title);
-    if (s.hero_title) document.querySelector('[data-setting="hero_title"]')?.textContent = s.hero_title;
-    if (s.hero_desc) document.querySelector('[data-setting="hero_desc"]')?.textContent = s.hero_desc;
-    if (s.about_heading) document.querySelector('[data-setting="about_heading"]')?.textContent = s.about_heading;
-    if (s.about_text) document.querySelector('[data-setting="about_text"]')?.textContent = s.about_text;
+    if (s.doctor_name) {
+      var docEls = document.querySelectorAll('[data-setting="doctor_name"]');
+      for (var i = 0; i < docEls.length; i++) docEls[i].textContent = s.doctor_name;
+    }
+    if (s.doctor_title) {
+      var titleEls = document.querySelectorAll('[data-setting="doctor_title"]');
+      for (var i = 0; i < titleEls.length; i++) titleEls[i].textContent = s.doctor_title;
+    }
+    var heroTitleEl = document.querySelector('[data-setting="hero_title"]');
+    if (s.hero_title && heroTitleEl) heroTitleEl.textContent = s.hero_title;
+    var heroDescEl = document.querySelector('[data-setting="hero_desc"]');
+    if (s.hero_desc && heroDescEl) heroDescEl.textContent = s.hero_desc;
+    var aboutHeadEl = document.querySelector('[data-setting="about_heading"]');
+    if (s.about_heading && aboutHeadEl) aboutHeadEl.textContent = s.about_heading;
+    var aboutTextEl = document.querySelector('[data-setting="about_text"]');
+    if (s.about_text && aboutTextEl) aboutTextEl.textContent = s.about_text;
     
-    // 🎯 قسم الاستشارات (إصلاح التوافق بين النسخ القديمة والجديدة)
-    const ctaTitle = s.cta?.title || s.cta_title || "";
-    const ctaDesc = s.cta?.desc || s.cta_desc || "";
-    const ctaHours = s.cta?.working_hours || s.working_hours || "";
-    const ctaBadge = s.cta?.badge || s.cta_badge || "";
-    const ctaVisible = s.cta?.visible !== false;
+    // 🎯 قسم الاستشارات (توافق مع النسخ القديمة والجديدة)
+    var ctaTitle = (s.cta && s.cta.title) ? s.cta.title : (s.cta_title || "");
+    var ctaDesc = (s.cta && s.cta.desc) ? s.cta.desc : (s.cta_desc || "");
+    var ctaHours = (s.cta && s.cta.working_hours) ? s.cta.working_hours : (s.working_hours || "");
+    var ctaBadge = (s.cta && s.cta.badge) ? s.cta.badge : (s.cta_badge || "");
+    var ctaVisible = (s.cta && s.cta.visible !== undefined) ? s.cta.visible : true;
     
-    if (ctaTitle) document.querySelector('[data-setting="cta_title"]')?.textContent = ctaTitle;
-    if (ctaDesc) document.querySelector('[data-setting="cta_desc"]')?.textContent = ctaDesc;
-    if (ctaHours) document.querySelector('[data-setting="working_hours"]')?.innerHTML = ctaHours;
-    if (ctaBadge) document.querySelector('[data-setting="cta_badge"]')?.textContent = ctaBadge;
+    var ctaTitleEl = document.querySelector('[data-setting="cta_title"]');
+    if (ctaTitle && ctaTitleEl) ctaTitleEl.textContent = ctaTitle;
+    var ctaDescEl = document.querySelector('[data-setting="cta_desc"]');
+    if (ctaDesc && ctaDescEl) ctaDescEl.textContent = ctaDesc;
+    var ctaHoursEl = document.querySelector('[data-setting="working_hours"]');
+    if (ctaHours && ctaHoursEl) ctaHoursEl.innerHTML = ctaHours;
+    var ctaBadgeEl = document.querySelector('[data-setting="cta_badge"]');
+    if (ctaBadge && ctaBadgeEl) ctaBadgeEl.textContent = ctaBadge;
     
-    if (s.address) document.querySelector('[data-setting="address"]')?.textContent = s.address;
-    if (s.contact_note) document.querySelector('[data-setting="contact_note"]')?.textContent = s.contact_note;
+    var addrEl = document.querySelector('[data-setting="address"]');
+    if (s.address && addrEl) addrEl.textContent = s.address;
+    var contactEl = document.querySelector('[data-setting="contact_note"]');
+    if (s.contact_note && contactEl) contactEl.textContent = s.contact_note;
     if (s.footer_text) document.getElementById('footer-text').textContent = s.footer_text;
     
     // 🖼️ الصور
@@ -204,8 +221,8 @@ async function loadAndApplySettings() {
     // 📞 أرقام التواصل
     if (s.phone_number) document.getElementById('phone-link').href = "tel:" + s.phone_number;
     if (s.whatsapp_number) {
-      const waNum = s.whatsapp_number.replace(/^0+/,'').replace(/\s/g,'');
-      const fullWa = waNum.startsWith('20') ? waNum : '20' + waNum;
+      var waNum = s.whatsapp_number.replace(/^0+/,'').replace(/\s/g,'');
+      var fullWa = waNum.startsWith('20') ? waNum : '20' + waNum;
       document.getElementById('whatsapp-link').href = "https://wa.me/" + fullWa;
       document.getElementById('wa-float').href = "https://wa.me/" + fullWa;
     }
@@ -213,7 +230,7 @@ async function loadAndApplySettings() {
     
     // 🖼️ خلفية الهيرو
     if (s.hero_bg) {
-      const heroSection = document.getElementById('hero-section');
+      var heroSection = document.getElementById('hero-section');
       if (heroSection) { 
         heroSection.style.backgroundImage = "url('" + s.hero_bg + "')"; 
         heroSection.style.backgroundSize = "cover"; 
@@ -222,28 +239,37 @@ async function loadAndApplySettings() {
     }
     
     // 🔗 الناف بار
-    if (s.navbar_links?.length) {
-      const navbar = document.getElementById('navbar');
+    if (s.navbar_links && s.navbar_links.length > 0) {
+      var navbar = document.getElementById('navbar');
       navbar.innerHTML = "";
-      s.navbar_links.filter(l => l.visible).forEach(link => {
-        navbar.innerHTML += `<a href="${link.href}">${link.text}</a>`;
-      });
+      for (var i = 0; i < s.navbar_links.length; i++) {
+        var link = s.navbar_links[i];
+        if (link.visible) {
+          navbar.innerHTML += '<a href="' + link.href + '">' + link.text + '</a>';
+        }
+      }
     }
     
     // 🃏 الكروت
-    if (s.cards?.length) {
-      const cardsSection = document.getElementById('cards-section');
+    if (s.cards && s.cards.length > 0) {
+      var cardsSection = document.getElementById('cards-section');
       cardsSection.innerHTML = "";
-      s.cards.filter(c => c.visible).forEach(card => {
-        cardsSection.innerHTML += `<div class="card"><div class="icon">${card.icon}</div><h3>${card.title}</h3></div>`;
-      });
+      for (var i = 0; i < s.cards.length; i++) {
+        var card = s.cards[i];
+        if (card.visible) {
+          cardsSection.innerHTML += '<div class="card"><div class="icon">' + card.icon + '</div><h3>' + card.title + '</h3></div>';
+        }
+      }
     }
     
     // 🖼️ الجاليري مع تمرير لا نهائي
-    if (s.gallery_images?.length) {
-      const track = document.getElementById('gallery-track');
-      const images = s.gallery_images.map(url => `<img src="${url}" onerror="this.src='https://via.placeholder.com/250x200?text=Image'">`).join('');
-      track.innerHTML = images + images;
+    if (s.gallery_images && s.gallery_images.length > 0) {
+      var track = document.getElementById('gallery-track');
+      var imagesHtml = "";
+      for (var i = 0; i < s.gallery_images.length; i++) {
+        imagesHtml += '<img src="' + s.gallery_images[i] + '" onerror="this.src=\'https://via.placeholder.com/250x200?text=Image\'">';
+      }
+      track.innerHTML = imagesHtml + imagesHtml; // تكرار للتمرير اللانهائي
       if (s.gallery_auto_scroll !== false) { 
         track.style.animation = 'scroll 40s linear infinite'; 
       } else { 
@@ -263,7 +289,10 @@ async function loadAndApplySettings() {
       if (ctaVisible === false) document.getElementById('cta-section').classList.add('section-hidden');
       if (s.sections.contact === false) document.getElementById('contact').classList.add('section-hidden');
       if (s.sections.map === false) document.getElementById('map-section').classList.add('section-hidden');
-      if (s.sections.footer === false) document.getElementById('footer-text').closest('footer')?.classList.add('section-hidden');
+      if (s.sections.footer === false) {
+        var footerEl = document.getElementById('footer-text');
+        if (footerEl && footerEl.parentElement) footerEl.parentElement.classList.add('section-hidden');
+      }
     }
     
   } catch (err) { 
@@ -281,10 +310,10 @@ function applyDefaults() {
   document.getElementById('whatsapp-link').href = "https://wa.me/201211538334";
   document.getElementById('wa-float').href = "https://wa.me/201211538334";
   document.getElementById('map-frame').src = "https://www.google.com/maps?q=alexandria+egypt&output=embed";
-  const navbar = document.getElementById('navbar');
-  navbar.innerHTML = `<a href="#">الرئيسية</a><a href="#doctor">عن الدكتور</a><a href="#media">المكتبة الطبية</a><a href="#contact">تواصل</a>`;
-  const cardsSection = document.getElementById('cards-section');
-  cardsSection.innerHTML = `<div class="card"><div class="icon">⭐</div><h3>مستوى خدمة عالي</h3></div><div class="card"><div class="icon">🧠</div><h3>أحدث تقنيات طبية</h3></div><div class="card"><div class="icon">❤️</div><h3>اهتمام شخصي بالمرضى</h3></div>`;
+  var navbar = document.getElementById('navbar');
+  navbar.innerHTML = '<a href="#">الرئيسية</a><a href="#doctor">عن الدكتور</a><a href="#media">المكتبة الطبية</a><a href="#contact">تواصل</a>';
+  var cardsSection = document.getElementById('cards-section');
+  cardsSection.innerHTML = '<div class="card"><div class="icon">⭐</div><h3>مستوى خدمة عالي</h3></div><div class="card"><div class="icon">🧠</div><h3>أحدث تقنيات طبية</h3></div><div class="card"><div class="icon">❤️</div><h3>اهتمام شخصي بالمرضى</h3></div>';
 }
 
 // تحميل المحتوى من content_mona
@@ -306,7 +335,7 @@ async function loadMediaContent() {
 
 // تشغيل الدوال بعد تحميل الصفحة
 if (document.readyState === "loading") {
-  document.addEventListener("DOMContentLoaded", () => { loadAndApplySettings(); loadMediaContent(); });
+  document.addEventListener("DOMContentLoaded", function() { loadAndApplySettings(); loadMediaContent(); });
 } else { loadAndApplySettings(); loadMediaContent(); }
 </script>
 </body>
