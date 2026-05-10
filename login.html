@@ -3,120 +3,255 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>تسجيل الدخول - ميديكال كلينك</title>
+<title>تسجيل الدخول - عيادة د. منى المصري</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
-body { margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; background: linear-gradient(135deg, #1a237e, #3949ab); height: 100vh; display: flex; justify-content: center; align-items: center; }
-.login-box { background: #fff; padding: 30px; border-radius: 15px; width: 320px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); text-align: center; }
-.login-box h2 { margin-bottom: 20px; color: #1a237e; }
-input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ccc; border-radius: 8px; outline: none; transition: 0.3s; box-sizing: border-box; }
-input:focus { border-color: #1a237e; box-shadow: 0 0 5px rgba(26,35,126,0.3); }
-button { width: 100%; padding: 12px; background: #1a237e; color: #fff; border: none; border-radius: 8px; cursor: pointer; font-size: 16px; transition: 0.3s; }
-button:hover { background: #3949ab; }
-::placeholder { color: #999; }
-.error-msg { color: #d32f2f; font-size: 13px; margin-top: 5px; display: none; }
+:root { --primary: #1d4ed8; --primary-dark: #1e40af; --bg-gradient: linear-gradient(135deg, #1a237e, #3949ab); }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { 
+  font-family: 'Tajawal', sans-serif; 
+  background: var(--bg-gradient); 
+  height: 100vh; 
+  display: flex; 
+  justify-content: center; 
+  align-items: center; 
+  padding: 20px;
+}
+.login-box { 
+  background: #fff; 
+  padding: 35px 30px; 
+  border-radius: 20px; 
+  width: 100%; 
+  max-width: 380px; 
+  box-shadow: 0 20px 60px rgba(0,0,0,0.3); 
+  text-align: center;
+  animation: slideUp 0.4s ease;
+}
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.login-box .logo { 
+  font-size: 24px; 
+  font-weight: 700; 
+  color: var(--primary); 
+  margin-bottom: 8px;
+}
+.login-box .subtitle { 
+  color: #64748b; 
+  font-size: 14px; 
+  margin-bottom: 25px;
+}
+.input-group { text-align: right; margin-bottom: 18px; }
+.input-group label { 
+  display: block; 
+  font-size: 13px; 
+  color: #334155; 
+  margin-bottom: 6px; 
+  font-weight: 500;
+}
+.input-group input { 
+  width: 100%; 
+  padding: 12px 15px; 
+  border: 2px solid #e2e8f0; 
+  border-radius: 12px; 
+  font-size: 14px; 
+  outline: none; 
+  transition: 0.3s;
+  font-family: 'Tajawal', sans-serif;
+}
+.input-group input:focus { 
+  border-color: var(--primary); 
+  box-shadow: 0 0 0 4px rgba(29, 78, 216, 0.1);
+}
+.input-group input::placeholder { color: #94a3b8; }
+button { 
+  width: 100%; 
+  padding: 14px; 
+  background: var(--primary); 
+  color: #fff; 
+  border: none; 
+  border-radius: 12px; 
+  cursor: pointer; 
+  font-size: 15px; 
+  font-weight: 600;
+  font-family: 'Tajawal', sans-serif;
+  transition: 0.3s;
+  margin-top: 10px;
+}
+button:hover { background: var(--primary-dark); transform: translateY(-2px); }
+button:disabled { background: #94a3b8; cursor: not-allowed; transform: none; }
+.error-msg { 
+  color: #dc2626; 
+  font-size: 13px; 
+  margin-top: 12px; 
+  display: none; 
+  background: #fef2f2; 
+  padding: 10px; 
+  border-radius: 8px;
+  border: 1px solid #fecaca;
+}
+.footer-note { 
+  margin-top: 25px; 
+  font-size: 12px; 
+  color: #94a3b8;
+}
+.footer-note a { 
+  color: var(--primary); 
+  text-decoration: none;
+}
+.footer-note a:hover { text-decoration: underline; }
+.back-link {
+  display: inline-block;
+  margin-top: 15px;
+  color: var(--primary);
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+}
+.back-link:hover { text-decoration: underline; }
 </style>
 </head>
 <body>
 
 <div class="login-box">
-  <h2>🔐 تسجيل الدخول</h2>
+  <div class="logo">🏥 عيادة د. منى المصري</div>
+  <p class="subtitle">نظام إدارة المواعيد - تسجيل دخول الموظفين</p>
   
-  <input type="email" id="email" placeholder="البريد الإلكتروني">
-  <input type="password" id="password" placeholder="كلمة المرور">
+  <div class="input-group">
+    <label for="email">البريد الإلكتروني</label>
+    <input type="email" id="email" placeholder="admin@clinic.com" autocomplete="email">
+  </div>
+  
+  <div class="input-group">
+    <label for="password">كلمة المرور</label>
+    <input type="password" id="password" placeholder="••••••••" autocomplete="current-password">
+  </div>
+  
   <p id="errorMsg" class="error-msg"></p>
   
-  <button onclick="handleLogin()">دخول</button>
+  <button onclick="handleLogin()" id="loginBtn">تسجيل الدخول</button>
+  
+  <a href="index.html" class="back-link">← العودة للموقع الرئيسي</a>
+  
+  <p class="footer-note">
+    🔐 هذه الصفحة مخصصة لفريق العمل فقط.<br>
+    للحجز كـ مريض، زوري <a href="booking.html">صفحة الحجز</a>
+  </p>
 </div>
 
-<!-- ✅ كود الجافاسكريبت مدمج في نفس الملف (بدون ملفات خارجية) -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-/* ================= FIREBASE CONFIG ================= */
+/* ================= 🔥 Firebase Config - عيادة د. منى المصري ================= */
 const firebaseConfig = {
-  apiKey: "AIzaSyA8FEgNeXAMZ1Sbg12zFCzwwxUD3sVl99o",
-  authDomain: "mydoctor-clinic.firebaseapp.com",
-  projectId: "mydoctor-clinic",
+  apiKey: "AIzaSyD7B-e65xKC2Q3rY6F0TI55QtYJPqqw4dE",
+  authDomain: "dr-mona-elmasry.firebaseapp.com",
+  databaseURL: "https://dr-mona-elmasry-default-rtdb.firebaseio.com",
+  projectId: "dr-mona-elmasry",
+  storageBucket: "dr-mona-elmasry.firebasestorage.app",
+  messagingSenderId: "40312173388",
+  appId: "1:40312173388:web:d5b75d750ac4b5599195e9",
+  measurementId: "G-MFG6HP7585"
 };
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-// ⚠️ ضعي الإيميل بتاع الأدمن هنا
-const ADMIN_EMAIL = "admin@clinic.com"; 
+// ⚠️ إيميل الأدمن الرئيسي
+const ADMIN_EMAIL = "admin@clinic.com";
 
-/* ================= دالة الدخول (مربوطة بـ window عشان onclick يشتغل) ================= */
+/* ================= دالة تسجيل الدخول ================= */
 window.handleLogin = async function() {
   const email = document.getElementById("email").value.trim();
   const password = document.getElementById("password").value;
   const errorMsg = document.getElementById("errorMsg");
-  const btn = document.querySelector("button");
+  const loginBtn = document.getElementById("loginBtn");
   
-  // إخفاء الخطأ السابق
+  // إخفاء أي رسالة خطأ سابقة
   errorMsg.style.display = "none";
   errorMsg.textContent = "";
   
-  // تحقق بسيط من المدخلات
-  if (!email || !password) {
-    showError("12345678");
-    return;
-  }
+  // تحقق من المدخلات
+  if (!email) { showError("⚠️ يرجى إدخال البريد الإلكتروني"); return; }
+  if (!password) { showError("⚠️ يرجى إدخال كلمة المرور"); return; }
   
   // تعطيل الزر أثناء التحميل
-  btn.disabled = true;
-  btn.textContent = "جاري الدخول...";
+  loginBtn.disabled = true;
+  loginBtn.textContent = "جاري التحقق...";
   
   try {
-    // 1. تسجيل الدخول عبر فايربيس
+    // 1️⃣ تسجيل الدخول عبر فايربيس
     const userCred = await signInWithEmailAndPassword(auth, email, password);
     const user = userCred.user;
     
-    // 2. فحص الدور من قاعدة البيانات (users collection)
-    const userDoc = await getDoc(doc(db, "users", user.uid));
-    const role = userDoc.exists() ? userDoc.data().role : "user";
+    // 2️⃣ فحص صلاحية المستخدم من قاعدة البيانات
+    let role = "user"; // القيمة الافتراضية
+    try {
+      const userDoc = await getDoc(doc(db, "users", user.uid));
+      if (userDoc.exists()) {
+        role = userDoc.data().role || "user";
+      }
+    } catch (e) {
+      console.log("⚠️ لم يتم العثور على تفاصيل المستخدم، سيتم اعتباره مستخدم عادي");
+    }
     
-    // 3. التوجيه حسب الدور
+    // 3️⃣ التوجيه حسب الصلاحية
     if (email.toLowerCase() === ADMIN_EMAIL.toLowerCase() || role === "admin") {
-      // ✅ أدمن → يروح لصفحة الأدمن
-      window.location.href = "admin.html";
+      // ✅ أدمن → لوحة التحكم
+      showToast("✅ مرحباً بكِ في لوحة التحكم");
+      setTimeout(() => { window.location.href = "index-admin.html"; }, 800);
     } else {
-      // 👤 مستخدم عادي → يروح لصفحة الحجز
-      window.location.href = "booking.html";
+      // 👤 مستخدم عادي / موظف → صفحة الحجز
+      showToast("✅ تم تسجيل الدخول بنجاح");
+      setTimeout(() => { window.location.href = "booking.html"; }, 800);
     }
     
   } catch (err) {
-    console.error("Login Error:", err);
+    console.error("❌ Login Error:", err);
     
-    // ترجمة أخطاء فايربيس الشائعة
-    let msg = "❌ فشل تسجيل الدخول";
-    if (err.code === "auth/invalid-email") msg = "⚠️ صيغة البريد غير صحيحة";
-    else if (err.code === "auth/user-disabled") msg = "⚠️ هذا الحساب معطل";
-    else if (err.code === "auth/user-not-found") msg = "⚠️ لا يوجد حساب بهذا البريد";
-    else if (err.code === "auth/wrong-password") msg = "⚠️ كلمة المرور غير صحيحة";
-    else if (err.code === "auth/too-many-requests") msg = "⚠️ محاولات كثيرة، حاولي لاحقاً";
+    // ترجمة رسائل الخطأ للعربية
+    let msg = "❌ حدث خطأ غير متوقع، حاولي مرة أخرى";
+    
+    if (err.code === "auth/invalid-email") msg = "⚠️ صيغة البريد الإلكتروني غير صحيحة";
+    else if (err.code === "auth/user-disabled") msg = "⚠️ هذا الحساب معطل، راجعي الإدارة";
+    else if (err.code === "auth/user-not-found") msg = "⚠️ لا يوجد حساب بهذا البريد الإلكتروني";
+    else if (err.code === "auth/wrong-password") msg = "⚠️ كلمة المرور غير صحيحة، حاولي مرة أخرى";
+    else if (err.code === "auth/too-many-requests") msg = "⚠️ محاولات كثيرة، انتظري قليلاً ثم حاولي";
+    else if (err.code === "auth/network-request-failed") msg = "⚠️ مشكلة في الاتصال بالإنترنت، تأكدي من الشبكة";
     
     showError(msg);
     
     // إعادة تفعيل الزر
-    btn.disabled = false;
-    btn.textContent = "دخول";
+    loginBtn.disabled = false;
+    loginBtn.textContent = "تسجيل الدخول";
   }
 };
 
-/* ================= دالة مساعدة لعرض الأخطاء ================= */
+/* ================= دوال مساعدة ================= */
 function showError(msg) {
   const el = document.getElementById("errorMsg");
   el.textContent = msg;
   el.style.display = "block";
   
-  // إخفاء الرسالة تلقائياً بعد 5 ثواني
-  setTimeout(() => { el.style.display = "none"; }, 5000);
+  // اهتزاز بسيط للفت الانتباه
+  el.animate([
+    { transform: "translateX(0)" },
+    { transform: "translateX(-5px)" },
+    { transform: "translateX(5px)" },
+    { transform: "translateX(0)" }
+  ], { duration: 200 });
 }
 
-/* ================= تسجيل الخروج (لو محتاجة تستخدميها من صفحات تانية) ================= */
+function showToast(msg) {
+  // يمكن إضافة توست هنا لو حابة
+  console.log(msg);
+}
+
+/* ================= تسجيل الخروج (للاستخدام في صفحات أخرى) ================= */
 window.handleLogout = async function() {
   try {
     await auth.signOut();
@@ -126,7 +261,12 @@ window.handleLogout = async function() {
   }
 };
 
-console.log("✅ Login Page Loaded - Auth Ready");
+/* ================= ضغط Enter لتسجيل الدخول ================= */
+document.getElementById("password").addEventListener("keypress", function(e) {
+  if (e.key === "Enter") handleLogin();
+});
+
+console.log("✅ صفحة تسجيل الدخول - عيادة د. منى المصري - جاهزة");
 </script>
 
 </body>
