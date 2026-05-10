@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<title>حجز موعد - عيادة د. منى المصري</title>
+<title>حجز موعد - د. منى المصري</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
@@ -34,7 +34,7 @@ body { font-family: 'Tajawal', sans-serif; background: var(--bg); color: var(--t
 
 <div class="booking-box">
   <h2>📅 احجز موعدك</h2>
-  <p style="text-align:center;color:#666;margin-bottom:20px;font-size:14px;"> د. منى المصري -  اخصائي تخاطب وتعديل سلوك</p>
+  <p style="text-align:center;color:#666;margin-bottom:20px;font-size:14px;">عيادة د. منى المصري - استشاري النساء والتوليد</p>
   
   <div class="form-group">
     <label>الاسم الكامل *</label>
@@ -55,7 +55,7 @@ body { font-family: 'Tajawal', sans-serif; background: var(--bg); color: var(--t
     <p class="loading">⏳ اختاري تاريخاً لعرض المواعيد المتاحة</p>
   </div>
   
-  <button id="bookBtn" class="btn" onclick="book()" disabled>تأكيد الحجز</button>
+  <button id="bookBtn" class="btn" onclick="handleBook()" disabled>تأكيد الحجز</button>
   
   <p style="text-align:center;margin-top:15px;font-size:12px;color:#666;">
     🔒 بياناتك محمية وسيتم التواصل معك لتأكيد الموعد
@@ -63,7 +63,6 @@ body { font-family: 'Tajawal', sans-serif; background: var(--bg); color: var(--t
 </div>
 
 <script type="module">
-// ✅ Firebase Config - مشروع د. منى المصري (نفس الأدمن)
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getFirestore, collection, onSnapshot, doc, getDoc, updateDoc, addDoc, query, where, getDocs, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
@@ -93,7 +92,6 @@ onSnapshot(slotsRef, (snap) => {
   slotsCache = [];
   snap.forEach(d => slotsCache.push({ id: d.id, ...d.data() }));
   
-  // إذا كان هناك تاريخ مختار، أعد عرض المواعيد
   const selectedDate = $("dateInput").value;
   if (selectedDate) {
     renderSlotsByDate(selectedDate);
@@ -111,11 +109,9 @@ function renderSlotsByDate(date) {
   
   if (!date) return;
   
-  // فلترة: مواعيد هذا التاريخ + غير محجوزة
   const available = slotsCache.filter(s => s.date === date && !s.booked);
   
   if (available.length > 0) {
-    // ترتيب زمني
     available.sort((a, b) => a.time.localeCompare(b.time));
     
     container.innerHTML = "";
@@ -125,9 +121,7 @@ function renderSlotsByDate(date) {
       div.innerHTML = `<span>🕒 ${slot.time}</span><span style="font-size:12px;color:var(--success)">متاح</span>`;
       
       div.onclick = () => {
-        // إزالة التحديد السابق
         document.querySelectorAll(".slot-item").forEach(el => el.classList.remove("selected"));
-        // تحديد الجديد
         div.classList.add("selected");
         selectedSlotId = slot.id;
         bookBtn.disabled = false;
@@ -135,18 +129,15 @@ function renderSlotsByDate(date) {
       container.appendChild(div);
     });
   } else {
-    // لا توجد مواعيد متاحة
     const anySlots = slotsCache.some(s => s.date === date);
     if (!anySlots) {
-      // مفيش جدول أصلاً → زر إرسال طلب
       container.innerHTML = `
         <p class="no-slots">⚠️ لا توجد مواعيد مضافة لهذا اليوم بعد</p>
-        <button class="btn request-btn" onclick="sendBookingRequest('${date}')">
+        <button class="btn request-btn" onclick="window.handleSendBookingRequest('${date}')">
           📝 إرسال طلب حجز
         </button>
       `;
     } else {
-      // في جدول لكن كل المواعيد محجوزة
       container.innerHTML = `<p class="no-slots" style="color:var(--danger)">❌ جميع مواعيد هذا اليوم محجوزة</p>`;
     }
   }
@@ -160,8 +151,8 @@ $("dateInput").addEventListener("change", (e) => {
   }
 });
 
-// ✅ دالة الحجز النهائية
-async function book() {
+// ✅ دالة الحجز النهائية (مربوطة بـ window)
+window.handleBook = async function() {
   const name = $("pName").value.trim();
   const phone = $("pPhone").value.trim();
   const date = $("dateInput").value;
@@ -174,12 +165,10 @@ async function book() {
     return showToast("⚠️ اكملِ البيانات: الاسم والهاتف مطلوبان", "error");
   }
   
-  // تعطيل الزر أثناء المعالجة
   bookBtn.disabled = true;
   bookBtn.textContent = "جاري الحجز...";
   
   try {
-    // Double-Check: التأكد من أن الميعاد لسه متاح
     const slotRef = doc(db, "slots", selectedSlotId);
     const slotSnap = await getDoc(slotRef);
     
@@ -191,7 +180,6 @@ async function book() {
       return;
     }
     
-    // تنفيذ الحجز
     await updateDoc(slotRef, {
       booked: true,
       status: "booked",
@@ -201,7 +189,6 @@ async function book() {
     
     showToast("✅ تم الحجز بنجاح! هنتواصل معاك قريباً");
     
-    // إعادة تعيين
     selectedSlotId = null;
     $("pName").value = "";
     $("pPhone").value = "";
@@ -213,10 +200,10 @@ async function book() {
     bookBtn.disabled = false;
     bookBtn.textContent = "تأكيد الحجز";
   }
-}
+};
 
-// 📝 دالة إرسال طلب (لأيام مفيش لها جدول)
-async function sendBookingRequest(date) {
+// 📝 دالة إرسال طلب (مربوطة بـ window)
+window.handleSendBookingRequest = async function(date) {
   const name = $("pName").value.trim();
   const phone = $("pPhone").value.trim();
   
@@ -242,7 +229,7 @@ async function sendBookingRequest(date) {
     console.error("❌ Request Error:", err);
     showToast("❌ فشل إرسال الطلب، حاولي مرة أخرى", "error");
   }
-}
+};
 
 // 🔔 دالة عرض الإشعارات
 function showToast(msg, type = "success") {
@@ -253,6 +240,9 @@ function showToast(msg, type = "success") {
   document.body.appendChild(toast);
   setTimeout(() => toast.remove(), 4000);
 }
+
+// ✅ تعريف الدوال في النطاق العام
+window.renderSlotsByDate = renderSlotsByDate;
 
 console.log("✅ Booking Page Loaded - Dr. Mona Clinic");
 </script>
