@@ -44,14 +44,31 @@ body {
 .patient-name { font-size: 20px; font-weight: 700; color: var(--main); }
 .patient-phone { color: var(--text-light); font-size: 14px; }
 
+/* ✅ أزرار تعديل البيانات الأساسية */
+.edit-basic-btn { background: var(--warning); color: #fff; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 12px; margin-right: 10px; }
+.delete-patient-btn { background: var(--danger); color: #fff; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 12px; }
+
 .sessions-list { max-height: 400px; overflow-y: auto; }
 .session-item {
   background: #f8f9fa; padding: 15px; border-radius: 10px; margin-bottom: 10px;
-  border-right: 4px solid var(--main);
+  border-right: 4px solid var(--main); position: relative;
 }
 .session-date { font-weight: 600; color: var(--main); margin-bottom: 5px; }
 .session-notes { color: var(--text); line-height: 1.6; }
 .session-empty { text-align: center; color: var(--text-light); padding: 20px; }
+
+/* ✅ أزرار الجلسة */
+.session-actions {
+  position: absolute; top: 10px; left: 10px; display: flex; gap: 5px;
+}
+.session-actions button {
+  width: 28px; height: 28px; border-radius: 50%; border: none;
+  cursor: pointer; font-size: 14px; display: flex; align-items: center; justify-content: center;
+  transition: 0.2s; color: #fff;
+}
+.session-actions .edit-btn { background: #0ea5e9; }
+.session-actions .delete-btn { background: var(--danger); }
+.session-actions button:hover { transform: scale(1.1); }
 
 .add-session { background: #fff3e0; padding: 15px; border-radius: 10px; margin-top: 20px; border: 2px solid var(--warning); }
 .add-session h4 { margin-bottom: 10px; color: var(--warning); }
@@ -73,6 +90,27 @@ body {
 }
 @keyframes slideIn { from { transform: translateX(-50%) translateY(-30px); opacity: 0; } to { transform: translateX(-50%) translateY(0); opacity: 1; } }
 @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }
+
+/* Modal للتعديل */
+.modal-overlay {
+  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(26,35,126,0.85); z-index: 10000;
+  display: flex; justify-content: center; align-items: center;
+}
+.modal-content {
+  background: var(--white); width: 95%; max-width: 450px;
+  border-radius: 16px; padding: 20px 25px; max-height: 90vh; overflow: auto;
+}
+.modal-title { color: var(--main); text-align: center; margin: 0 0 15px; font-size: 18px; font-weight: 600; }
+.modal-actions { display: flex; gap: 10px; margin-top: 20px; }
+.modal-btn { flex: 1; padding: 12px; border: none; border-radius: 10px; cursor: pointer; font-weight: 600; font-size: 14px; }
+.modal-btn-primary { background: var(--main); color: #fff; }
+.modal-btn-cancel { background: var(--danger); color: #fff; }
+.modal-close {
+  position: absolute; top: 12px; left: 12px; width: 32px; height: 32px;
+  border-radius: 50%; background: var(--danger); color: #fff; border: none;
+  font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center;
+}
 
 .no-results { text-align: center; padding: 40px; color: var(--text-light); }
 </style>
@@ -109,6 +147,11 @@ body {
         <div style="text-align:left;">
           <div style="font-size:14px;color:var(--text-light);">عدد الجلسات</div>
           <div style="font-size:24px;font-weight:700;color:var(--main);" id="pCount">0</div>
+          <!-- ✅ أزرار تعديل وحذف المريض -->
+          <div style="margin-top:10px;">
+            <button class="edit-basic-btn" onclick="editPatientBasic()">✏️ تعديل البيانات</button>
+            <button class="delete-patient-btn" onclick="deletePatient()">🗑️ حذف المريض</button>
+          </div>
         </div>
       </div>
 
@@ -128,7 +171,7 @@ body {
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getFirestore, collection, query, where, getDocs, doc, updateDoc, arrayUnion, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { getFirestore, collection, query, where, getDocs, doc, updateDoc, arrayUnion, serverTimestamp, deleteDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 import { getAuth, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
 const firebaseConfig = {
@@ -148,6 +191,7 @@ const auth = getAuth(app);
 const patientsRef = collection(db, "patients");
 
 let currentPatientId = null;
+let currentPatientData = null;
 
 // 🔐 حماية الصفحة
 auth.onAuthStateChanged(user => {
@@ -182,27 +226,16 @@ window.searchPatient = async function() {
     }
     
     const docSnap = snap.docs[0];
-    const patient = { id: docSnap.id, ...docSnap.data() };
+    currentPatientData = { id: docSnap.id, ...docSnap.data() };
+    currentPatientId = currentPatientData.id;
     
     // عرض بيانات المريض
-    document.getElementById("pName").textContent = patient.name;
-    document.getElementById("pPhone").textContent = "📞 " + patient.phone.replace('20', '0');
-    document.getElementById("pCount").textContent = patient.sessions?.length || 0;
+    document.getElementById("pName").textContent = currentPatientData.name;
+    document.getElementById("pPhone").textContent = "📞 " + currentPatientData.phone.replace('20', '0');
+    document.getElementById("pCount").textContent = currentPatientData.sessions?.length || 0;
     
-    // عرض الجلسات
-    const sessionsList = document.getElementById("sessionsList");
-    if (patient.sessions && patient.sessions.length > 0) {
-      sessionsList.innerHTML = patient.sessions
-        .sort((a,b) => new Date(b.date + 'T' + b.time) - new Date(a.date + 'T' + a.time))
-        .map(s => `
-          <div class="session-item">
-            <div class="session-date">📅 ${s.date} | 🕒 ${s.time}</div>
-            <div class="session-notes">${s.notes || "<em style='color:var(--text-light)'>بدون ملاحظات</em>"}</div>
-          </div>
-        `).join("");
-    } else {
-      sessionsList.innerHTML = "<p class='session-empty'>لا توجد جلسات مسجلة</p>";
-    }
+    // عرض الجلسات مع أزرار التعديل والحذف
+    renderSessionsList();
     
     // إظهار التفاصيل
     document.getElementById("patientDetails").style.display = "block";
@@ -212,10 +245,7 @@ window.searchPatient = async function() {
     document.getElementById("newDate").value = new Date().toISOString().split("T")[0];
     document.getElementById("newTime").value = "18:00";
     
-    // حفظ الآيدي
-    currentPatientId = patient.id;
-    
-    // البحث عن مريض من الرابط (؟phone=...)
+    // البحث من الرابط
     const urlParams = new URLSearchParams(window.location.search);
     const urlPhone = urlParams.get('phone');
     if (urlPhone) {
@@ -228,6 +258,28 @@ window.searchPatient = async function() {
     resultDiv.innerHTML = `<p style="color:var(--danger)">❌ خطأ: ${err.message}</p>`;
   }
 };
+
+// 🎨 عرض الجلسات مع الأزرار
+function renderSessionsList() {
+  const sessionsList = document.getElementById("sessionsList");
+  
+  if (currentPatientData.sessions && currentPatientData.sessions.length > 0) {
+    sessionsList.innerHTML = currentPatientData.sessions
+      .sort((a,b) => new Date(b.date + 'T' + b.time) - new Date(a.date + 'T' + a.time))
+      .map((s, index) => `
+        <div class="session-item" data-index="${index}">
+          <div class="session-actions">
+            <button class="edit-btn" onclick="editSession(${index})" title="تعديل">✏️</button>
+            <button class="delete-btn" onclick="deleteSession(${index})" title="حذف">🗑️</button>
+          </div>
+          <div class="session-date">📅 ${s.date} | 🕒 ${s.time}</div>
+          <div class="session-notes">${s.notes || "<em style='color:var(--text-light)'>بدون ملاحظات</em>"}</div>
+        </div>
+      `).join("");
+  } else {
+    sessionsList.innerHTML = "<p class='session-empty'>لا توجد جلسات مسجلة</p>";
+  }
+}
 
 // ➕ إضافة جلسة جديدة
 window.addSession = async function() {
@@ -250,12 +302,165 @@ window.addSession = async function() {
     
     showNotification("✅ تمت إضافة الملاحظة");
     document.getElementById("newNotes").value = "";
-    
-    // إعادة تحميل البيانات
-    searchPatient();
+    searchPatient(); // إعادة التحميل
     
   } catch (err) {
     alert("❌ فشل الإضافة: " + err.message);
+  }
+};
+
+// ✏️ تعديل جلسة موجودة
+window.editSession = async function(index) {
+  if (!currentPatientData || !currentPatientData.sessions[index]) return;
+  
+  const session = currentPatientData.sessions[index];
+  const old = document.getElementById("editSessionModal");
+  if (old) old.remove();
+  
+  const modal = document.createElement("div");
+  modal.id = "editSessionModal";
+  modal.className = "modal-overlay";
+  modal.innerHTML = `
+    <div class="modal-content">
+      <button class="modal-close" onclick="closeEditSessionModal()">✕</button>
+      <h3 class="modal-title">✏️ تعديل الجلسة</h3>
+      <p style="margin-bottom:15px;color:var(--text-light)">📅 ${session.date} | 🕒 ${session.time}</p>
+      <textarea id="editSessionNotes" rows="4" style="width:100%;padding:10px;border:1px solid #ddd;border-radius:8px">${session.notes || ""}</textarea>
+      <div class="modal-actions">
+        <button class="modal-btn modal-btn-primary" onclick="saveEditedSession(${index})">💾 حفظ</button>
+        <button class="modal-btn modal-btn-cancel" onclick="closeEditSessionModal()">إلغاء</button>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(modal);
+  modal.onclick = function(e) { if (e.target === modal) closeEditSessionModal(); };
+};
+
+window.closeEditSessionModal = function() {
+  const modal = document.getElementById("editSessionModal");
+  if (modal) modal.remove();
+};
+
+window.saveEditedSession = async function(index) {
+  const newNotes = document.getElementById("editSessionNotes").value.trim();
+  
+  try {
+    // نسخ المصفوفة وتعديل العنصر
+    const sessions = [...(currentPatientData.sessions || [])];
+    sessions[index] = { ...sessions[index], notes: newNotes, updated_at: serverTimestamp() };
+    
+    await updateDoc(doc(db, "patients", currentPatientId), {
+      sessions: sessions,
+      updated_at: serverTimestamp()
+    });
+    
+    closeEditSessionModal();
+    showNotification("✅ تم تعديل الملاحظة");
+    searchPatient();
+    
+  } catch (err) {
+    alert("❌ فشل التعديل: " + err.message);
+  }
+};
+
+// 🗑️ حذف جلسة
+window.deleteSession = async function(index) {
+  if (!confirm("⚠️ هل أنتِ متأكدة من حذف هذه الجلسة؟\nلا يمكن التراجع عن هذا الإجراء.")) return;
+  
+  try {
+    const sessions = [...(currentPatientData.sessions || [])];
+    sessions.splice(index, 1); // حذف العنصر
+    
+    await updateDoc(doc(db, "patients", currentPatientId), {
+      sessions: sessions,
+      updated_at: serverTimestamp()
+    });
+    
+    showNotification("✅ تم حذف الجلسة");
+    searchPatient();
+    
+  } catch (err) {
+    alert("❌ فشل الحذف: " + err.message);
+  }
+};
+
+// ✏️ تعديل بيانات المريض الأساسية
+window.editPatientBasic = function() {
+  if (!currentPatientData) return;
+  
+  const old = document.getElementById("editBasicModal");
+  if (old) old.remove();
+  
+  const modal = document.createElement("div");
+  modal.id = "editBasicModal";
+  modal.className = "modal-overlay";
+  modal.innerHTML = `
+    <div class="modal-content">
+      <button class="modal-close" onclick="closeEditBasicModal()">✕</button>
+      <h3 class="modal-title">✏️ تعديل بيانات المريض</h3>
+      <div style="margin-bottom:15px;">
+        <label style="display:block;margin-bottom:5px;font-weight:500">الاسم</label>
+        <input type="text" id="editName" value="${currentPatientData.name}" style="width:100%;padding:10px;border:1px solid #ddd;border-radius:8px">
+      </div>
+      <div style="margin-bottom:15px;">
+        <label style="display:block;margin-bottom:5px;font-weight:500">رقم الهاتف</label>
+        <input type="tel" id="editPhone" value="${currentPatientData.phone.replace('20','0')}" style="width:100%;padding:10px;border:1px solid #ddd;border-radius:8px">
+      </div>
+      <div class="modal-actions">
+        <button class="modal-btn modal-btn-primary" onclick="saveEditedPatient()">💾 حفظ</button>
+        <button class="modal-btn modal-btn-cancel" onclick="closeEditBasicModal()">إلغاء</button>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(modal);
+  modal.onclick = function(e) { if (e.target === modal) closeEditBasicModal(); };
+};
+
+window.closeEditBasicModal = function() {
+  const modal = document.getElementById("editBasicModal");
+  if (modal) modal.remove();
+};
+
+window.saveEditedPatient = async function() {
+  const newName = document.getElementById("editName").value.trim();
+  const newPhone = cleanPhone(document.getElementById("editPhone").value);
+  
+  if (!newName || !newPhone) return alert("⚠️ الاسم والهاتف مطلوبان");
+  
+  try {
+    await updateDoc(doc(db, "patients", currentPatientId), {
+      name: newName,
+      phone: newPhone,
+      updated_at: serverTimestamp()
+    });
+    
+    closeEditBasicModal();
+    showNotification("✅ تم تحديث بيانات المريض");
+    searchPatient();
+    
+  } catch (err) {
+    alert("❌ فشل التحديث: " + err.message);
+  }
+};
+
+// 🗑️ حذف المريض كاملاً
+window.deletePatient = async function() {
+  if (!currentPatientId) return;
+  
+  const confirmed = confirm(`⚠️ تحذير: هل أنتِ متأكدة من حذف ملف المريض "${currentPatientData.name}" نهائياً؟\n\nسيتم حذف جميع الجلسات والبيانات ولا يمكن استعادتها.`);
+  if (!confirmed) return;
+  
+  try {
+    await deleteDoc(doc(db, "patients", currentPatientId));
+    
+    showNotification("✅ تم حذف ملف المريض");
+    document.getElementById("patientDetails").style.display = "none";
+    document.getElementById("patientPhone").value = "";
+    currentPatientId = null;
+    currentPatientData = null;
+    
+  } catch (err) {
+    alert("❌ فشل الحذف: " + err.message);
   }
 };
 
@@ -278,7 +483,7 @@ window.addEventListener('DOMContentLoaded', () => {
   }
 });
 
-console.log("✅ Patients Page Loaded");
+console.log("✅ Patients Page Loaded - Edit/Delete Ready");
 </script>
 </body>
 </html>
