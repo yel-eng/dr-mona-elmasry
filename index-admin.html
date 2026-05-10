@@ -1,3 +1,8 @@
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.getRegistrations().then(regs => regs.forEach(r => r.unregister()));
+}
+localStorage.clear();
+sessionStorage.clear();
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -227,8 +232,8 @@ body { font-family: 'Segoe UI', Tahoma, Arial, sans-serif; background: var(--bg)
 
 <div class="toast" id="toast"></div>
 
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+<script type="module" src="index.html?v=2">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, updateDoc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 import { getAuth, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
