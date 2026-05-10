@@ -15,12 +15,11 @@ body.loaded{opacity:1;visibility:visible;transition:opacity 0.5s ease-in}
 *{margin:0;padding:0;box-sizing:border-box;font-family:'Tajawal',sans-serif}
 
 /* === التصميم الأصلي للكمبيوتر === */
-/* ✅ زر تسجيل الدخول - ثابت في الركن وبيأخد مساحته بس */
-.login-btn{
-  position: fixed; /* ✅ ثابت مش بيتدحرج مع الصفحة */
-  top: 15px;       /* ✅ مسافة من فوق */
-  right: 15px;     /* ✅ مسافة من اليمين */
-  z-index: 9999;   /* ✅ فوق كل العناصر */
+.login-btn {
+  position: fixed !important; /* ✅ ثابت تماماً */
+  top: 15px !important;       /* ✅ من فوق بالظبط */
+  right: 15px !important;     /* ✅ من اليمين بالظبط */
+  z-index: 10000 !important;  /* ✅ فوق كل حاجة */
   background: linear-gradient(135deg, var(--primary), var(--primary-dark));
   color: #fff;
   border: none;
@@ -30,13 +29,12 @@ body.loaded{opacity:1;visibility:visible;transition:opacity 0.5s ease-in}
   cursor: pointer;
   transition: 0.3s;
   text-decoration: none;
-  white-space: nowrap; /* ✅ عشان النص ما ينزلش سطر جديد */
-  width: auto;         /* ✅ ياخد مساحته بس */
-  display: inline-block; /* ✅ مش بيأثر على اللي حواليه */
+  white-space: nowrap;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
 }
 .login-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.2);
 }
 /* ✅ الهيرو مع خلفية شفافة */
 .hero{
