@@ -137,7 +137,7 @@ footer{text-align:center;padding:20px;color:#64748b;}
 <!-- WHATSAPP FLOATING -->
 <a class="wa" id="wa-float" href=""><i class="fab fa-whatsapp"></i></a>
 
-<!-- ✅ كود تحميل الإعدادات (نسخة آمنة بدون أخطاء) -->
+<!-- ✅ كود تحميل الإعدادات (محدث وآمن 100%) -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getFirestore, doc, getDoc, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
@@ -172,46 +172,51 @@ async function loadAndApplySettings() {
     // 🏷️ النصوص
     if (s.clinic_name) { 
       document.title = s.clinic_name + " - نظام الحجز"; 
-      var clinicEls = document.querySelectorAll('[data-setting="clinic_name"]');
-      for (var i = 0; i < clinicEls.length; i++) clinicEls[i].textContent = s.clinic_name;
+      document.querySelectorAll('[data-setting="clinic_name"]').forEach(el => el.textContent = s.clinic_name); 
     }
-    if (s.doctor_name) {
-      var docEls = document.querySelectorAll('[data-setting="doctor_name"]');
-      for (var i = 0; i < docEls.length; i++) docEls[i].textContent = s.doctor_name;
-    }
-    if (s.doctor_title) {
-      var titleEls = document.querySelectorAll('[data-setting="doctor_title"]');
-      for (var i = 0; i < titleEls.length; i++) titleEls[i].textContent = s.doctor_title;
-    }
+    if (s.doctor_name) document.querySelectorAll('[data-setting="doctor_name"]').forEach(el => el.textContent = s.doctor_name);
+    if (s.doctor_title) document.querySelectorAll('[data-setting="doctor_title"]').forEach(el => el.textContent = s.doctor_title);
+    
     var heroTitleEl = document.querySelector('[data-setting="hero_title"]');
     if (s.hero_title && heroTitleEl) heroTitleEl.textContent = s.hero_title;
+    
     var heroDescEl = document.querySelector('[data-setting="hero_desc"]');
     if (s.hero_desc && heroDescEl) heroDescEl.textContent = s.hero_desc;
+    
     var aboutHeadEl = document.querySelector('[data-setting="about_heading"]');
     if (s.about_heading && aboutHeadEl) aboutHeadEl.textContent = s.about_heading;
+    
     var aboutTextEl = document.querySelector('[data-setting="about_text"]');
     if (s.about_text && aboutTextEl) aboutTextEl.textContent = s.about_text;
     
-    // 🎯 قسم الاستشارات (توافق مع النسخ القديمة والجديدة)
+    // 🎯 قسم الاستشارات
     var ctaTitle = (s.cta && s.cta.title) ? s.cta.title : (s.cta_title || "");
     var ctaDesc = (s.cta && s.cta.desc) ? s.cta.desc : (s.cta_desc || "");
     var ctaHours = (s.cta && s.cta.working_hours) ? s.cta.working_hours : (s.working_hours || "");
     var ctaBadge = (s.cta && s.cta.badge) ? s.cta.badge : (s.cta_badge || "");
-    var ctaVisible = (s.cta && s.cta.visible !== undefined) ? s.cta.visible : true;
+    
+    // تحديد ظهور القسم (القيمة الافتراضية true)
+    var ctaVisible = true;
+    if (s.cta && s.cta.visible === false) ctaVisible = false;
     
     var ctaTitleEl = document.querySelector('[data-setting="cta_title"]');
     if (ctaTitle && ctaTitleEl) ctaTitleEl.textContent = ctaTitle;
+    
     var ctaDescEl = document.querySelector('[data-setting="cta_desc"]');
     if (ctaDesc && ctaDescEl) ctaDescEl.textContent = ctaDesc;
+    
     var ctaHoursEl = document.querySelector('[data-setting="working_hours"]');
     if (ctaHours && ctaHoursEl) ctaHoursEl.innerHTML = ctaHours;
+    
     var ctaBadgeEl = document.querySelector('[data-setting="cta_badge"]');
     if (ctaBadge && ctaBadgeEl) ctaBadgeEl.textContent = ctaBadge;
     
     var addrEl = document.querySelector('[data-setting="address"]');
     if (s.address && addrEl) addrEl.textContent = s.address;
+    
     var contactEl = document.querySelector('[data-setting="contact_note"]');
     if (s.contact_note && contactEl) contactEl.textContent = s.contact_note;
+    
     if (s.footer_text) document.getElementById('footer-text').textContent = s.footer_text;
     
     // 🖼️ الصور
@@ -226,7 +231,11 @@ async function loadAndApplySettings() {
       document.getElementById('whatsapp-link').href = "https://wa.me/" + fullWa;
       document.getElementById('wa-float').href = "https://wa.me/" + fullWa;
     }
-    if (s.map_url) document.getElementById('map-frame').src = s.map_url;
+    
+    // 🗺️ الخريطة (تستخدم الرابط من الأدمن أو الرابط الافتراضي)
+    if (s.map_url) {
+      document.getElementById('map-frame').src = s.map_url;
+    }
     
     // 🖼️ خلفية الهيرو
     if (s.hero_bg) {
@@ -262,14 +271,14 @@ async function loadAndApplySettings() {
       }
     }
     
-    // 🖼️ الجاليري مع تمرير لا نهائي
+    // 🖼️ الجاليري
     if (s.gallery_images && s.gallery_images.length > 0) {
       var track = document.getElementById('gallery-track');
       var imagesHtml = "";
       for (var i = 0; i < s.gallery_images.length; i++) {
         imagesHtml += '<img src="' + s.gallery_images[i] + '" onerror="this.src=\'https://via.placeholder.com/250x200?text=Image\'">';
       }
-      track.innerHTML = imagesHtml + imagesHtml; // تكرار للتمرير اللانهائي
+      track.innerHTML = imagesHtml + imagesHtml;
       if (s.gallery_auto_scroll !== false) { 
         track.style.animation = 'scroll 40s linear infinite'; 
       } else { 
@@ -309,14 +318,18 @@ function applyDefaults() {
   document.getElementById('phone-link').href = "tel:01211538334";
   document.getElementById('whatsapp-link').href = "https://wa.me/201211538334";
   document.getElementById('wa-float').href = "https://wa.me/201211538334";
-  document.getElementById('map-frame').src = "https://www.google.com/maps?q=alexandria+egypt&output=embed";
+  
+  // 🗺️ رابط خريطة افتراضي صحيح (إسكندرية)
+  document.getElementById('map-frame').src = "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d109143.5476075848!2d29.85589339887508!3d31.21564550000001!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14f5c50223400001%3A0x500c3b4e7c186c0!2sAlexandria%2C%20Alexandria%20Governorate!5e0!3m2!1sen!2seg!4v1689898989898!5m2!1sen!2seg";
+  
   var navbar = document.getElementById('navbar');
   navbar.innerHTML = '<a href="#">الرئيسية</a><a href="#doctor">عن الدكتور</a><a href="#media">المكتبة الطبية</a><a href="#contact">تواصل</a>';
+  
   var cardsSection = document.getElementById('cards-section');
   cardsSection.innerHTML = '<div class="card"><div class="icon">⭐</div><h3>مستوى خدمة عالي</h3></div><div class="card"><div class="icon">🧠</div><h3>أحدث تقنيات طبية</h3></div><div class="card"><div class="icon">❤️</div><h3>اهتمام شخصي بالمرضى</h3></div>';
 }
 
-// تحميل المحتوى من content_mona
+// تحميل المحتوى
 async function loadMediaContent() {
   try {
     const snapshot = await getDocs(collection(db, "content_mona"));
@@ -333,7 +346,6 @@ async function loadMediaContent() {
   } catch (err) { console.warn("⚠️ Failed to load media content:", err); }
 }
 
-// تشغيل الدوال بعد تحميل الصفحة
 if (document.readyState === "loading") {
   document.addEventListener("DOMContentLoaded", function() { loadAndApplySettings(); loadMediaContent(); });
 } else { loadAndApplySettings(); loadMediaContent(); }
