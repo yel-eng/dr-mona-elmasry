@@ -116,12 +116,12 @@ footer{text-align:center;padding:20px;color:#64748b}
   <nav class="navbar" id="navbar"></nav>
   <div class="hero-content">
     <div class="hero-text">
-      <h1 data-setting="hero_title"> د. منى المصري</h1>
-      <p data-setting="hero_desc">اخصائي تخاطب.</p>
+      <h1 data-setting="hero_title">عيادة د. منى المصري</h1>
+      <p data-setting="hero_desc">رعاية طبية متميزة في مجال التخاطب وعلاج النطق</p>
       <button onclick="location.href='booking.html'" class="book-btn">احجز الآن</button>
     </div>
     <div class="hero-img">
-      <img src="https://scontent.faly2-2.fna.fbcdn.net/v/t39.30808-6/488684706_9703197523069841_8397030114797715733_n.jpg?_nc_cat=104&ccb=1-7&_nc_sid=7b2446&_nc_ohc=bEEkkt_HncsQ7kNvwEI080f&_nc_oc=AdrrVttE0sAsJ07kOwrq8kM2-8vi8qEI3T24KD_ITNz3sVq1zfp6qLnrk6JfdQ5w6kA&_nc_zt=23&_nc_ht=scontent.faly2-2.fna&_nc_gid=31SObsfDM_D6G89J-E70HA&_nc_ss=7b2a8&oh=00_Af7EYeMZEAdej1JbiNObi925TEgg_26hJWLVaDV5BYuh1A&oe=6A05C858" id="hero-image" alt="صورة العيادة">
+      <img src="" id="hero-image" alt="د. منى المصري">
     </div>
   </div>
 </section>
@@ -133,8 +133,11 @@ footer{text-align:center;padding:20px;color:#64748b}
 <section class="doctor" id="doctor">
   <div>
     <h2 data-setting="about_heading">عن الدكتورة</h2>
-    <p><span data-setting="doctor_name">د. منى المصري</span> - <span data-setting="doctor_title">استشاري النساء والتوليد</span></p>
-    <p data-setting="about_text">خبرة طويلة في متابعة الحمل والولادة، وعلاج العقم، والجراحات الدقيقة بأحدث التقنيات.</p>
+    <p>
+      <span data-setting="doctor_name">د. منى المصري</span> - 
+      <span data-setting="doctor_title">أخصائي تخاطب وعلاج نطق</span>
+    </p>
+    <p data-setting="about_text">خبرة طويلة في مجال التخاطب وعلاج اضطرابات النطق واللغة للأطفال والكبار.</p>
   </div>
   <img src="" id="doctor-image" alt="صورة الدكتورة">
 </section>
@@ -212,18 +215,31 @@ async function loadAndApplySettings() {
     if (!settingsDoc.exists()) { applyDefaults(); return; }
     const s = settingsDoc.data();
     
-    if (s.primary_color) { document.documentElement.style.setProperty('--primary', s.primary_color); document.documentElement.style.setProperty('--primary-dark', s.primary_color + 'dd'); }
+    // 🎨 الألوان
+    if (s.primary_color) { 
+      document.documentElement.style.setProperty('--primary', s.primary_color); 
+      document.documentElement.style.setProperty('--primary-dark', s.primary_color + 'dd'); 
+    }
     if (s.bg_color) document.documentElement.style.setProperty('--bg', s.bg_color);
-    if (s.clinic_name) { document.title = s.clinic_name + " - نظام الحجز"; document.querySelectorAll('[data-setting="clinic_name"]').forEach(el => el.textContent = s.clinic_name); }
+    
+    // 🏷️ النصوص الأساسية
+    if (s.clinic_name) { 
+      document.title = s.clinic_name + " - نظام الحجز"; 
+      document.querySelectorAll('[data-setting="clinic_name"]').forEach(el => el.textContent = s.clinic_name); 
+    }
     if (s.doctor_name) document.querySelectorAll('[data-setting="doctor_name"]').forEach(el => el.textContent = s.doctor_name);
     if (s.doctor_title) document.querySelectorAll('[data-setting="doctor_title"]').forEach(el => el.textContent = s.doctor_title);
     
+    // نصوص الهيرو
     var el;
     if (s.hero_title && (el=document.querySelector('[data-setting="hero_title"]'))) el.textContent = s.hero_title;
     if (s.hero_desc && (el=document.querySelector('[data-setting="hero_desc"]'))) el.textContent = s.hero_desc;
+    
+    // نصوص قسم عن الدكتور
     if (s.about_heading && (el=document.querySelector('[data-setting="about_heading"]'))) el.textContent = s.about_heading;
     if (s.about_text && (el=document.querySelector('[data-setting="about_text"]'))) el.textContent = s.about_text;
     
+    // 🎯 CTA
     var ctaTitle = (s.cta && s.cta.title) ? s.cta.title : (s.cta_title || "");
     var ctaDesc = (s.cta && s.cta.desc) ? s.cta.desc : (s.cta_desc || "");
     var ctaHours = (s.cta && s.cta.working_hours) ? s.cta.working_hours : (s.working_hours || "");
@@ -233,13 +249,16 @@ async function loadAndApplySettings() {
     if (ctaHours && (el=document.querySelector('[data-setting="working_hours"]'))) el.innerHTML = ctaHours;
     if (ctaBadge && (el=document.querySelector('[data-setting="cta_badge"]'))) el.textContent = ctaBadge;
     
+    // التواصل
     if (s.address && (el=document.querySelector('[data-setting="address"]'))) el.textContent = s.address;
     if (s.contact_note && (el=document.querySelector('[data-setting="contact_note"]'))) el.textContent = s.contact_note;
     if (s.footer_text) document.getElementById('footer-text').textContent = s.footer_text;
     
-    if (s.hero_image) document.getElementById('hero-image').src = s.hero_image;
-    if (s.doctor_image) document.getElementById('doctor-image').src = s.doctor_image;
+    // 🖼️ الصور (مهم جداً - فصلناهم)
+    if (s.hero_image) document.getElementById('hero-image').src = s.hero_image; // صورة د. منى في الهيرو
+    if (s.doctor_image) document.getElementById('doctor-image').src = s.doctor_image; // صورة د. منى في قسم "عن الدكتورة"
     
+    // 📞 أرقام التواصل
     if (s.phone_number) document.getElementById('phone-link').href = "tel:" + s.phone_number;
     if (s.whatsapp_number) {
       var waNum = s.whatsapp_number.replace(/^0+/,'').replace(/\s/g,'');
@@ -247,13 +266,21 @@ async function loadAndApplySettings() {
       document.getElementById('whatsapp-link').href = "https://wa.me/" + fullWa;
       document.getElementById('wa-float').href = "https://wa.me/" + fullWa;
     }
+    
+    // 🗺️ الخريطة
     if (s.map_url) document.getElementById('map-frame').src = s.map_url;
     
+    // 🖼️ خلفية الهيرو (اختياري)
     if (s.hero_bg) {
       var heroSection = document.getElementById('hero-section');
-      if (heroSection) { heroSection.style.backgroundImage = "url('" + s.hero_bg + "')"; heroSection.style.backgroundSize = "cover"; heroSection.style.backgroundPosition = "center"; }
+      if (heroSection) { 
+        heroSection.style.backgroundImage = "url('" + s.hero_bg + "')"; 
+        heroSection.style.backgroundSize = "cover"; 
+        heroSection.style.backgroundPosition = "center"; 
+      }
     }
     
+    // 🔗 الناف بار + القائمة المنبثقة للموبايل
     if (s.navbar_links && s.navbar_links.length > 0) {
       var navbar = document.getElementById('navbar'); navbar.innerHTML = "";
       var mobileMenu = document.getElementById('mobileMenu'); if (mobileMenu) mobileMenu.innerHTML = "";
@@ -266,6 +293,7 @@ async function loadAndApplySettings() {
       }
     }
     
+    // 🃏 الكروت
     if (s.cards && s.cards.length > 0) {
       var cardsSection = document.getElementById('cards-section'); cardsSection.innerHTML = "";
       for (var i = 0; i < s.cards.length; i++) {
@@ -274,6 +302,7 @@ async function loadAndApplySettings() {
       }
     }
     
+    // 🖼️ الجاليري
     if (s.gallery_images && s.gallery_images.length > 0) {
       var track = document.getElementById('gallery-track'); var imagesHtml = "";
       for (var i = 0; i < s.gallery_images.length; i++) imagesHtml += '<img src="' + s.gallery_images[i] + '" alt="صورة" loading="lazy" onerror="this.src=\'https://via.placeholder.com/250x200?text=Image\'">';
@@ -281,6 +310,7 @@ async function loadAndApplySettings() {
       if (s.gallery_auto_scroll !== false) { track.style.animation = 'scroll 30s linear infinite'; } else { track.style.animation = 'none'; track.style.overflowX = 'auto'; track.style.padding = '10px 0'; }
     }
     
+    // 👁️ إخفاء الأقسام
     if (s.sections) {
       if (s.sections.hero === false) document.getElementById('hero-section').classList.add('section-hidden');
       if (s.sections.cards === false) document.getElementById('cards-section').classList.add('section-hidden');
@@ -292,22 +322,43 @@ async function loadAndApplySettings() {
       if (s.sections.map === false) document.getElementById('map-section').classList.add('section-hidden');
       if (s.sections.footer === false) { var footerEl = document.getElementById('footer-text'); if (footerEl && footerEl.parentElement) footerEl.parentElement.classList.add('section-hidden'); }
     }
+    
   } catch (err) { console.warn("⚠️ Failed to load settings:", err); applyDefaults(); } 
   finally { document.body.classList.add('loaded'); }
 }
 
 function applyDefaults() {
+  // ✅ القيم الافتراضية الصحيحة لعيادة تخاطب
   document.documentElement.style.setProperty('--primary', '#1d4ed8');
   document.documentElement.style.setProperty('--bg', '#f8fafc');
+  
+  // الصور
   document.getElementById('hero-image').src = "https://i.pravatar.cc/320?img=5";
   document.getElementById('doctor-image').src = "https://i.pravatar.cc/320?img=9";
+  
+  // التواصل
   document.getElementById('phone-link').href = "tel:01211538334";
   document.getElementById('whatsapp-link').href = "https://wa.me/201211538334";
   document.getElementById('wa-float').href = "https://wa.me/201211538334";
+  
+  // الخريطة
   document.getElementById('map-frame').src = "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d109143.5476075848!2d29.85589339887508!3d31.21564550000001!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14f5c50223400001%3A0x500c3b4e7c186c0!2sAlexandria%2C%20Alexandria%20Governorate!5e0!3m2!1sen!2seg!4v1689898989898!5m2!1sen!2seg";
-  var navbar = document.getElementById('navbar'); navbar.innerHTML = '<a href="#">الرئيسية</a><a href="#doctor">عن الدكتورة</a><a href="#media">المكتبة</a><a href="#contact">تواصل</a>';
-  var mobileMenu = document.getElementById('mobileMenu'); if (mobileMenu) mobileMenu.innerHTML = '<a href="#">الرئيسية</a><a href="#doctor">عن الدكتورة</a><a href="#media">المكتبة</a><a href="#contact">تواصل</a>';
-  var cardsSection = document.getElementById('cards-section'); cardsSection.innerHTML = '<div class="card"><div class="icon">⭐</div><h3>رعاية متميزة</h3></div><div class="card"><div class="icon">🧠</div><h3>أحدث الأجهزة</h3></div><div class="card"><div class="icon">❤️</div><h3>اهتمام بالأم والجنين</h3></div>';
+  
+  // الناف بار
+  var navbar = document.getElementById('navbar');
+  navbar.innerHTML = '<a href="#">الرئيسية</a><a href="#doctor">عن الدكتورة</a><a href="#media">المكتبة</a><a href="#contact">تواصل</a>';
+  
+  var mobileMenu = document.getElementById('mobileMenu');
+  if (mobileMenu) mobileMenu.innerHTML = '<a href="#">الرئيسية</a><a href="#doctor">عن الدكتورة</a><a href="#media">المكتبة</a><a href="#contact">تواصل</a>';
+  
+  // ✅ الكروت الصحيحة لعيادة تخاطب
+  var cardsSection = document.getElementById('cards-section');
+  cardsSection.innerHTML = `
+    <div class="card"><div class="icon">🗣️</div><h3>جلسات تخاطب فردية</h3></div>
+    <div class="card"><div class="icon">👨‍👩‍👧‍👦</div><h3>دعم أسري وتوعوي</h3></div>
+    <div class="card"><div class="icon">🎯</div><h3>خطط علاج مخصصة</h3></div>
+  `;
+  
   document.body.classList.add('loaded');
 }
 
