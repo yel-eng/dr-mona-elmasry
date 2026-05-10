@@ -14,12 +14,12 @@ body.loaded{opacity:1;visibility:visible;transition:opacity 0.5s ease-in}
 :root{--primary:#1d4ed8;--dark:#0f172a;--bg:#f8fafc;--card:#ffffff;--muted:#64748b}
 *{margin:0;padding:0;box-sizing:border-box;font-family:'Tajawal',sans-serif}
 
-/* === التصميم الأصلي للكمبيوتر === */
+/* ✅ الزرار للكمبيوتر (زي ما هو) */
 .login-btn {
-  position: fixed !important; /* ✅ ثابت تماماً */
-  top: 15px !important;       /* ✅ من فوق بالظبط */
-  right: 15px !important;     /* ✅ من اليمين بالظبط */
-  z-index: 10000 !important;  /* ✅ فوق كل حاجة */
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 9999;
   background: linear-gradient(135deg, var(--primary), var(--primary-dark));
   color: #fff;
   border: none;
@@ -29,12 +29,25 @@ body.loaded{opacity:1;visibility:visible;transition:opacity 0.5s ease-in}
   cursor: pointer;
   transition: 0.3s;
   text-decoration: none;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
   white-space: nowrap;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
 }
+
 .login-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+  box-shadow: 0 6px 15px rgba(0,0,0,0.3);
+}
+
+/* ✅ تعديل خاص للموبايل عشان يبان ظريف ومتخانقش مع العنوان */
+@media (max-width: 768px) {
+  .login-btn {
+    top: 15px;       /* مسافة بسيطة من فوق */
+    right: 15px;     /* مسافة بسيطة من اليمين */
+    padding: 6px 12px; /* تصغير حجم الزرار */
+    font-size: 12px;   /* تصغير الخط */
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  }
 }
 /* ✅ الهيرو مع خلفية شفافة */
 .hero{
@@ -146,16 +159,7 @@ footer{text-align:center;padding:20px;color:#64748b}
 }
 
 
-/* ✅ تعديل خاص للموبايل عشان يبان ظريف ومتخانقش مع العنوان */
-@media (max-width: 768px) {
-  .login-btn {
-    top: 15px;       /* مسافة بسيطة من فوق */
-    right: 15px;     /* مسافة بسيطة من اليمين */
-    padding: 6px 12px; /* تصغير حجم الزرار */
-    font-size: 12px;   /* تصغير الخط */
-    border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-  }
+
 }
 
 </style>
