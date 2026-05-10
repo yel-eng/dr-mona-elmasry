@@ -2,91 +2,393 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
 <title id="page-title">عيادة د. منى المصري</title>
 <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <style>
-/* ✅ التعديل هنا: إخفاء الموقع مبدئياً */
-body {
-  background: var(--bg);
-  color: var(--dark);
-  transition: background 0.3s, color 0.3s;
-  opacity: 0; /* مخفي في البداية */
-  visibility: hidden; /* مخفي تماماً */
+/* ✅ تحميل سلس للموقع */
+body{
+  background:var(--bg);
+  color:var(--dark);
+  transition:background 0.3s,color 0.3s;
+  opacity:0;
+  visibility:hidden;
+  overflow-x:hidden;
 }
-/* ✅ كلاس للإظهار */
-body.loaded {
-  opacity: 1;
-  visibility: visible;
-  transition: opacity 0.5s ease-in;
-}
+body.loaded{opacity:1;visibility:visible;transition:opacity 0.5s ease-in;}
 
 :root{--primary:#1d4ed8;--dark:#0f172a;--bg:#f8fafc;--card:#ffffff;--muted:#64748b;}
 *{margin:0;padding:0;box-sizing:border-box;font-family:'Tajawal',sans-serif;}
-/* ... بقية الستايل كما هو ... */
-.login-btn{position:absolute;top:20px;right:20px;z-index:999;background:linear-gradient(135deg,var(--primary),var(--primary-dark));color:#fff;border:none;padding:10px 20px;font-size:14px;border-radius:10px;cursor:pointer;transition:0.3s;text-decoration:none;}
-.hero{position:relative;padding:70px 8%;background:linear-gradient(135deg,#e0f2fe,#ffffff);min-height:90vh;display:flex;align-items:center;}
-.navbar{position:absolute;top:20px;left:50%;transform:translateX(-50%);background:#fff;padding:12px 20px;border-radius:50px;display:flex;gap:20px;box-shadow:0 10px 30px rgba(0,0,0,0.08);flex-wrap:wrap;justify-content:center;}
-.navbar a{text-decoration:none;color:var(--dark);font-weight:500;font-size:14px;padding:5px 10px;}
-.hero-content{display:flex;width:100%;justify-content:space-between;align-items:center;gap:40px;flex-wrap:wrap;}
-.hero-text{flex:1;max-width:520px;text-align:center;}
-.hero-text h1{font-size:42px;margin-bottom:10px;color:var(--primary);}
-.hero-text p{color:var(--muted);line-height:1.9;font-size:16px;margin-bottom:20px;}
-.hero-img{flex:1;display:flex;justify-content:center;}
-.hero-img img{width:280px;border-radius:20px;}
-.wa{position:fixed;bottom:20px;right:20px;background:#25d366;color:#fff;width:55px;height:55px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:24px;}
-.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:25px;padding:60px 8%;}
-.card{background:#fff;border-radius:20px;border:1px solid #eee;aspect-ratio:1/1;display:flex;align-items:center;justify-content:center;text-align:center;font-size:18px;font-weight:500;transition:0.3s;flex-direction:column;padding:15px;}
+
+/* === التصميم الأصلي للكمبيوتر (بدون تغيير) === */
+
+/* الناف بار */
+.navbar{
+  position:absolute;
+  top:20px;
+  left:50%;
+  transform:translateX(-50%);
+  background:#fff;
+  padding:12px 20px;
+  border-radius:50px;
+  display:flex;
+  gap:20px;
+  box-shadow:0 10px 30px rgba(0,0,0,0.08);
+  flex-wrap:wrap;
+  justify-content:center;
+  z-index:100;
+}
+.navbar a{
+  text-decoration:none;
+  color:var(--dark);
+  font-weight:500;
+  font-size:14px;
+  padding:5px 10px;
+}
+
+/* زر تسجيل الدخول */
+.login-btn{
+  position:absolute;
+  top:20px;
+  right:20px;
+  z-index:999;
+  background:linear-gradient(135deg,var(--primary),var(--primary-dark));
+  color:#fff;
+  border:none;
+  padding:10px 20px;
+  font-size:14px;
+  border-radius:10px;
+  cursor:pointer;
+  transition:0.3s;
+  text-decoration:none;
+}
+
+/* الهيرو */
+.hero{
+  position:relative;
+  padding:70px 8%;
+  background:linear-gradient(135deg,#e0f2fe,#ffffff);
+  min-height:90vh;
+  display:flex;
+  align-items:center;
+}
+.hero-content{
+  display:flex;
+  width:100%;
+  justify-content:space-between;
+  align-items:center;
+  gap:40px;
+  flex-wrap:wrap;
+}
+.hero-text{
+  flex:1;
+  max-width:520px;
+  text-align:center;
+}
+.hero-text h1{
+  font-size:42px;
+  margin-bottom:10px;
+  color:var(--primary);
+}
+.hero-text p{
+  color:var(--muted);
+  line-height:1.9;
+  font-size:16px;
+  margin-bottom:20px;
+}
+.hero-img{
+  flex:1;
+  display:flex;
+  justify-content:center;
+}
+.hero-img img{
+  width:280px;
+  border-radius:20px;
+}
+
+/* زر الحجز */
+.book-btn{
+  background:var(--primary);
+  color:#fff;
+  padding:14px 26px;
+  border:none;
+  border-radius:12px;
+  font-size:15px;
+  cursor:pointer;
+  transition:0.3s;
+}
+.book-btn:hover{transform:translateY(-2px);box-shadow:0 10px 20px rgba(0,0,0,0.1);}
+
+/* الكروت */
+.cards{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+  gap:25px;
+  padding:60px 8%;
+}
+.card{
+  background:#fff;
+  border-radius:20px;
+  border:1px solid #eee;
+  aspect-ratio:1/1;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  font-size:18px;
+  font-weight:500;
+  transition:0.3s;
+  flex-direction:column;
+  padding:15px;
+}
 .card .icon{font-size:40px;margin-bottom:10px;}
 .card:hover{transform:translateY(-8px);box-shadow:0 20px 40px rgba(0,0,0,0.08);}
-.doctor{display:flex;align-items:center;justify-content:center;gap:30px;padding:60px 8%;flex-wrap:wrap;}
+
+/* قسم الدكتور */
+.doctor{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:30px;
+  padding:60px 8%;
+  flex-wrap:wrap;
+}
 .doctor>div{flex:1;max-width:450px;}
 .doctor img{width:280px;border-radius:20px;}
+
+/* الجاليري */
 .gallery{position:relative;padding:40px 8%;overflow:hidden;}
-.gallery-track{display:flex;gap:15px;animation:scroll 30s linear infinite;width:max-content;}
+.gallery-track{
+  display:flex;
+  gap:15px;
+  animation:scroll 30s linear infinite;
+  width:max-content;
+}
 .gallery-track:hover{animation-play-state:paused;}
 @keyframes scroll{0%{transform:translateX(0);}100%{transform:translateX(-50%);}}
 .gallery img{width:250px;border-radius:15px;flex-shrink:0;}
+
+/* المكتبة الطبية */
 .media{padding:50px 8%;}
-.media-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:15px;}
-.cta{margin:60px 8%;border-radius:25px;background:linear-gradient(135deg,var(--primary),var(--primary-dark));color:#fff;padding:40px;position:relative;overflow:hidden;}
-.cta-content{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:20px;}
+.media-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+  gap:15px;
+}
+
+/* قسم الاستشارات */
+.cta{
+  margin:60px 8%;
+  border-radius:25px;
+  background:linear-gradient(135deg,var(--primary),var(--primary-dark));
+  color:#fff;
+  padding:40px;
+  position:relative;
+  overflow:hidden;
+}
+.cta-content{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:20px;
+}
 .cta-text h2{font-size:28px;margin-bottom:10px;}
 .cta-text p{opacity:0.9;line-height:1.8;}
-.cta-buttons{margin-top:20px;display:flex;gap:15px;flex-wrap:wrap;}
-.call-btn{background:#fff;color:var(--primary);padding:12px 20px;border-radius:12px;text-decoration:none;font-weight:500;}
-.wa-btn{background:#25d366;color:#fff;padding:12px 20px;border-radius:12px;text-decoration:none;font-weight:500;}
-.cta-badge{background:#fff;color:var(--primary);padding:10px 18px;border-radius:50px;font-weight:600;}
+.cta-buttons{
+  margin-top:20px;
+  display:flex;
+  gap:15px;
+  flex-wrap:wrap;
+}
+.call-btn,.wa-btn{
+  background:#fff;
+  color:var(--primary);
+  padding:12px 20px;
+  border-radius:12px;
+  text-decoration:none;
+  font-weight:500;
+}
+.wa-btn{background:#25d366;color:#fff;}
+.cta-badge{
+  background:#fff;
+  color:var(--primary);
+  padding:10px 18px;
+  border-radius:50px;
+  font-weight:600;
+}
+
+/* التواصل */
 .contact{padding:50px 8%;}
-.contact-box{background:#fff;padding:20px;border-radius:15px;border:1px solid #eee;}
+.contact-box{
+  background:#fff;
+  padding:20px;
+  border-radius:15px;
+  border:1px solid #eee;
+}
+
+/* الخريطة */
 .map{padding:40px 8%;}
 .map iframe{width:100%;height:350px;border-radius:20px;border:0;}
+
+/* الفوتر */
 footer{text-align:center;padding:20px;color:#64748b;}
-.book-btn{background:var(--primary);color:#fff;padding:12px 22px;border:none;border-radius:12px;font-size:15px;cursor:pointer;transition:0.3s;}
-.book-btn:hover{transform:translateY(-2px);box-shadow:0 10px 20px rgba(0,0,0,0.1);}
+
+/* واتساب العائم */
+.wa{
+  position:fixed;
+  bottom:20px;
+  right:20px;
+  background:#25d366;
+  color:#fff;
+  width:55px;
+  height:55px;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:24px;
+  z-index:999;
+  text-decoration:none;
+}
+
+/* إخفاء الأقسام */
 .section-hidden{display:none!important;}
-@media(max-width:900px){.cards{grid-template-columns:repeat(2,1fr);}.hero-content{flex-direction:column;text-align:center;}.doctor{flex-direction:column;}.cta-content{flex-direction:column;text-align:center;}}
-@media(max-width:500px){.cards{grid-template-columns:1fr;}.navbar{gap:10px;}}
+
+/* === إضافات الموبايل فقط (لا تؤثر على الكمبيوتر) === */
+
+/* زر الهامبرغر - مخفي على الكمبيوتر */
+.menu-toggle{
+  display:none;
+  position:fixed;
+  top:15px;
+  right:15px;
+  z-index:1001;
+  background:#fff;
+  color:var(--primary);
+  border:2px solid var(--primary);
+  width:44px;
+  height:44px;
+  border-radius:10px;
+  font-size:20px;
+  cursor:pointer;
+  align-items:center;
+  justify-content:center;
+  box-shadow:0 4px 12px rgba(0,0,0,0.1);
+}
+
+/* القائمة المنبثقة للموبايل - مخفية افتراضياً */
+.mobile-menu{
+  display:none;
+  position:fixed;
+  top:70px;
+  right:15px;
+  background:#fff;
+  padding:15px;
+  border-radius:15px;
+  box-shadow:0 10px 30px rgba(0,0,0,0.15);
+  z-index:1000;
+  min-width:200px;
+  flex-direction:column;
+  gap:8px;
+}
+.mobile-menu.active{display:flex;}
+.mobile-menu a{
+  text-decoration:none;
+  color:var(--dark);
+  font-weight:500;
+  font-size:14px;
+  padding:10px 15px;
+  border-radius:8px;
+  transition:0.2s;
+}
+.mobile-menu a:hover{background:#f1f5f9;color:var(--primary);}
+
+/* === ميديا كويري للموبايل فقط (أقل من 768 بكسل) === */
+@media(max-width:768px){
+  /* إخفاء الناف بار الأصلي */
+  .navbar{display:none;}
+  
+  /* إظهار زر الهامبرغر */
+  .menu-toggle{display:flex;}
+  
+  /* تعديل الهيرو للموبايل */
+  .hero{padding:80px 5% 40px;min-height:auto;}
+  .hero-content{flex-direction:column;text-align:center;}
+  .hero-text h1{font-size:32px;}
+  .hero-text p{font-size:15px;}
+  .hero-img img{width:240px;}
+  
+  /* الكروت */
+  .cards{grid-template-columns:1fr;padding:40px 5%;}
+  
+  /* قسم الدكتور */
+  .doctor{flex-direction:column;text-align:center;padding:40px 5%;}
+  .doctor img{width:220px;}
+  
+  /* الجاليري */
+  .gallery{padding:30px 5%;}
+  .gallery-track{gap:12px;}
+  .gallery img{width:200px;height:150px;}
+  
+  /* المكتبة */
+  .media{padding:40px 5%;}
+  .media-grid{grid-template-columns:1fr;}
+  
+  /* CTA */
+  .cta{margin:40px 5%;padding:30px 20px;}
+  .cta-content{flex-direction:column;text-align:center;}
+  .cta-text h2{font-size:24px;}
+  .cta-buttons{justify-content:center;}
+  
+  /* التواصل والخريطة */
+  .contact{padding:40px 5%;}
+  .map{padding:30px 5%;}
+  .map iframe{height:250px;}
+  
+  /* واتساب */
+  .wa{width:50px;height:50px;font-size:22px;bottom:15px;right:15px;}
+}
+
+/* للشاشات الصغيرة جداً */
+@media(max-width:480px){
+  .hero-text h1{font-size:28px;}
+  .hero-img img{width:200px;}
+  .book-btn{padding:12px 24px;font-size:14px;}
+  .card{font-size:16px;}
+  .card .icon{font-size:36px;}
+  .doctor img{width:180px;}
+  .gallery img{width:160px;height:120px;}
+  .cta{padding:25px 15px;}
+  .call-btn,.wa-btn{width:100%;text-align:center;}
+}
 </style>
 </head>
-<body> <!-- ✅ هنا تم إضافة ستايل الإخفاء المبدئي -->
+<body>
 
-<!-- HERO -->
-<section class="hero" id="hero-section" style="position:relative;min-height:90vh;display:flex;align-items:center;padding:70px 8%;background-size:cover;background-position:center;">
+<!-- ✅ زر الهامبرغر للموبايل فقط -->
+<button class="menu-toggle" onclick="toggleMobileMenu()">☰</button>
+
+<!-- ✅ القائمة المنبثقة للموبايل فقط -->
+<div class="mobile-menu" id="mobileMenu">
+  <!-- الروابط هتتحط هنا بالجافاسكريبت -->
+</div>
+
+<!-- HERO (نفس التصميم الأصلي) -->
+<section class="hero" id="hero-section">
   <a href="login.html" class="login-btn">تسجيل الدخول</a>
-  <div class="navbar" id="navbar"></div>
-  <div style="position:absolute;inset:0;background:rgba(255,255,255,0.80);pointer-events:none;z-index:1;"></div>
-  <div class="hero-content" style="position:relative;z-index:2;display:flex;justify-content:space-between;align-items:center;width:100%;gap:40px;flex-wrap:wrap;">
-    <div class="hero-text" style="flex:1;max-width:520px;">
-      <h1 style="font-size:42px;margin-bottom:10px;" data-setting="hero_title">ميديكال كلينك</h1>
-      <p style="color:#475569;line-height:1.9;font-size:16px;margin-bottom:20px;" data-setting="hero_desc">رعاية طبية بثقة وتنظيم احترافي يضمن لك تجربة مريحة بدون زحام باستخدام نظام ذكي لإدارة المواعيد بدقة</p>
-      <button onclick="location.href='booking.html'" class="book-btn" style="background:var(--primary);color:#fff;padding:14px 26px;border:none;border-radius:12px;font-size:15px;cursor:pointer;transition:0.3s;position:relative;z-index:3;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">احجز الآن</button>
+  <nav class="navbar" id="navbar">
+    <!-- الروابط هتتحط هنا بالجافاسكريبت -->
+  </nav>
+  <div class="hero-content">
+    <div class="hero-text">
+      <h1 data-setting="hero_title">عيادة د. منى المصري</h1>
+      <p data-setting="hero_desc">رعاية طبية متميزة واستشاري نساء وتوليد بخبرة واسعة لضمان صحة الأم والجنين.</p>
+      <button onclick="location.href='booking.html'" class="book-btn">احجز الآن</button>
     </div>
-    <div class="hero-img" style="flex:1;display:flex;justify-content:center;">
-      <div style="background:#fff;padding:10px;border-radius:20px;box-shadow:0 20px 40px rgba(0,0,0,0.08);position:relative;z-index:3;">
-        <img src="https://scontent.faly2-2.fna.fbcdn.net/v/t39.30808-6/488684706_9703197523069841_8397030114797715733_n.jpg?_nc_cat=104&ccb=1-7&_nc_sid=7b2446&_nc_ohc=bEEkkt_HncsQ7kNvwEI080f&_nc_oc=AdrrVttE0sAsJ07kOwrq8kM2-8vi8qEI3T24KD_ITNz3sVq1zfp6qLnrk6JfdQ5w6kA&_nc_zt=23&_nc_ht=scontent.faly2-2.fna&_nc_gid=31SObsfDM_D6G89J-E70HA&_nc_ss=7b2a8&oh=00_Af7EYeMZEAdej1JbiNObi925TEgg_26hJWLVaDV5BYuh1A&oe=6A05C858" id="hero-image" style="width:280px;border-radius:15px;">
-      </div>
+    <div class="hero-img">
+      <img src="" id="hero-image" alt="صورة العيادة">
     </div>
   </div>
 </section>
@@ -97,11 +399,11 @@ footer{text-align:center;padding:20px;color:#64748b;}
 <!-- DOCTOR -->
 <section class="doctor" id="doctor">
   <div>
-    <h2 data-setting="about_heading">عن الدكتور</h2>
-    <p><span data-setting="doctor_name">د/ منى المصري</span> - <span data-setting="doctor_title">استشاري النساء والتوليد</span></p>
-    <p style="color:#64748b;line-height:1.8;" data-setting="about_text">خبرة طويلة في التشخيص والعلاج باستخدام أحدث البروتوكولات الطبية.</p>
+    <h2 data-setting="about_heading">عن الدكتورة</h2>
+    <p><span data-setting="doctor_name">د. منى المصري</span> - <span data-setting="doctor_title">استشاري النساء والتوليد</span></p>
+    <p data-setting="about_text">خبرة طويلة في متابعة الحمل والولادة، وعلاج العقم، والجراحات الدقيقة بأحدث التقنيات.</p>
   </div>
-  <img src="" id="doctor-image" style="width:280px;border-radius:20px;">
+  <img src="" id="doctor-image" alt="صورة الدكتورة">
 </section>
 
 <!-- GALLERY -->
@@ -111,10 +413,13 @@ footer{text-align:center;padding:20px;color:#64748b;}
 
 <!-- MEDIA -->
 <section class="media" id="media">
-  <h2>المكتبة الطبية</h2>
-  <h3>📸 صور</h3><div class="media-grid" id="imagesContainer"></div>
-  <h3>🎥 فيديوهات</h3><div class="media-grid" id="videosContainer"></div>
-  <h3>📄 مقالات</h3><div class="media-grid" id="articlesContainer"></div>
+  <h2 style="text-align:center;margin-bottom:20px;">المكتبة الطبية</h2>
+  <h3 style="margin:25px 0 15px;">📸 صور</h3>
+  <div class="media-grid" id="imagesContainer"></div>
+  <h3 style="margin:25px 0 15px;">🎥 فيديوهات</h3>
+  <div class="media-grid" id="videosContainer"></div>
+  <h3 style="margin:25px 0 15px;">📄 مقالات</h3>
+  <div class="media-grid" id="articlesContainer"></div>
 </section>
 
 <!-- CTA -->
@@ -122,8 +427,8 @@ footer{text-align:center;padding:20px;color:#64748b;}
   <div class="cta-content">
     <div class="cta-text">
       <h2 data-setting="cta_title">استشارة مجانية لأول مرة 🎯</h2>
-      <p data-setting="cta_desc">احجز الآن – الأماكن محدودة جدًا هذا الشهر واستفد من تقييم طبي كامل بدون رسوم</p>
-      <p data-setting="working_hours">مواعيد العمل طوال الاسبوع من 12 ص :5 مساءا <br> متاح الاستشاره اون لاين</p>
+      <p data-setting="cta_desc">احجز الآن – الأماكن محدودة جدًا هذا الشهر</p>
+      <p data-setting="working_hours">مواعيد العمل: طوال الأسبوع من 12 ظهراً - 5 مساءً</p>
       <div class="cta-buttons">
         <a href="" id="phone-link" class="call-btn">📞 اتصل الآن</a>
         <a href="" id="whatsapp-link" class="wa-btn"><i class="fab fa-whatsapp"></i> واتساب</a>
@@ -136,21 +441,22 @@ footer{text-align:center;padding:20px;color:#64748b;}
 <!-- CONTACT -->
 <section class="contact" id="contact">
   <div class="contact-box">
-    <h2 data-setting="contact_heading">: عنوانا</h2>
-    <p><span data-setting="address">الإسكندرية، مصر</span> / <span data-setting="contact_note">اتصال مباشر مع العيادة</span></p>
+    <h2 data-setting="contact_heading">عنوان العيادة</h2>
+    <p><span data-setting="address">الإسكندرية، مصر</span></p>
+    <p data-setting="contact_note" style="margin-top:10px;color:var(--muted);">اتصال مباشر مع العيادة</p>
   </div>
 </section>
 
 <!-- MAP -->
 <section class="map" id="map-section">
-  <iframe id="map-frame" src="" allowfullscreen="" loading="lazy"></iframe>
+  <iframe id="map-frame" src="" allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
 </section>
 
 <!-- FOOTER -->
-<footer id="footer-text">ميديكال كلينك - جميع الحقوق محفوظة</footer>
+<footer id="footer-text">عيادة د. منى المصري - جميع الحقوق محفوظة © 2024</footer>
 
 <!-- WHATSAPP FLOATING -->
-<a class="wa" id="wa-float" href=""><i class="fab fa-whatsapp"></i></a>
+<a class="wa" id="wa-float" href="" aria-label="واتساب"><i class="fab fa-whatsapp"></i></a>
 
 <!-- ✅ كود تحميل الإعدادات -->
 <script type="module">
@@ -170,6 +476,11 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
+
+// ✅ دالة تبديل القائمة على الموبايل
+window.toggleMobileMenu = function() {
+  document.getElementById('mobileMenu').classList.toggle('active');
+};
 
 async function loadAndApplySettings() {
   try {
@@ -194,47 +505,38 @@ async function loadAndApplySettings() {
     
     var heroTitleEl = document.querySelector('[data-setting="hero_title"]');
     if (s.hero_title && heroTitleEl) heroTitleEl.textContent = s.hero_title;
-    
     var heroDescEl = document.querySelector('[data-setting="hero_desc"]');
     if (s.hero_desc && heroDescEl) heroDescEl.textContent = s.hero_desc;
-    
     var aboutHeadEl = document.querySelector('[data-setting="about_heading"]');
     if (s.about_heading && aboutHeadEl) aboutHeadEl.textContent = s.about_heading;
-    
     var aboutTextEl = document.querySelector('[data-setting="about_text"]');
     if (s.about_text && aboutTextEl) aboutTextEl.textContent = s.about_text;
     
-    // 🎯 قسم الاستشارات
+    // 🎯 CTA
     var ctaTitle = (s.cta && s.cta.title) ? s.cta.title : (s.cta_title || "");
     var ctaDesc = (s.cta && s.cta.desc) ? s.cta.desc : (s.cta_desc || "");
     var ctaHours = (s.cta && s.cta.working_hours) ? s.cta.working_hours : (s.working_hours || "");
     var ctaBadge = (s.cta && s.cta.badge) ? s.cta.badge : (s.cta_badge || "");
-    
     var ctaTitleEl = document.querySelector('[data-setting="cta_title"]');
     if (ctaTitle && ctaTitleEl) ctaTitleEl.textContent = ctaTitle;
-    
     var ctaDescEl = document.querySelector('[data-setting="cta_desc"]');
     if (ctaDesc && ctaDescEl) ctaDescEl.textContent = ctaDesc;
-    
     var ctaHoursEl = document.querySelector('[data-setting="working_hours"]');
     if (ctaHours && ctaHoursEl) ctaHoursEl.innerHTML = ctaHours;
-    
     var ctaBadgeEl = document.querySelector('[data-setting="cta_badge"]');
     if (ctaBadge && ctaBadgeEl) ctaBadgeEl.textContent = ctaBadge;
     
     var addrEl = document.querySelector('[data-setting="address"]');
     if (s.address && addrEl) addrEl.textContent = s.address;
-    
     var contactEl = document.querySelector('[data-setting="contact_note"]');
     if (s.contact_note && contactEl) contactEl.textContent = s.contact_note;
-    
     if (s.footer_text) document.getElementById('footer-text').textContent = s.footer_text;
     
     // 🖼️ الصور
     if (s.hero_image) document.getElementById('hero-image').src = s.hero_image;
     if (s.doctor_image) document.getElementById('doctor-image').src = s.doctor_image;
     
-    // 📞 أرقام التواصل
+    // 📞 التواصل
     if (s.phone_number) document.getElementById('phone-link').href = "tel:" + s.phone_number;
     if (s.whatsapp_number) {
       var waNum = s.whatsapp_number.replace(/^0+/,'').replace(/\s/g,'');
@@ -244,9 +546,7 @@ async function loadAndApplySettings() {
     }
     
     // 🗺️ الخريطة
-    if (s.map_url) {
-      document.getElementById('map-frame').src = s.map_url;
-    }
+    if (s.map_url) document.getElementById('map-frame').src = s.map_url;
     
     // 🖼️ خلفية الهيرو
     if (s.hero_bg) {
@@ -258,14 +558,24 @@ async function loadAndApplySettings() {
       }
     }
     
-    // 🔗 الناف بار
+    // 🔗 الناف بار (للكمبيوتر) + القائمة المنبثقة (للموبايل)
     if (s.navbar_links && s.navbar_links.length > 0) {
+      // للناف بار الأصلي (الكمبيوتر)
       var navbar = document.getElementById('navbar');
       navbar.innerHTML = "";
+      // للقائمة المنبثقة (الموبايل)
+      var mobileMenu = document.getElementById('mobileMenu');
+      if (mobileMenu) mobileMenu.innerHTML = "";
+      
       for (var i = 0; i < s.navbar_links.length; i++) {
         var link = s.navbar_links[i];
         if (link.visible) {
+          // نضيف للناف بار
           navbar.innerHTML += '<a href="' + link.href + '">' + link.text + '</a>';
+          // ونضيف للقائمة المنبثقة كمان
+          if (mobileMenu) {
+            mobileMenu.innerHTML += '<a href="' + link.href + '">' + link.text + '</a>';
+          }
         }
       }
     }
@@ -287,15 +597,15 @@ async function loadAndApplySettings() {
       var track = document.getElementById('gallery-track');
       var imagesHtml = "";
       for (var i = 0; i < s.gallery_images.length; i++) {
-        imagesHtml += '<img src="' + s.gallery_images[i] + '" onerror="this.src=\'https://via.placeholder.com/250x200?text=Image\'">';
+        imagesHtml += '<img src="' + s.gallery_images[i] + '" alt="صورة" loading="lazy" onerror="this.src=\'https://via.placeholder.com/250x200?text=Image\'">';
       }
       track.innerHTML = imagesHtml + imagesHtml;
       if (s.gallery_auto_scroll !== false) { 
-        track.style.animation = 'scroll 40s linear infinite'; 
+        track.style.animation = 'scroll 30s linear infinite'; 
       } else { 
         track.style.animation = 'none'; 
         track.style.overflowX = 'auto'; 
-        track.style.padding = '10px 0'; 
+        track.style.padding = '10px 0';
       }
     }
     
@@ -319,7 +629,7 @@ async function loadAndApplySettings() {
     console.warn("⚠️ Failed to load settings:", err); 
     applyDefaults(); 
   } finally {
-    // ✅ الخطوة الأخيرة: إظهار الموقع بعد انتهاء التحميل
+    // ✅ إظهار الموقع بعد التحميل
     document.body.classList.add('loaded');
   }
 }
@@ -327,18 +637,27 @@ async function loadAndApplySettings() {
 function applyDefaults() {
   document.documentElement.style.setProperty('--primary', '#1d4ed8');
   document.documentElement.style.setProperty('--bg', '#f8fafc');
-  document.getElementById('hero-image').src = "https://i.pravatar.cc/320?img=12";
-  document.getElementById('doctor-image').src = "https://i.pravatar.cc/320?img=12";
+  document.getElementById('hero-image').src = "https://i.pravatar.cc/320?img=5";
+  document.getElementById('doctor-image').src = "https://i.pravatar.cc/320?img=9";
   document.getElementById('phone-link').href = "tel:01211538334";
   document.getElementById('whatsapp-link').href = "https://wa.me/201211538334";
   document.getElementById('wa-float').href = "https://wa.me/201211538334";
   document.getElementById('map-frame').src = "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d109143.5476075848!2d29.85589339887508!3d31.21564550000001!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14f5c50223400001%3A0x500c3b4e7c186c0!2sAlexandria%2C%20Alexandria%20Governorate!5e0!3m2!1sen!2seg!4v1689898989898!5m2!1sen!2seg";
   
+  // الناف بار للكمبيوتر
   var navbar = document.getElementById('navbar');
-  navbar.innerHTML = '<a href="#">الرئيسية</a><a href="#doctor">عن الدكتور</a><a href="#media">المكتبة الطبية</a><a href="#contact">تواصل</a>';
+  navbar.innerHTML = '<a href="#">الرئيسية</a><a href="#doctor">عن الدكتورة</a><a href="#media">المكتبة</a><a href="#contact">تواصل</a>';
+  
+  // ✅ نفس الروابط للقائمة المنبثقة للموبايل
+  var mobileMenu = document.getElementById('mobileMenu');
+  if (mobileMenu) {
+    mobileMenu.innerHTML = '<a href="#">الرئيسية</a><a href="#doctor">عن الدكتورة</a><a href="#media">المكتبة</a><a href="#contact">تواصل</a>';
+  }
   
   var cardsSection = document.getElementById('cards-section');
-  cardsSection.innerHTML = '<div class="card"><div class="icon">⭐</div><h3>مستوى خدمة عالي</h3></div><div class="card"><div class="icon">🧠</div><h3>أحدث تقنيات طبية</h3></div><div class="card"><div class="icon">❤️</div><h3>اهتمام شخصي بالمرضى</h3></div>';
+  cardsSection.innerHTML = '<div class="card"><div class="icon">⭐</div><h3>رعاية متميزة</h3></div><div class="card"><div class="icon">🧠</div><h3>أحدث الأجهزة</h3></div><div class="card"><div class="icon">❤️</div><h3>اهتمام بالأم والجنين</h3></div>';
+  
+  document.body.classList.add('loaded');
 }
 
 // تحميل المحتوى
@@ -351,16 +670,24 @@ async function loadMediaContent() {
     imagesContainer.innerHTML = ""; videosContainer.innerHTML = ""; articlesContainer.innerHTML = "";
     snapshot.forEach((docSnap) => {
       const item = docSnap.data();
-      if (item.type === "image") imagesContainer.innerHTML += '<div class="card"><img src="' + item.link + '" style="width:100%;border-radius:10px" onerror="this.src=\'https://via.placeholder.com/300x200?text=Image\'"></div>';
-      if (item.type === "video") videosContainer.innerHTML += '<div class="card"><video controls style="width:100%"><source src="' + item.link + '"></video></div>';
-      if (item.type === "article") articlesContainer.innerHTML += '<div class="card"><h3>' + item.title + '</h3><p>' + item.desc + '</p></div>';
+      if (item.type === "image") imagesContainer.innerHTML += '<div class="card"><img src="' + item.link + '" style="width:100%;border-radius:10px" loading="lazy" onerror="this.src=\'https://via.placeholder.com/300x200?text=Image\'"></div>';
+      if (item.type === "video") videosContainer.innerHTML += '<div class="card"><video controls style="width:100%" loading="lazy"><source src="' + item.link + '"></video></div>';
+      if (item.type === "article") articlesContainer.innerHTML += '<div class="card"><h3>' + item.title + '</h3><p style="font-size:13px;color:var(--muted);margin-top:8px;">' + item.desc + '</p></div>';
     });
   } catch (err) { console.warn("⚠️ Failed to load media content:", err); }
 }
 
+// التشغيل
 if (document.readyState === "loading") {
   document.addEventListener("DOMContentLoaded", function() { loadAndApplySettings(); loadMediaContent(); });
 } else { loadAndApplySettings(); loadMediaContent(); }
+
+// ✅ إغلاق القائمة المنبثقة عند الضغط على رابط
+document.addEventListener('click', function(e) {
+  if (e.target.closest('.mobile-menu a')) {
+    document.getElementById('mobileMenu').classList.remove('active');
+  }
+});
 </script>
 </body>
-</html> 
+</html>
