@@ -1,8 +1,3 @@
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.getRegistrations().then(regs => regs.forEach(r => r.unregister()));
-}
-localStorage.clear();
-sessionStorage.clear();
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -68,15 +63,8 @@ body { font-family: 'Segoe UI', Tahoma, Arial, sans-serif; background: var(--bg)
 .section-toggle input { width: auto; }
 .gallery-preview { display: flex; gap: 10px; overflow-x: auto; padding: 10px 0; }
 .gallery-preview img { width: 80px; height: 80px; object-fit: cover; border-radius: 8px; border: 2px solid #eee; }
-/* 🎨 معرض صور الغلاف */
-.hero-gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px; margin-top: 15px; }
-.hero-gallery-item { position: relative; cursor: pointer; border-radius: 10px; overflow: hidden; border: 3px solid transparent; transition: all 0.3s; }
-.hero-gallery-item:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0,0,0,0.15); }
-.hero-gallery-item.selected { border-color: var(--success); }
-.hero-gallery-item img { width: 100%; height: 120px; object-fit: cover; }
-.hero-gallery-item .label { position: absolute; bottom: 0; left: 0; right: 0; background: rgba(0,0,0,0.7); color: #fff; padding: 5px; font-size: 12px; text-align: center; }
-@media (max-width: 900px) { .side-nav { transform: translateX(100%); } .side-nav.open { transform: translateX(0); } .main-content { margin-right: 0; padding-top: 70px; } .menu-toggle { display: flex; } .settings-grid { grid-template-columns: 1fr; } .hero-gallery { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); } }
-@media (max-width: 500px) { body { padding: 12px; } .section { padding: 20px 15px; } .content-grid { grid-template-columns: 1fr; } .card .actions { position: static; margin-top: 10px; justify-content: flex-end; } .hero-gallery { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 900px) { .side-nav { transform: translateX(100%); } .side-nav.open { transform: translateX(0); } .main-content { margin-right: 0; padding-top: 70px; } .menu-toggle { display: flex; } .settings-grid { grid-template-columns: 1fr; } }
+@media (max-width: 500px) { body { padding: 12px; } .section { padding: 20px 15px; } .content-grid { grid-template-columns: 1fr; } .card .actions { position: static; margin-top: 10px; justify-content: flex-end; } }
 </style>
 </head>
 <body>
@@ -86,7 +74,7 @@ body { font-family: 'Segoe UI', Tahoma, Arial, sans-serif; background: var(--bg)
   <h2 class="logo">⚙️ لوحة التحكم</h2>
   <a href="admin.html">🏠 لوحة المواعيد</a>
   <a href="index-admin.html" class="active">📂 إدارة الموقع</a>
-  <a href="patients.html" class="disabled">🚧 ملفات المرضي</a>
+  <a href="#" class="disabled">🚧 قريباً</a>
   <button onclick="handleLogout()" style="margin-top:auto;background:rgba(255,255,255,0.2);color:#fff;border:none;padding:12px;border-radius:10px;cursor:pointer;">🚪 خروج</button>
 </div>
 
@@ -123,22 +111,17 @@ body { font-family: 'Segoe UI', Tahoma, Arial, sans-serif; background: var(--bg)
         <div class="form-group"><label>عنوان الهيدر</label><input type="text" id="setting_hero_title" placeholder="ميديكال كلينك"></div>
         <div class="form-group" style="grid-column: span 2;"><label>وصف الهيدر</label><textarea id="setting_hero_desc" placeholder="رعاية طبية بثقة..."></textarea></div>
         
-        <!-- 🖼️ صورة الغلاف مع المعرض -->
         <div class="form-group" style="grid-column: span 2;">
-          <label>🖼️ صورة الغلاف للهيرو (خلفية القسم الأول)</label>
+          <label>🖼️ صورة الغلاف للهيرو</label>
           <input type="url" id="setting_hero_bg" placeholder="https://... أو اختاري من المعرض أسفل">
           <div class="preview-box" id="heroBgPreviewBox"><img id="heroBgPreviewImg" src="" style="max-width:100%;max-height:100px;border-radius:8px;margin-top:5px;"></div>
-          
-          <!-- 🎨 معرض الصور الجاهزة -->
           <div style="margin-top: 20px; padding: 15px; background: #f8f9fa; border-radius: 10px;">
-            <label style="font-weight: 600; color: var(--main); margin-bottom: 10px; display: block;">🎨 اختاري من الصور الجاهزة (اضغطي على الصورة):</label>
-            <div class="hero-gallery" id="heroGallery">
-              <!-- سيتم ملؤها بالجافاسكريبت -->
-            </div>
+            <label style="font-weight: 600; color: var(--main); margin-bottom: 10px; display: block;">🎨 اختاري من الصور الجاهزة:</label>
+            <div class="hero-gallery" id="heroGallery"></div>
           </div>
         </div>
         
-        <div class="form-group"><label>👩‍⚕️ صورة الدكتور</label><input type="url" id="setting_doctor_image" placeholder="https://..."><div class="preview-box" id="doctorPreviewBox"><img id="doctorPreviewImg" src="" style="max-width:100%;max-height:150px;border-radius:8px;margin-top:5px;"></div></div>
+        <div class="form-group"><label>👩‍️ صورة الدكتور</label><input type="url" id="setting_doctor_image" placeholder="https://..."><div class="preview-box" id="doctorPreviewBox"><img id="doctorPreviewImg" src="" style="max-width:100%;max-height:150px;border-radius:8px;margin-top:5px;"></div></div>
         <div class="form-group" style="grid-column: span 2;"><label>نص "عن الدكتور"</label><textarea id="setting_about_text" placeholder="خبرة طويلة..."></textarea></div>
         <div class="form-group"><label>رقم الواتساب</label><input type="text" id="setting_whatsapp_number" placeholder="201211538334"></div>
         <div class="form-group"><label>رقم الاتصال</label><input type="text" id="setting_phone_number" placeholder="01211538334"></div>
@@ -232,8 +215,8 @@ body { font-family: 'Segoe UI', Tahoma, Arial, sans-serif; background: var(--bg)
 
 <div class="toast" id="toast"></div>
 
-<script type="module" src="index.html?v=2">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, updateDoc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 import { getAuth, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
@@ -253,16 +236,13 @@ const db = getFirestore(app);
 const auth = getAuth(app);
 let editingId = null, contentData = [], navbarData = [], cardsData = [], galleryData = [], sectionsData = {};
 
-// 🎨 قائمة صور الغلاف الجاهزة
 const heroImages = [
   { url: "https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?w=1600&h=600&fit=crop", thumb: "https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?w=400&h=200&fit=crop", label: "عيادة حديثة" },
   { url: "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=1600&h=600&fit=crop", thumb: "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=400&h=200&fit=crop", label: "خلفية هادئة" },
   { url: "https://images.unsplash.com/photo-1588776814546-1ffcf47267a5?w=1600&h=600&fit=crop", thumb: "https://images.unsplash.com/photo-1588776814546-1ffcf47267a5?w=400&h=200&fit=crop", label: "عيادة نظيفة" },
   { url: "https://images.unsplash.com/photo-1516574187841-69301976e499?w=1600&h=600&fit=crop", thumb: "https://images.unsplash.com/photo-1516574187841-69301976e499?w=400&h=200&fit=crop", label: "استقبال" },
   { url: "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=1600&h=600&fit=crop", thumb: "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=400&h=200&fit=crop", label: "فريق طبي" },
-  { url: "https://images.unsplash.com/photo-1505751172876-fa1923c5c528?w=1600&h=600&fit=crop", thumb: "https://images.unsplash.com/photo-1505751172876-fa1923c5c528?w=400&h=200&fit=crop", label: "minimal" },
-  { url: "https://images.unsplash.com/photo-1581093458791-9f3c3900df4b?w=1600&h=600&fit=crop", thumb: "https://images.unsplash.com/photo-1581093458791-9f3c3900df4b?w=400&h=200&fit=crop", label: "معدات طبية" },
-  { url: "https://images.unsplash.com/photo-1579684385127-1ef15d508118?w=1600&h=600&fit=crop", thumb: "https://images.unsplash.com/photo-1579684385127-1ef15d508118?w=400&h=200&fit=crop", label: "مستشفى" }
+  { url: "https://images.unsplash.com/photo-1505751172876-fa1923c5c528?w=1600&h=600&fit=crop", thumb: "https://images.unsplash.com/photo-1505751172876-fa1923c5c528?w=400&h=200&fit=crop", label: "minimal" }
 ];
 
 // 🔀 تبديل التبويبات
@@ -277,13 +257,19 @@ window.switchTab = function(tabName) {
 };
 
 window.toggleMenu = function() { document.getElementById('sideNav').classList.toggle('open'); }
-window.handleLogout = async function() { await signOut(auth); window.location.reload(); }
+
+window.handleLogout = async function() { 
+  await signOut(auth); 
+  window.location.reload(); 
+}
+
 function showToast(msg, type = 'success') {
   const toast = document.getElementById('toast');
   toast.textContent = msg;
   toast.className = 'toast ' + type + ' show';
   setTimeout(() => toast.classList.remove('show'), 3000);
 }
+
 window.quickLogin = async function() {
   const email = document.getElementById('loginEmail').value;
   const password = document.getElementById('loginPassword').value;
@@ -295,42 +281,36 @@ window.quickLogin = async function() {
     loadAllSettings();
   } catch (err) { errorEl.textContent = "❌ " + err.message; errorEl.style.display = 'block'; }
 };
+
 window.checkAuth = function() {
   const user = auth.currentUser;
   if (!user) { document.getElementById('loginSection').style.display = 'block'; }
   else { document.getElementById('loginSection').style.display = 'none'; loadAllSettings(); }
 };
 
-// 🎨 عرض معرض صور الغلاف
+// 🎨 معرض صور الغلاف
 function renderHeroGallery() {
   const gallery = document.getElementById('heroGallery');
+  if(!gallery) return;
   gallery.innerHTML = '';
   heroImages.forEach((img, idx) => {
     const item = document.createElement('div');
     item.className = 'hero-gallery-item';
-    item.innerHTML = `
-      <img src="${img.thumb}" alt="${img.label}" loading="lazy">
-      <div class="label">${img.label}</div>
-    `;
+    item.innerHTML = `<img src="${img.thumb}" alt="${img.label}" loading="lazy"><div class="label">${img.label}</div>`;
     item.onclick = () => selectHeroImage(img.url, item);
     gallery.appendChild(item);
   });
 }
 
-// 🎨 اختيار صورة من المعرض
 window.selectHeroImage = function(url, element) {
   document.getElementById('setting_hero_bg').value = url;
   const pb = document.getElementById("heroBgPreviewBox");
   const pi = document.getElementById("heroBgPreviewImg");
   pi.src = url;
   pb.style.display = "block";
-  
-  // إزالة التحديد من كل العناصر
   document.querySelectorAll('.hero-gallery-item').forEach(el => el.classList.remove('selected'));
-  // إضافة التحديد للعنصر المختار
   if (element) element.classList.add('selected');
-  
-  showToast(`✅ تم اختيار الصورة: "${element.querySelector('.label').textContent}" - لا تنسي تحفظي الإعدادات`);
+  showToast(`✅ تم اختيار الصورة: "${element.querySelector('.label').textContent}"`);
 };
 
 async function loadAllSettings() {
@@ -338,6 +318,7 @@ async function loadAllSettings() {
     const docSnap = await getDoc(doc(db, "settings_mona", "main"));
     if (!docSnap.exists()) { loadDefaults(); return; }
     const s = docSnap.data();
+    
     document.getElementById("setting_clinic_name").value = s.clinic_name || "";
     document.getElementById("setting_doctor_name").value = s.doctor_name || "";
     document.getElementById("setting_doctor_title").value = s.doctor_title || "";
@@ -353,37 +334,52 @@ async function loadAllSettings() {
     document.getElementById("setting_address").value = s.address || "";
     document.getElementById("setting_map_url").value = s.map_url || "";
     document.getElementById("setting_footer_text").value = s.footer_text || "";
+    
     updateColorPreview(s.primary_color || "#1d4ed8");
     if (s.hero_bg) { const pb = document.getElementById("heroBgPreviewBox"), pi = document.getElementById("heroBgPreviewImg"); pi.src = s.hero_bg; pb.style.display = "block"; }
     if (s.doctor_image) { const pb = document.getElementById("doctorPreviewBox"), pi = document.getElementById("doctorPreviewImg"); pi.src = s.doctor_image; pb.style.display = "block"; }
-    navbarData = s.navbar_links || [{ text: "الرئيسية", href: "#", visible: true }, { text: "عن الدكتور", href: "#doctor", visible: true }, { text: "المكتبة الطبية", href: "#media", visible: true }, { text: "تواصل", href: "#contact", visible: true }];
+    
+    navbarData = s.navbar_links || [{ text: "الرئيسية", href: "#", visible: true }, { text: "عن الدكتور", href: "#doctor", visible: true }];
     renderNavbarList();
-    cardsData = s.cards || [{ icon: "⭐", title: "مستوى خدمة عالي", visible: true }, { icon: "🧠", title: "أحدث تقنيات طبية", visible: true }, { icon: "❤️", title: "اهتمام شخصي بالمرضى", visible: true }];
+    
+    cardsData = s.cards || [{ icon: "⭐", title: "مستوى خدمة عالي", visible: true }];
     renderCardsList();
+    
     galleryData = s.gallery_images || [];
     document.getElementById("galleryAutoScroll").checked = s.gallery_auto_scroll !== false;
     renderGalleryPreview();
+    
     document.getElementById("cta_title").value = s.cta?.title || "";
     document.getElementById("cta_desc").value = s.cta?.desc || "";
     document.getElementById("cta_working_hours").value = s.cta?.working_hours || "";
     document.getElementById("cta_badge").value = s.cta?.badge || "";
     document.getElementById("cta_visible").checked = s.cta?.visible !== false;
+    
     sectionsData = s.sections || { hero: true, cards: true, doctor: true, gallery: true, media: true, cta: true, contact: true, map: true, footer: true };
     renderSectionsToggle();
     loadContent();
     renderHeroGallery();
   } catch (err) { console.warn("⚠️ Failed to load settings:", err); loadDefaults(); }
 }
+
 function loadDefaults() {
   document.getElementById("setting_primary_color").value = "#1d4ed8";
   updateColorPreview("#1d4ed8");
-  navbarData = [{ text: "الرئيسية", href: "#", visible: true }, { text: "عن الدكتور", href: "#doctor", visible: true }, { text: "المكتبة الطبية", href: "#media", visible: true }, { text: "تواصل", href: "#contact", visible: true }];
-  cardsData = [{ icon: "⭐", title: "مستوى خدمة عالي", visible: true }, { icon: "🧠", title: "أحدث تقنيات طبية", visible: true }, { icon: "❤️", title: "اهتمام شخصي بالمرضى", visible: true }];
+  navbarData = [{ text: "الرئيسية", href: "#", visible: true }, { text: "عن الدكتور", href: "#doctor", visible: true }];
+  cardsData = [{ icon: "⭐", title: "مستوى خدمة عالي", visible: true }];
   galleryData = [];
   sectionsData = { hero: true, cards: true, doctor: true, gallery: true, media: true, cta: true, contact: true, map: true, footer: true };
   renderNavbarList(); renderCardsList(); renderGalleryPreview(); renderSectionsToggle();
   renderHeroGallery();
 }
+
+function updateColorPreview(color) { const preview = document.getElementById("colorPreview"); if (preview) preview.style.backgroundColor = color; }
+const primaryColorInput = document.getElementById("setting_primary_color");
+if (primaryColorInput) primaryColorInput.addEventListener("input", (e) => updateColorPreview(e.target.value));
+const heroBgInput = document.getElementById('setting_hero_bg');
+if (heroBgInput) heroBgInput.addEventListener('input', function(e) { const pb = document.getElementById("heroBgPreviewBox"), pi = document.getElementById("heroBgPreviewImg"); if (e.target.value && pi && pb) { pi.src = e.target.value; pb.style.display = "block"; } else if (pb) pb.style.display = "none"; });
+const doctorImageInput = document.getElementById('setting_doctor_image');
+if (doctorImageInput) doctorImageInput.addEventListener('input', function(e) { const pb = document.getElementById("doctorPreviewBox"), pi = document.getElementById("doctorPreviewImg"); if (e.target.value && pi && pb) { pi.src = e.target.value; pb.style.display = "block"; } else if (pb) pb.style.display = "none"; });
 
 // 🔗 Navbar Functions
 function renderNavbarList() {
@@ -502,14 +498,6 @@ window.saveAllSettings = async function() {
     showToast("✅ تم حفظ جميع الإعدادات! افتحي الموقع واعملي ري فريش.");
   } catch (err) { console.error("Save settings error:", err); showToast("❌ خطأ في الحفظ: " + err.message, "error"); }
 };
-
-function updateColorPreview(color) { const preview = document.getElementById("colorPreview"); if (preview) preview.style.backgroundColor = color; }
-const primaryColorInput = document.getElementById("setting_primary_color");
-if (primaryColorInput) primaryColorInput.addEventListener("input", (e) => updateColorPreview(e.target.value));
-const heroBgInput = document.getElementById('setting_hero_bg');
-if (heroBgInput) heroBgInput.addEventListener('input', function(e) { const pb = document.getElementById("heroBgPreviewBox"), pi = document.getElementById("heroBgPreviewImg"); if (e.target.value && pi && pb) { pi.src = e.target.value; pb.style.display = "block"; } else if (pb) pb.style.display = "none"; });
-const doctorImageInput = document.getElementById('setting_doctor_image');
-if (doctorImageInput) doctorImageInput.addEventListener('input', function(e) { const pb = document.getElementById("doctorPreviewBox"), pi = document.getElementById("doctorPreviewImg"); if (e.target.value && pi && pb) { pi.src = e.target.value; pb.style.display = "block"; } else if (pb) pb.style.display = "none"; });
 
 // 🔄 استعادة آخر تبويب مفتوح
 document.addEventListener('DOMContentLoaded', function() {
