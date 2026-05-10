@@ -16,7 +16,32 @@ body.loaded{opacity:1;visibility:visible;transition:opacity 0.5s ease-in}
 
 /* === التصميم الأصلي للكمبيوتر === */
 .login-btn{position:absolute;top:20px;right:20px;z-index:999;background:linear-gradient(135deg,var(--primary),var(--primary-dark));color:#fff;border:none;padding:10px 20px;font-size:14px;border-radius:10px;cursor:pointer;transition:0.3s;text-decoration:none}
-.hero{position:relative;padding:70px 8%;background:linear-gradient(135deg,#e0f2fe,#ffffff);min-height:90vh;display:flex;align-items:center}
+
+/* ✅ الهيرو مع خلفية شفافة */
+.hero{
+  position:relative;
+  padding:70px 8%;
+  background:linear-gradient(135deg,#e0f2fe,#ffffff);
+  min-height:90vh;
+  display:flex;
+  align-items:center;
+  overflow:hidden; /* عشان الخلفية ما تطلعش برا */
+}
+/* ✅ طبقة الخلفية الشفافة (لصورة الاستقبال) */
+.hero::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  opacity: 0.08; /* ✅ شفافية عالية جداً (8% فقط) */
+  z-index: 0;
+  pointer-events: none;
+}
+/* ✅ محتوى الهيرو فوق الخلفية */
+.hero > * { position: relative; z-index: 2; }
+
 .navbar{position:absolute;top:20px;left:50%;transform:translateX(-50%);background:#fff;padding:12px 20px;border-radius:50px;display:flex;gap:20px;box-shadow:0 10px 30px rgba(0,0,0,0.08);flex-wrap:wrap;justify-content:center;z-index:100}
 .navbar a{text-decoration:none;color:var(--dark);font-weight:500;font-size:14px;padding:5px 10px}
 .hero-content{display:flex;width:100%;justify-content:space-between;align-items:center;gap:40px;flex-wrap:wrap}
@@ -121,7 +146,7 @@ footer{text-align:center;padding:20px;color:#64748b}
       <button onclick="location.href='booking.html'" class="book-btn">احجز الآن</button>
     </div>
     <div class="hero-img">
-      <img src="https://scontent.faly2-2.fna.fbcdn.net/v/t39.30808-6/488684706_9703197523069841_8397030114797715733_n.jpg?_nc_cat=104&ccb=1-7&_nc_sid=7b2446&_nc_ohc=bEEkkt_HncsQ7kNvwEI080f&_nc_oc=AdrrVttE0sAsJ07kOwrq8kM2-8vi8qEI3T24KD_ITNz3sVq1zfp6qLnrk6JfdQ5w6kA&_nc_zt=23&_nc_ht=scontent.faly2-2.fna&_nc_gid=31SObsfDM_D6G89J-E70HA&_nc_ss=7b2a8&oh=00_Af7EYeMZEAdej1JbiNObi925TEgg_26hJWLVaDV5BYuh1A&oe=6A05C858" id="hero-image" alt="د. منى المصري">
+      <img src="" id="hero-image" alt="د. منى المصري">
     </div>
   </div>
 </section>
@@ -270,13 +295,12 @@ async function loadAndApplySettings() {
     // 🗺️ الخريطة
     if (s.map_url) document.getElementById('map-frame').src = s.map_url;
     
-    // 🖼️ خلفية الهيرو (اختياري)
+    // 🖼️ خلفية الهيرو الشفافة (اختياري)
     if (s.hero_bg) {
       var heroSection = document.getElementById('hero-section');
       if (heroSection) { 
-        heroSection.style.backgroundImage = "url('" + s.hero_bg + "')"; 
-        heroSection.style.backgroundSize = "cover"; 
-        heroSection.style.backgroundPosition = "center"; 
+        // نطبق الخلفية على الـ ::before عشان تكون شفافة
+        heroSection.style.setProperty('--hero-bg-url', `url('${s.hero_bg}')`);
       }
     }
     
