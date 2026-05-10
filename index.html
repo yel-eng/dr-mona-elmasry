@@ -50,7 +50,6 @@ body{background:var(--bg);color:var(--dark);transition:background 0.3s,color 0.3
 footer{text-align:center;padding:20px;color:#64748b;}
 .book-btn{background:var(--primary);color:#fff;padding:12px 22px;border:none;border-radius:12px;font-size:15px;cursor:pointer;transition:0.3s;}
 .book-btn:hover{transform:translateY(-2px);box-shadow:0 10px 20px rgba(0,0,0,0.1);}
-/* إخفاء الأقسام */
 .section-hidden{display:none!important;}
 @media(max-width:900px){.cards{grid-template-columns:repeat(2,1fr);}.hero-content{flex-direction:column;text-align:center;}.doctor{flex-direction:column;}.cta-content{flex-direction:column;text-align:center;}}
 @media(max-width:500px){.cards{grid-template-columns:1fr;}.navbar{gap:10px;}}
@@ -138,7 +137,7 @@ footer{text-align:center;padding:20px;color:#64748b;}
 <!-- WHATSAPP FLOATING -->
 <a class="wa" id="wa-float" href=""><i class="fab fa-whatsapp"></i></a>
 
-<!-- ✅ كود تحميل الإعدادات -->
+<!-- ✅ كود تحميل الإعدادات (محدث وداعم للنسخ القديمة والجديدة) -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getFirestore, doc, getDoc, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
@@ -164,21 +163,36 @@ async function loadAndApplySettings() {
     const s = settingsDoc.data();
     
     // 🎨 الألوان
-    if (s.primary_color) { document.documentElement.style.setProperty('--primary', s.primary_color); document.documentElement.style.setProperty('--primary-dark', s.primary_color + 'dd'); }
+    if (s.primary_color) { 
+      document.documentElement.style.setProperty('--primary', s.primary_color); 
+      document.documentElement.style.setProperty('--primary-dark', s.primary_color + 'dd'); 
+    }
     if (s.bg_color) document.documentElement.style.setProperty('--bg', s.bg_color);
     
     // 🏷️ النصوص
-    if (s.clinic_name) { document.title = s.clinic_name + " - نظام الحجز"; document.querySelectorAll('[data-setting="clinic_name"]').forEach(el => el.textContent = s.clinic_name); }
+    if (s.clinic_name) { 
+      document.title = s.clinic_name + " - نظام الحجز"; 
+      document.querySelectorAll('[data-setting="clinic_name"]').forEach(el => el.textContent = s.clinic_name); 
+    }
     if (s.doctor_name) document.querySelectorAll('[data-setting="doctor_name"]').forEach(el => el.textContent = s.doctor_name);
     if (s.doctor_title) document.querySelectorAll('[data-setting="doctor_title"]').forEach(el => el.textContent = s.doctor_title);
     if (s.hero_title) document.querySelector('[data-setting="hero_title"]')?.textContent = s.hero_title;
     if (s.hero_desc) document.querySelector('[data-setting="hero_desc"]')?.textContent = s.hero_desc;
     if (s.about_heading) document.querySelector('[data-setting="about_heading"]')?.textContent = s.about_heading;
     if (s.about_text) document.querySelector('[data-setting="about_text"]')?.textContent = s.about_text;
-    if (s.cta_title) document.querySelector('[data-setting="cta_title"]')?.textContent = s.cta.title || s.cta_title;
-    if (s.cta_desc) document.querySelector('[data-setting="cta_desc"]')?.textContent = s.cta.desc || s.cta_desc;
-    if (s.working_hours) document.querySelector('[data-setting="working_hours"]')?.innerHTML = s.cta.working_hours || s.working_hours;
-    if (s.cta_badge) document.querySelector('[data-setting="cta_badge"]')?.textContent = s.cta.badge || s.cta_badge;
+    
+    // 🎯 قسم الاستشارات (إصلاح التوافق بين النسخ القديمة والجديدة)
+    const ctaTitle = s.cta?.title || s.cta_title || "";
+    const ctaDesc = s.cta?.desc || s.cta_desc || "";
+    const ctaHours = s.cta?.working_hours || s.working_hours || "";
+    const ctaBadge = s.cta?.badge || s.cta_badge || "";
+    const ctaVisible = s.cta?.visible !== false;
+    
+    if (ctaTitle) document.querySelector('[data-setting="cta_title"]')?.textContent = ctaTitle;
+    if (ctaDesc) document.querySelector('[data-setting="cta_desc"]')?.textContent = ctaDesc;
+    if (ctaHours) document.querySelector('[data-setting="working_hours"]')?.innerHTML = ctaHours;
+    if (ctaBadge) document.querySelector('[data-setting="cta_badge"]')?.textContent = ctaBadge;
+    
     if (s.address) document.querySelector('[data-setting="address"]')?.textContent = s.address;
     if (s.contact_note) document.querySelector('[data-setting="contact_note"]')?.textContent = s.contact_note;
     if (s.footer_text) document.getElementById('footer-text').textContent = s.footer_text;
@@ -196,9 +210,15 @@ async function loadAndApplySettings() {
       document.getElementById('wa-float').href = "https://wa.me/" + fullWa;
     }
     if (s.map_url) document.getElementById('map-frame').src = s.map_url;
+    
+    // 🖼️ خلفية الهيرو
     if (s.hero_bg) {
       const heroSection = document.getElementById('hero-section');
-      if (heroSection) { heroSection.style.backgroundImage = "url('" + s.hero_bg + "')"; heroSection.style.backgroundSize = "cover"; heroSection.style.backgroundPosition = "center"; }
+      if (heroSection) { 
+        heroSection.style.backgroundImage = "url('" + s.hero_bg + "')"; 
+        heroSection.style.backgroundSize = "cover"; 
+        heroSection.style.backgroundPosition = "center"; 
+      }
     }
     
     // 🔗 الناف بار
@@ -222,15 +242,16 @@ async function loadAndApplySettings() {
     // 🖼️ الجاليري مع تمرير لا نهائي
     if (s.gallery_images?.length) {
       const track = document.getElementById('gallery-track');
-      // نكرر الصور عشان التمرير اللا نهائي يكون سلس
       const images = s.gallery_images.map(url => `<img src="${url}" onerror="this.src='https://via.placeholder.com/250x200?text=Image'">`).join('');
-      track.innerHTML = images + images; // نكرر عشان الـ infinite scroll
-      if (s.gallery_auto_scroll !== false) { track.style.animation = 'scroll 40s linear infinite'; }
-      else { track.style.animation = 'none'; track.style.overflowX = 'auto'; track.style.padding = '10px 0'; }
+      track.innerHTML = images + images;
+      if (s.gallery_auto_scroll !== false) { 
+        track.style.animation = 'scroll 40s linear infinite'; 
+      } else { 
+        track.style.animation = 'none'; 
+        track.style.overflowX = 'auto'; 
+        track.style.padding = '10px 0'; 
+      }
     }
-    
-    // 🎯 قسم الاستشارات
-    if (s.cta?.visible === false) document.getElementById('cta-section').classList.add('section-hidden');
     
     // 👁️ إخفاء الأقسام
     if (s.sections) {
@@ -239,13 +260,16 @@ async function loadAndApplySettings() {
       if (s.sections.doctor === false) document.getElementById('doctor').classList.add('section-hidden');
       if (s.sections.gallery === false) document.getElementById('gallery-section').classList.add('section-hidden');
       if (s.sections.media === false) document.getElementById('media').classList.add('section-hidden');
-      if (s.sections.cta === false) document.getElementById('cta-section').classList.add('section-hidden');
+      if (ctaVisible === false) document.getElementById('cta-section').classList.add('section-hidden');
       if (s.sections.contact === false) document.getElementById('contact').classList.add('section-hidden');
       if (s.sections.map === false) document.getElementById('map-section').classList.add('section-hidden');
       if (s.sections.footer === false) document.getElementById('footer-text').closest('footer')?.classList.add('section-hidden');
     }
     
-  } catch (err) { console.warn("⚠️ Failed to load settings:", err); applyDefaults(); }
+  } catch (err) { 
+    console.warn("⚠️ Failed to load settings:", err); 
+    applyDefaults(); 
+  }
 }
 
 function applyDefaults() {
@@ -257,10 +281,8 @@ function applyDefaults() {
   document.getElementById('whatsapp-link').href = "https://wa.me/201211538334";
   document.getElementById('wa-float').href = "https://wa.me/201211538334";
   document.getElementById('map-frame').src = "https://www.google.com/maps?q=alexandria+egypt&output=embed";
-  // Navbar default
   const navbar = document.getElementById('navbar');
   navbar.innerHTML = `<a href="#">الرئيسية</a><a href="#doctor">عن الدكتور</a><a href="#media">المكتبة الطبية</a><a href="#contact">تواصل</a>`;
-  // Cards default
   const cardsSection = document.getElementById('cards-section');
   cardsSection.innerHTML = `<div class="card"><div class="icon">⭐</div><h3>مستوى خدمة عالي</h3></div><div class="card"><div class="icon">🧠</div><h3>أحدث تقنيات طبية</h3></div><div class="card"><div class="icon">❤️</div><h3>اهتمام شخصي بالمرضى</h3></div>`;
 }
@@ -282,6 +304,7 @@ async function loadMediaContent() {
   } catch (err) { console.warn("⚠️ Failed to load media content:", err); }
 }
 
+// تشغيل الدوال بعد تحميل الصفحة
 if (document.readyState === "loading") {
   document.addEventListener("DOMContentLoaded", () => { loadAndApplySettings(); loadMediaContent(); });
 } else { loadAndApplySettings(); loadMediaContent(); }
