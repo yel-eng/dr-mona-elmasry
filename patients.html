@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ملفات المرضى - عيادة د. منى المصري</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --main: #1a237e; --main-light: #3949ab; --bg: #f4f7f6; --white: #ffffff;
+  --text: #333333; --text-light: #666666; --success: #2e7d32; --warning: #ff9800;
+  --danger: #f44336; --whatsapp: #25d366;
+  --shadow: 0 4px 16px rgba(0,0,0,0.06); --radius: 14px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Tajawal', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  padding: 20px;
+  margin-right: 220px;
+}
+.side-nav {
+  position: fixed; top: 0; right: 0; width: 220px; height: 100vh;
+  background: linear-gradient(180deg, var(--main), var(--main-light));
+  padding: 25px 15px; display: flex; flex-direction: column; gap: 15px; z-index: 999;
+}
+.side-nav .logo { color: #fff; text-align: center; margin-bottom: 20px; font-size: 18px; font-weight: bold; }
+.side-nav a { text-decoration: none; color: #fff; padding: 12px; border-radius: 10px; transition: 0.3s; font-size: 15px; }
+.side-nav a:hover, .side-nav a.active { background: rgba(255,255,255,0.2); }
+.side-nav a.disabled { opacity: 0.5; pointer-events: none; }
+
+.container { max-width: 900px; margin: 0 auto; }
+.card {
+  background: var(--white); padding: 20px; border-radius: var(--radius);
+  box-shadow: var(--shadow); margin-bottom: 20px;
+}
+.search-box { display: flex; gap: 10px; margin-bottom: 20px; }
+.search-box input { flex: 1; padding: 12px; border: 2px solid #ddd; border-radius: 10px; font-size: 15px; }
+.search-box button { padding: 12px 25px; background: var(--main); color: #fff; border: none; border-radius: 10px; cursor: pointer; font-weight: 600; }
+.search-box button:hover { background: var(--main-light); }
+
+.patient-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; padding-bottom: 15px; border-bottom: 2px solid #eee; }
+.patient-name { font-size: 20px; font-weight: 700; color: var(--main); }
+.patient-phone { color: var(--text-light); font-size: 14px; }
+
+.sessions-list { max-height: 400px; overflow-y: auto; }
+.session-item {
+  background: #f8f9fa; padding: 15px; border-radius: 10px; margin-bottom: 10px;
+  border-right: 4px solid var(--main);
+}
+.session-date { font-weight: 600; color: var(--main); margin-bottom: 5px; }
+.session-notes { color: var(--text); line-height: 1.6; }
+.session-empty { text-align: center; color: var(--text-light); padding: 20px; }
+
+.add-session { background: #fff3e0; padding: 15px; border-radius: 10px; margin-top: 20px; border: 2px solid var(--warning); }
+.add-session h4 { margin-bottom: 10px; color: var(--warning); }
+.add-session input, .add-session textarea { width: 100%; padding: 10px; margin: 5px 0; border: 1px solid #ddd; border-radius: 8px; }
+.add-session button { background: var(--success); color: #fff; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: 600; margin-top: 10px; }
+.add-session button:hover { background: #388e3c; }
+
+.btn { background: var(--main); color: #fff; border: none; padding: 12px 20px; border-radius: 10px; cursor: pointer; font-weight: 600; }
+.btn:hover { background: var(--main-light); }
+.btn-danger { background: var(--danger); }
+.btn-danger:hover { background: #d32f2f; }
+
+.admin-notif {
+  position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
+  background: linear-gradient(135deg, var(--success), #43a047);
+  color: #fff; padding: 14px 24px; border-radius: 12px; font-weight: 500;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2); z-index: 10001;
+  animation: slideIn 0.3s ease, fadeOut 0.3s ease 4.7s forwards;
+}
+@keyframes slideIn { from { transform: translateX(-50%) translateY(-30px); opacity: 0; } to { transform: translateX(-50%) translateY(0); opacity: 1; } }
+@keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }
+
+.no-results { text-align: center; padding: 40px; color: var(--text-light); }
+</style>
+</head>
+<body>
+
+<div class="side-nav">
+  <h2 class="logo">🏥 د. منى المصري</h2>
+  <a href="admin.html">🏠 لوحة التحكم</a>
+  <a href="index-admin.html">📂 إدارة المحتوى</a>
+  <a href="patients.html" class="active">📋 ملفات المرضى</a>
+  <button onclick="logout()" class="btn" style="margin-top:auto;">🚪 خروج</button>
+</div>
+
+<a href="index.html" style="position:fixed;top:20px;left:20px;text-decoration:none;color:#fff;background:linear-gradient(135deg,var(--main),var(--main-light));padding:12px 18px;border-radius:10px;font-size:15px;z-index:9999;box-shadow:0 8px 20px rgba(0,0,0,0.2);">🌐 الموقع الرئيسي</a>
+
+<div class="container">
+  <div class="card">
+    <h2 style="margin-bottom:15px;">🔍 البحث عن مريض</h2>
+    <div class="search-box">
+      <input type="tel" id="patientPhone" placeholder="أدخلي رقم الهاتف (مثال: 01211538334)">
+      <button onclick="searchPatient()">🔍 بحث</button>
+    </div>
+    <div id="searchResult"></div>
+  </div>
+
+  <div id="patientDetails" style="display:none;">
+    <div class="card">
+      <div class="patient-header">
+        <div>
+          <div class="patient-name" id="pName">اسم المريض</div>
+          <div class="patient-phone" id="pPhone">📞 01xxxxxxxxx</div>
+        </div>
+        <div style="text-align:left;">
+          <div style="font-size:14px;color:var(--text-light);">عدد الجلسات</div>
+          <div style="font-size:24px;font-weight:700;color:var(--main);" id="pCount">0</div>
+        </div>
+      </div>
+
+      <h3 style="margin:20px 0 10px;">📝 سجل الجلسات</h3>
+      <div class="sessions-list" id="sessionsList"></div>
+
+      <div class="add-session">
+        <h4>➕ إضافة ملاحظة جلسة جديدة</h4>
+        <input type="date" id="newDate">
+        <input type="time" id="newTime" value="18:00">
+        <textarea id="newNotes" placeholder="اكتبي ملاحظات الجلسة هنا..." rows="3"></textarea>
+        <button onclick="addSession()">💾 حفظ الملاحظة</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getFirestore, collection, query, where, getDocs, doc, updateDoc, arrayUnion, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { getAuth, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyD7B-e65xKC2Q3rY6F0TI55QtYJPqqw4dE",
+  authDomain: "dr-mona-elmasry.firebaseapp.com",
+  databaseURL: "https://dr-mona-elmasry-default-rtdb.firebaseio.com",
+  projectId: "dr-mona-elmasry",
+  storageBucket: "dr-mona-elmasry.firebasestorage.app",
+  messagingSenderId: "40312173388",
+  appId: "1:40312173388:web:d5b75d750ac4b5599195e9",
+  measurementId: "G-MFG6HP7585"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const auth = getAuth(app);
+const patientsRef = collection(db, "patients");
+
+let currentPatientId = null;
+
+// 🔐 حماية الصفحة
+auth.onAuthStateChanged(user => {
+  if (!user) window.location.href = "login.html";
+});
+
+window.logout = () => signOut(auth).then(() => location.href = "login.html");
+
+// 🔍 تنظيف رقم الهاتف
+function cleanPhone(phone) {
+  const p = phone.replace(/^0+/, '').replace(/\s/g, '');
+  return p.startsWith('20') ? p : '20' + p;
+}
+
+// 🔍 البحث عن مريض
+window.searchPatient = async function() {
+  const phone = document.getElementById("patientPhone").value.trim();
+  if (!phone) return alert("⚠️ أدخلي رقم الهاتف");
+  
+  const resultDiv = document.getElementById("searchResult");
+  resultDiv.innerHTML = "<p style='text-align:center;color:var(--text-light)'>جاري البحث...</p>";
+  
+  try {
+    const clean = cleanPhone(phone);
+    const q = query(patientsRef, where("phone", "==", clean));
+    const snap = await getDocs(q);
+    
+    if (snap.empty) {
+      resultDiv.innerHTML = `<p style="color:var(--danger);text-align:center">❌ لم يتم العثور على مريض بهذا الرقم</p>`;
+      document.getElementById("patientDetails").style.display = "none";
+      return;
+    }
+    
+    const docSnap = snap.docs[0];
+    const patient = { id: docSnap.id, ...docSnap.data() };
+    
+    // عرض بيانات المريض
+    document.getElementById("pName").textContent = patient.name;
+    document.getElementById("pPhone").textContent = "📞 " + patient.phone.replace('20', '0');
+    document.getElementById("pCount").textContent = patient.sessions?.length || 0;
+    
+    // عرض الجلسات
+    const sessionsList = document.getElementById("sessionsList");
+    if (patient.sessions && patient.sessions.length > 0) {
+      sessionsList.innerHTML = patient.sessions
+        .sort((a,b) => new Date(b.date + 'T' + b.time) - new Date(a.date + 'T' + a.time))
+        .map(s => `
+          <div class="session-item">
+            <div class="session-date">📅 ${s.date} | 🕒 ${s.time}</div>
+            <div class="session-notes">${s.notes || "<em style='color:var(--text-light)'>بدون ملاحظات</em>"}</div>
+          </div>
+        `).join("");
+    } else {
+      sessionsList.innerHTML = "<p class='session-empty'>لا توجد جلسات مسجلة</p>";
+    }
+    
+    // إظهار التفاصيل
+    document.getElementById("patientDetails").style.display = "block";
+    resultDiv.innerHTML = "";
+    
+    // تعيين التاريخ والوقت للإضافة الجديدة
+    document.getElementById("newDate").value = new Date().toISOString().split("T")[0];
+    document.getElementById("newTime").value = "18:00";
+    
+    // حفظ الآيدي
+    currentPatientId = patient.id;
+    
+    // البحث عن مريض من الرابط (؟phone=...)
+    const urlParams = new URLSearchParams(window.location.search);
+    const urlPhone = urlParams.get('phone');
+    if (urlPhone) {
+      document.getElementById("patientPhone").value = urlPhone.replace('20', '0');
+      searchPatient();
+    }
+    
+  } catch (err) {
+    console.error("❌ Search error:", err);
+    resultDiv.innerHTML = `<p style="color:var(--danger)">❌ خطأ: ${err.message}</p>`;
+  }
+};
+
+// ➕ إضافة جلسة جديدة
+window.addSession = async function() {
+  if (!currentPatientId) return alert("⚠️ خطأ: لم يتم تحديد مريض");
+  
+  const date = document.getElementById("newDate").value;
+  const time = document.getElementById("newTime").value;
+  const notes = document.getElementById("newNotes").value.trim();
+  
+  if (!date || !time) return alert("⚠️ حددي التاريخ والوقت");
+  
+  try {
+    await updateDoc(doc(db, "patients", currentPatientId), {
+      sessions: arrayUnion({
+        date, time, notes,
+        added_at: serverTimestamp()
+      }),
+      updated_at: serverTimestamp()
+    });
+    
+    showNotification("✅ تمت إضافة الملاحظة");
+    document.getElementById("newNotes").value = "";
+    
+    // إعادة تحميل البيانات
+    searchPatient();
+    
+  } catch (err) {
+    alert("❌ فشل الإضافة: " + err.message);
+  }
+};
+
+// 🔔 إشعار
+function showNotification(msg) {
+  const notif = document.createElement("div");
+  notif.className = "admin-notif";
+  notif.innerHTML = "🔔 " + msg;
+  document.body.appendChild(notif);
+  setTimeout(() => notif.remove(), 5000);
+}
+
+// دعم البحث من الرابط
+window.addEventListener('DOMContentLoaded', () => {
+  const urlParams = new URLSearchParams(window.location.search);
+  const phone = urlParams.get('phone');
+  if (phone) {
+    document.getElementById("patientPhone").value = phone.replace('20', '0');
+    searchPatient();
+  }
+});
+
+console.log("✅ Patients Page Loaded");
+</script>
+</body>
+</html>
