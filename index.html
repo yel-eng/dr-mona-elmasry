@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title id="page-title">العيادة</title>
+<title id="page-title">عيادة د. منى المصري</title>
 <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <style>
@@ -70,7 +70,7 @@ footer{text-align:center;padding:20px;color:#64748b;}
     </div>
     <div class="hero-img" style="flex:1;display:flex;justify-content:center;">
       <div style="background:#fff;padding:10px;border-radius:20px;box-shadow:0 20px 40px rgba(0,0,0,0.08);position:relative;z-index:3;">
-        <img src="https://scontent.faly2-1.fna.fbcdn.net/v/t39.30808-6/493694337_9843074599082132_6591052312570868305_n.jpg?_nc_cat=102&ccb=1-7&_nc_sid=53a332&_nc_ohc=lMDDwnXG_wYQ7kNvwHyRkI6&_nc_oc=AdroJ05oQYJCaGivCrIM9LJl4fC15fWDQP_uQaoubDrrtq82GZ685oKU3R_ARarJ0x8&_nc_zt=23&_nc_ht=scontent.faly2-1.fna&_nc_gid=341XuwWPPcgEHrBerAb3Dg&_nc_ss=7b2a8&oh=00_Af6pYwDTtidMsBVdQVP7mo596M16ZK2EqpIr43419UFzUw&oe=6A0534C3" id="hero-image" style="width:280px;border-radius:15px;">
+        <img src="" id="hero-image" style="width:280px;border-radius:15px;">
       </div>
     </div>
   </div>
@@ -137,7 +137,7 @@ footer{text-align:center;padding:20px;color:#64748b;}
 <!-- WHATSAPP FLOATING -->
 <a class="wa" id="wa-float" href=""><i class="fab fa-whatsapp"></i></a>
 
-<!-- ✅ كود تحميل الإعدادات (محدث وآمن 100%) -->
+<!-- ✅ كود تحميل الإعدادات (متوافق مع قواعد فايربيس الجديدة) -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getFirestore, doc, getDoc, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
@@ -195,10 +195,6 @@ async function loadAndApplySettings() {
     var ctaHours = (s.cta && s.cta.working_hours) ? s.cta.working_hours : (s.working_hours || "");
     var ctaBadge = (s.cta && s.cta.badge) ? s.cta.badge : (s.cta_badge || "");
     
-    // تحديد ظهور القسم (القيمة الافتراضية true)
-    var ctaVisible = true;
-    if (s.cta && s.cta.visible === false) ctaVisible = false;
-    
     var ctaTitleEl = document.querySelector('[data-setting="cta_title"]');
     if (ctaTitle && ctaTitleEl) ctaTitleEl.textContent = ctaTitle;
     
@@ -232,7 +228,7 @@ async function loadAndApplySettings() {
       document.getElementById('wa-float').href = "https://wa.me/" + fullWa;
     }
     
-    // 🗺️ الخريطة (تستخدم الرابط من الأدمن أو الرابط الافتراضي)
+    // 🗺️ الخريطة
     if (s.map_url) {
       document.getElementById('map-frame').src = s.map_url;
     }
@@ -295,7 +291,7 @@ async function loadAndApplySettings() {
       if (s.sections.doctor === false) document.getElementById('doctor').classList.add('section-hidden');
       if (s.sections.gallery === false) document.getElementById('gallery-section').classList.add('section-hidden');
       if (s.sections.media === false) document.getElementById('media').classList.add('section-hidden');
-      if (ctaVisible === false) document.getElementById('cta-section').classList.add('section-hidden');
+      if (s.sections.cta === false) document.getElementById('cta-section').classList.add('section-hidden');
       if (s.sections.contact === false) document.getElementById('contact').classList.add('section-hidden');
       if (s.sections.map === false) document.getElementById('map-section').classList.add('section-hidden');
       if (s.sections.footer === false) {
@@ -318,8 +314,6 @@ function applyDefaults() {
   document.getElementById('phone-link').href = "tel:01211538334";
   document.getElementById('whatsapp-link').href = "https://wa.me/201211538334";
   document.getElementById('wa-float').href = "https://wa.me/201211538334";
-  
-  // 🗺️ رابط خريطة افتراضي صحيح (إسكندرية)
   document.getElementById('map-frame').src = "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d109143.5476075848!2d29.85589339887508!3d31.21564550000001!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14f5c50223400001%3A0x500c3b4e7c186c0!2sAlexandria%2C%20Alexandria%20Governorate!5e0!3m2!1sen!2seg!4v1689898989898!5m2!1sen!2seg";
   
   var navbar = document.getElementById('navbar');
@@ -329,7 +323,7 @@ function applyDefaults() {
   cardsSection.innerHTML = '<div class="card"><div class="icon">⭐</div><h3>مستوى خدمة عالي</h3></div><div class="card"><div class="icon">🧠</div><h3>أحدث تقنيات طبية</h3></div><div class="card"><div class="icon">❤️</div><h3>اهتمام شخصي بالمرضى</h3></div>';
 }
 
-// تحميل المحتوى
+// تحميل المحتوى من content_mona
 async function loadMediaContent() {
   try {
     const snapshot = await getDocs(collection(db, "content_mona"));
@@ -346,6 +340,7 @@ async function loadMediaContent() {
   } catch (err) { console.warn("⚠️ Failed to load media content:", err); }
 }
 
+// تشغيل الدوال بعد تحميل الصفحة
 if (document.readyState === "loading") {
   document.addEventListener("DOMContentLoaded", function() { loadAndApplySettings(); loadMediaContent(); });
 } else { loadAndApplySettings(); loadMediaContent(); }
