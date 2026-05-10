@@ -14,12 +14,13 @@ body.loaded{opacity:1;visibility:visible;transition:opacity 0.5s ease-in}
 :root{--primary:#1d4ed8;--dark:#0f172a;--bg:#f8fafc;--card:#ffffff;--muted:#64748b}
 *{margin:0;padding:0;box-sizing:border-box;font-family:'Tajawal',sans-serif}
 
-/* ✅ الزرار للكمبيوتر (زي ما هو) */
+/* === زرار تسجيل الدخول (للديسكتوب) === */
 .login-btn {
   position: fixed;
   top: 20px;
-  right: 20px;
-  z-index: 9999;
+  right: 20px; /* هنا مكانه الأصلي يمين */
+  left: auto;  /* تأكيد إنه مش شمال */
+  z-index: 10000;
   background: linear-gradient(135deg, var(--primary), var(--primary-dark));
   color: #fff;
   border: none;
@@ -38,13 +39,14 @@ body.loaded{opacity:1;visibility:visible;transition:opacity 0.5s ease-in}
   box-shadow: 0 6px 15px rgba(0,0,0,0.3);
 }
 
-/* ✅ تعديل خاص للموبايل عشان يبان ظريف ومتخانقش مع العنوان */
+/* === تعديل خاص للموبايل === */
 @media (max-width: 768px) {
   .login-btn {
-    top: 15px;       /* مسافة بسيطة من فوق */
-    right: 15px;     /* مسافة بسيطة من اليمين */
-    padding: 6px 12px; /* تصغير حجم الزرار */
-    font-size: 12px;   /* تصغير الخط */
+    top: 15px;
+    left: 15px !important;  /* ✅ هنا السر: نقلناه للشمال */
+    right: auto !important; /* ✅ وألغينا حقه في اليمين */
+    padding: 6px 12px;
+    font-size: 12px;
     border-radius: 8px;
     box-shadow: 0 2px 5px rgba(0,0,0,0.2);
   }
