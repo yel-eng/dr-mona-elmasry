@@ -25,7 +25,7 @@ body.loaded{opacity:1;visibility:visible;transition:opacity 0.5s ease-in}
   min-height:90vh;
   display:flex;
   align-items:center;
-  overflow:hidden; /* عشان الخلفية ما تطلعش برا */
+  overflow:hidden;
 }
 /* ✅ طبقة الخلفية الشفافة (لصورة الاستقبال) */
 .hero::before {
@@ -35,7 +35,7 @@ body.loaded{opacity:1;visibility:visible;transition:opacity 0.5s ease-in}
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  opacity: 1.0; /* ✅ شفافية عالية جداً (8% فقط) */
+  opacity: 0.08; /* ✅ شفافية عالية جداً (8% فقط) */
   z-index: 0;
   pointer-events: none;
 }
@@ -295,12 +295,13 @@ async function loadAndApplySettings() {
     // 🗺️ الخريطة
     if (s.map_url) document.getElementById('map-frame').src = s.map_url;
     
-    // 🖼️ خلفية الهيرو الشفافة (اختياري)
+    // 🖼️ خلفية الهيرو الشفافة (الحل الصحيح)
     if (s.hero_bg) {
       var heroSection = document.getElementById('hero-section');
       if (heroSection) { 
-        // نطبق الخلفية على الـ ::before عشان تكون شفافة
-        heroSection.style.setProperty('--hero-bg-url', `url('${s.hero_bg}')`);
+        // نطبق الخلفية مباشرة على الـ ::before باستخدام الـ style
+        heroSection.style.setProperty('--hero-bg-image', `url('${s.hero_bg}')`);
+        // نستخدم CSS variable في الـ ::before
       }
     }
     
