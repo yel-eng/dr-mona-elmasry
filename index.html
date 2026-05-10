@@ -64,13 +64,13 @@ footer{text-align:center;padding:20px;color:#64748b;}
   <div style="position:absolute;inset:0;background:rgba(255,255,255,0.80);pointer-events:none;z-index:1;"></div>
   <div class="hero-content" style="position:relative;z-index:2;display:flex;justify-content:space-between;align-items:center;width:100%;gap:40px;flex-wrap:wrap;">
     <div class="hero-text" style="flex:1;max-width:520px;">
-      <h1 style="font-size:42px;margin-bottom:10px;" data-setting="hero_title">د. منى المصري</h1>
-      <p style="color:#475569;line-height:1.9;font-size:16px;margin-bottom:20px;" data-setting="hero_desc">اخصائي تخاطب وتعديل سلوك </p>
+      <h1 style="font-size:42px;margin-bottom:10px;" data-setting="hero_title">عيادة د. منى المصري</h1>
+      <p style="color:#475569;line-height:1.9;font-size:16px;margin-bottom:20px;" data-setting="hero_desc">رعاية طبية متميزة واستشاري نساء وتوليد بخبرة واسعة لضمان صحة الأم والجنين.</p>
       <button onclick="location.href='booking.html'" class="book-btn" style="background:var(--primary);color:#fff;padding:14px 26px;border:none;border-radius:12px;font-size:15px;cursor:pointer;transition:0.3s;position:relative;z-index:3;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">احجز الآن</button>
     </div>
     <div class="hero-img" style="flex:1;display:flex;justify-content:center;">
       <div style="background:#fff;padding:10px;border-radius:20px;box-shadow:0 20px 40px rgba(0,0,0,0.08);position:relative;z-index:3;">
-        <img src="" id="hero-image" style="width:280px;border-radius:15px;">
+        <img src="https://i.pravatar.cc/320?img=5" id="hero-image" style="width:280px;border-radius:15px;">
       </div>
     </div>
   </div>
@@ -82,11 +82,11 @@ footer{text-align:center;padding:20px;color:#64748b;}
 <!-- DOCTOR -->
 <section class="doctor" id="doctor">
   <div>
-    <h2 data-setting="about_heading">عن الدكتور</h2>
-    <p><span data-setting="doctor_name">د/ منى المصري</span> - <span data-setting="doctor_title">اخصائي تخاطب وتعديل سلوك </span></p>
-    <p style="color:#64748b;line-height:1.8;" data-setting="about_text">...............................</p>
+    <h2 data-setting="about_heading">عن الدكتورة</h2>
+    <p><span data-setting="doctor_name">د. منى المصري</span> - <span data-setting="doctor_title">استشاري النساء والتوليد</span></p>
+    <p style="color:#64748b;line-height:1.8;" data-setting="about_text">خبرة طويلة في متابعة الحمل والولادة، وعلاج العقم، والجراحات الدقيقة بأحدث التقنيات.</p>
   </div>
-  <img src="" id="doctor-image" style="width:280px;border-radius:20px;">
+  <img src="https://i.pravatar.cc/320?img=9" id="doctor-image" style="width:280px;border-radius:20px;">
 </section>
 
 <!-- GALLERY -->
@@ -108,7 +108,7 @@ footer{text-align:center;padding:20px;color:#64748b;}
     <div class="cta-text">
       <h2 data-setting="cta_title">استشارة مجانية لأول مرة 🎯</h2>
       <p data-setting="cta_desc">احجز الآن – الأماكن محدودة جدًا هذا الشهر واستفد من تقييم طبي كامل بدون رسوم</p>
-      <p data-setting="working_hours">مواعيد العمل طوال الاسبوع من 12 ص :5 مساءا <br> متاح الاستشاره اون لاين</p>
+      <p data-setting="working_hours">مواعيد العمل طوال الأسبوع من 12 ظهراً : 5 مساءً</p>
       <div class="cta-buttons">
         <a href="" id="phone-link" class="call-btn">📞 اتصل الآن</a>
         <a href="" id="whatsapp-link" class="wa-btn"><i class="fab fa-whatsapp"></i> واتساب</a>
@@ -121,7 +121,7 @@ footer{text-align:center;padding:20px;color:#64748b;}
 <!-- CONTACT -->
 <section class="contact" id="contact">
   <div class="contact-box">
-    <h2 data-setting="contact_heading">: عنوانا</h2>
+    <h2 data-setting="contact_heading">: عنوان العيادة</h2>
     <p><span data-setting="address">الإسكندرية، مصر</span> / <span data-setting="contact_note">اتصال مباشر مع العيادة</span></p>
   </div>
 </section>
@@ -132,12 +132,12 @@ footer{text-align:center;padding:20px;color:#64748b;}
 </section>
 
 <!-- FOOTER -->
-<footer id="footer-text">ميديكال كلينك - جميع الحقوق محفوظة</footer>
+<footer id="footer-text">عيادة د. منى المصري - جميع الحقوق محفوظة</footer>
 
 <!-- WHATSAPP FLOATING -->
 <a class="wa" id="wa-float" href=""><i class="fab fa-whatsapp"></i></a>
 
-<!-- ✅ كود تحميل الإعدادات (متوافق مع قواعد فايربيس الجديدة) -->
+<!-- ✅ كود تحميل الإعدادات (مصحح وبدون src) -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getFirestore, doc, getDoc, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
@@ -309,21 +309,21 @@ async function loadAndApplySettings() {
 function applyDefaults() {
   document.documentElement.style.setProperty('--primary', '#1d4ed8');
   document.documentElement.style.setProperty('--bg', '#f8fafc');
-  document.getElementById('hero-image').src = "https://i.pravatar.cc/320?img=12";
-  document.getElementById('doctor-image').src = "https://i.pravatar.cc/320?img=12";
+  document.getElementById('hero-image').src = "https://i.pravatar.cc/320?img=5";
+  document.getElementById('doctor-image').src = "https://i.pravatar.cc/320?img=9";
   document.getElementById('phone-link').href = "tel:01211538334";
   document.getElementById('whatsapp-link').href = "https://wa.me/201211538334";
   document.getElementById('wa-float').href = "https://wa.me/201211538334";
   document.getElementById('map-frame').src = "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d109143.5476075848!2d29.85589339887508!3d31.21564550000001!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14f5c50223400001%3A0x500c3b4e7c186c0!2sAlexandria%2C%20Alexandria%20Governorate!5e0!3m2!1sen!2seg!4v1689898989898!5m2!1sen!2seg";
   
   var navbar = document.getElementById('navbar');
-  navbar.innerHTML = '<a href="#">الرئيسية</a><a href="#doctor">عن الدكتور</a><a href="#media">المكتبة الطبية</a><a href="#contact">تواصل</a>';
+  navbar.innerHTML = '<a href="#">الرئيسية</a><a href="#doctor">عن الدكتورة</a><a href="#media">المكتبة الطبية</a><a href="#contact">تواصل</a>';
   
   var cardsSection = document.getElementById('cards-section');
-  cardsSection.innerHTML = '<div class="card"><div class="icon">⭐</div><h3>مستوى خدمة عالي</h3></div><div class="card"><div class="icon">🧠</div><h3>أحدث تقنيات طبية</h3></div><div class="card"><div class="icon">❤️</div><h3>اهتمام شخصي بالمرضى</h3></div>';
+  cardsSection.innerHTML = '<div class="card"><div class="icon">⭐</div><h3>رعاية متميزة</h3></div><div class="card"><div class="icon">🧠</div><h3>أحدث الأجهزة</h3></div><div class="card"><div class="icon">❤️</div><h3>اهتمام بالأم والجنين</h3></div>';
 }
 
-// تحميل المحتوى من content_mona
+// تحميل المحتوى
 async function loadMediaContent() {
   try {
     const snapshot = await getDocs(collection(db, "content_mona"));
@@ -340,7 +340,6 @@ async function loadMediaContent() {
   } catch (err) { console.warn("⚠️ Failed to load media content:", err); }
 }
 
-// تشغيل الدوال بعد تحميل الصفحة
 if (document.readyState === "loading") {
   document.addEventListener("DOMContentLoaded", function() { loadAndApplySettings(); loadMediaContent(); });
 } else { loadAndApplySettings(); loadMediaContent(); }
