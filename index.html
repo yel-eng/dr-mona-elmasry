@@ -27,9 +27,8 @@ body.loaded{opacity:1;visibility:visible;transition:opacity 0.5s ease-in}
   align-items:center;
   overflow:hidden;
 }
-/* ✅ طبقة الخلفية الشفافة (لصورة الاستقبال) */
-.hero::before {
-  content: '';
+/* ✅ طبقة الخلفية الشفافة (div حقيقي عشان نقدر نتحكم فيه) */
+.hero-bg-layer {
   position: absolute;
   top: 0; left: 0; right: 0; bottom: 0;
   background-size: cover;
@@ -40,7 +39,7 @@ body.loaded{opacity:1;visibility:visible;transition:opacity 0.5s ease-in}
   pointer-events: none;
 }
 /* ✅ محتوى الهيرو فوق الخلفية */
-.hero > * { position: relative; z-index: 2; }
+.hero > *:not(.hero-bg-layer) { position: relative; z-index: 2; }
 
 .navbar{position:absolute;top:20px;left:50%;transform:translateX(-50%);background:#fff;padding:12px 20px;border-radius:50px;display:flex;gap:20px;box-shadow:0 10px 30px rgba(0,0,0,0.08);flex-wrap:wrap;justify-content:center;z-index:100}
 .navbar a{text-decoration:none;color:var(--dark);font-weight:500;font-size:14px;padding:5px 10px}
@@ -137,6 +136,9 @@ footer{text-align:center;padding:20px;color:#64748b}
 
 <!-- HERO -->
 <section class="hero" id="hero-section">
+  <!-- ✅ طبقة الخلفية الشفافة (حقيقي) -->
+  <div class="hero-bg-layer" id="heroBgLayer"></div>
+  
   <a href="login.html" class="login-btn">تسجيل الدخول</a>
   <nav class="navbar" id="navbar"></nav>
   <div class="hero-content">
@@ -295,13 +297,12 @@ async function loadAndApplySettings() {
     // 🗺️ الخريطة
     if (s.map_url) document.getElementById('map-frame').src = s.map_url;
     
-    // 🖼️ خلفية الهيرو الشفافة (الحل الصحيح)
+    // 🖼️ خلفية الهيرو الشفافة (الحل النهائي - div حقيقي)
     if (s.hero_bg) {
-      var heroSection = document.getElementById('hero-section');
-      if (heroSection) { 
-        // نطبق الخلفية مباشرة على الـ ::before باستخدام الـ style
-        heroSection.style.setProperty('--hero-bg-image', `url('${s.hero_bg}')`);
-        // نستخدم CSS variable في الـ ::before
+      var bgLayer = document.getElementById('heroBgLayer');
+      if (bgLayer) { 
+        // نطبق الخلفية مباشرة على الـ div الحقيقي
+        bgLayer.style.backgroundImage = `url('${s.hero_bg}')`;
       }
     }
     
