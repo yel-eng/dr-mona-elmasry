@@ -20,7 +20,7 @@ body {
   background: var(--bg);
   color: var(--text);
   padding: 20px;
-  margin-right: 240px; /* ✅ مساحة ثابتة للناف بار */
+  margin-right: 240px;
   line-height: 1.6;
 }
 
@@ -53,7 +53,7 @@ body {
 .side-nav a:hover { background: rgba(255,255,255,0.15); }
 
 .menu-toggle {
-  display: none; /* ✅ مخفي على الديسكتوب */
+  display: none;
   position: fixed;
   top: 15px;
   right: 15px;
@@ -88,7 +88,7 @@ body {
 
 .admin-grid { 
   display: grid; 
-  grid-template-columns: 320px 1fr; /* ✅ عمودين ثابتين على الديسكتوب */
+  grid-template-columns: 320px 1fr;
   gap: 15px; 
   margin-top: 60px;
   align-items: start;
@@ -352,35 +352,24 @@ input:focus, textarea:focus, select:focus {
 .modal-btn-primary { background: var(--main); color: #fff; }
 .modal-btn-cancel { background: var(--danger); color: #fff; }
 
-/* ✅ ميديا كويري للموبايل - فقط هنا نغير التصميم */
+/* ✅ ميديا كويري للموبايل */
 @media (max-width: 900px) {
-  /* ✅ إعادة ضبط الجسم للموبايل */
   body { 
     padding: 12px; 
     padding-right: 12px; 
-    margin-right: 0; /* ✅ إزالة الهامش الثابت */
+    margin-right: 0;
   }
-  
-  /* ✅ إظهار زر الهامبرغر */
   .menu-toggle { display: flex; }
-  
-  /* ✅ إخفاء الناف بار افتراضيًا */
   .side-nav { 
     right: -240px; 
     transition: right 0.3s ease; 
   }
   .side-nav.open { right: 0; }
-  
-  /* ✅ عمود واحد للمحتوى */
   .admin-grid { 
     grid-template-columns: 1fr; 
     margin-top: 70px; 
   }
-  
-  /* ✅ إلغاء التثبيت للموبايل */
   .side-panel { position: static; }
-  
-  /* ✅ تحسينات للعناصر */
   .back-to-site { font-size: 12px; padding: 9px 14px; }
   .card { padding: 16px; }
   .card h3 { font-size: 17px; }
@@ -404,13 +393,9 @@ input:focus, textarea:focus, select:focus {
 </head>
 <body>
 
-<!-- ✅ زر القائمة للموبايل -->
 <button class="menu-toggle" onclick="toggleMenu()">☰</button>
-
-<!-- زر العودة -->
 <a href="index.html" class="back-to-site">🌐 الموقع</a>
 
-<!-- القائمة الجانبية -->
 <div class="side-nav" id="sideNav">
   <h2 class="logo">🏥 د. منى</h2>
   <a href="admin.html" class="active">🏠 لوحة التحكم</a>
@@ -421,10 +406,7 @@ input:focus, textarea:focus, select:focus {
 
 <div class="total-box" id="globalTotal">💰 إجمالي العيادة: 0</div>
 
-<!-- ✅ الشبكة: عمودين على الديسكتوب، عمود واحد على الموبايل -->
 <div class="admin-grid">
-  
-  <!-- العمود الأيمن: فورم بيانات الحجز -->
   <div class="side-panel">
     <div class="card">
       <h3>👤 بيانات الحجز</h3>
@@ -446,10 +428,7 @@ input:focus, textarea:focus, select:focus {
     </div>
   </div>
   
-  <!-- العمود الأيسر: طلبات الحجز + إضافة يوم + جدول الأيام -->
   <div class="main-panel">
-    
-    <!-- ✅ قسم عرض طلبات الحجز المعلقة (جديد) -->
     <div class="card" id="requestsCard" style="display:none;">
       <h3>📋 طلبات حجز جديدة <span id="requestsCount" style="background:var(--danger);color:#fff;padding:2px 8px;border-radius:10px;font-size:11px;margin-right:5px;">0</span></h3>
       <div id="requestsList" style="max-height:250px;overflow-y:auto;"></div>
@@ -468,7 +447,6 @@ input:focus, textarea:focus, select:focus {
     </div>
     <div id="daysGrid" class="days-row"></div>
   </div>
-  
 </div>
 
 <script type="module">
@@ -512,7 +490,6 @@ window.toggleMenu = function() {
 
 window.logout = () => signOut(auth).then(() => location.href = "login.html");
 
-// ✅ تحميل وعرض طلبات الحجز المعلقة
 async function loadPendingRequests() {
   try {
     const q = query(requestsRef, where("status", "==", "pending"), orderBy("createdAt", "desc"));
@@ -552,7 +529,6 @@ async function loadPendingRequests() {
   }
 }
 
-// ✅ تحويل طلب إلى ميعاد - مع اختيار من الجدول أو وقت يدوي (مُصلَح)
 window.assignRequestToSlot = async function(requestId, phone, date) {
   const available = cache.filter(s => s.date === date && !s.booked);
   
@@ -600,7 +576,6 @@ window.assignRequestToSlot = async function(requestId, phone, date) {
   };
 };
 
-// ✅ دالة تأكيد التحويل - لا تنشئ إلا ميعاد واحد فقط
 window.confirmAssignRequest = async function(requestId, phone, date) {
   const selectedSlotId = document.querySelector('input[name="selectedSlot"]:checked')?.value;
   const manualTime = document.getElementById("manualTime")?.value;
@@ -665,7 +640,6 @@ window.confirmAssignRequest = async function(requestId, phone, date) {
   }
 };
 
-// ✅ تجاهل طلب
 window.deleteRequest = async function(requestId) {
   if (!confirm("هل أنتِ متأكدة من تجاهل هذا الطلب؟")) return;
   try {
@@ -680,16 +654,182 @@ window.deleteRequest = async function(requestId) {
   }
 };
 
-// ✅ Listener للمواعيد + تحميل الطلبات
+// ✅ ✅ ✅ الإصلاح الرئيسي: تحسين onSnapshot و renderSlots ✅ ✅ ✅
 onSnapshot(slotsRef, (snap) => {
   cache = [];
   snap.forEach(d => cache.push({ id: d.id, ...d.data() }));
-  renderSlots();
+  
+  // ✅ حفظ حالة الطي/الفرد قبل إعادة الرسم
+  const preservedCollapsed = { ...collapsedDays };
+  
+  renderSlots(preservedCollapsed);
   loadPendingRequests();
 });
 
-// ✅ تحميل الطلبات أول مرة
-loadPendingRequests();
+// ✅ تحسين دالة renderSlots لقبول حالة محفوظة
+window.renderSlots = function(preservedCollapsed = null) {
+  // ✅ إذا كانت هناك حالة محفوظة، نستخدمها
+  if (preservedCollapsed) {
+    collapsedDays = preservedCollapsed;
+  }
+  
+  const grid = $("daysGrid"), totalBox = $("globalTotal");
+  let days = {}, total = 0;
+  
+  cache.forEach(d => { 
+    if (!d.date) return; 
+    if (!days[d.date]) days[d.date] = []; 
+    days[d.date].push(d); 
+  });
+  
+  grid.innerHTML = "";
+
+  Object.keys(days).sort().forEach(date => {
+    let dayTotal = 0;
+    days[date].forEach(s => { 
+      if (s.status === "كشف") { 
+        dayTotal += Number(s.paid||0); 
+        total += Number(s.paid||0); 
+      } 
+    });
+    
+    const col = document.createElement("div");
+    col.className = "day-col";
+    col.id = "day-" + date;
+    
+    // ✅ تطبيق حالة الطي/الفرد المحفوظة
+    if (collapsedDays[date]) {
+      col.classList.add("collapsed");
+    }
+
+    const slotsHTML = days[date].sort((a,b)=>a.time.localeCompare(b.time)).map(x => {
+      const isBooked = x.booked && x.status !== "cancelled";
+      const pname = x.patient?.name || "بدون اسم", phone = x.patient?.phone || "";
+      const statusLabel = x.status==="cancelled"?"❌ ملغي":(isBooked?"✅ محجوز":"⭕ متاح");
+      const badgeClass = x.status==="cancelled"?"status-cancel":(isBooked?"status-booked":"status-available");
+      const isSaved = x.is_saved_patient || isSavedPatient(phone);
+      const nameClass = isSaved ? "saved-patient" : "";
+      const savedBadge = isSaved ? '<span style="margin-right:4px;color:#2e7d32;font-size:11px;" title="مريض محفوظ">💾</span>' : "";
+      
+      let actions = "";
+      if (isBooked) {
+        actions = `<div class='action-buttons'>
+          <button onclick='event.stopPropagation();openWhatsApp("${phone}")'>💬</button>
+          ${isSaved ? `<button onclick='event.stopPropagation();window.location.href="patients.html?phone=${phone}"' style='background:#6a1b9a'>📋</button>` : `<button onclick='event.stopPropagation();savePatientFromSlot("${x.id}")' style='background:#2e7d32'>💾</button>`}
+          <button onclick='event.stopPropagation();editSlotData("${x.id}")' style='background:#0ea5e9'>✏️</button>
+          <button onclick='event.stopPropagation();cancelSlot("${x.id}")'>🗑️</button>
+        </div>`;
+      }
+      
+      return `<div class='slot-item ${isBooked?'booked':(x.status==='cancelled'?'cancel':'')}' onclick='selectSlot("${x.id}")'>
+        <span class='slot-time'>${x.time}</span>
+        <span class='slot-name ${nameClass}'>${savedBadge}${pname}</span>
+        <span class='status-badge ${badgeClass}'>${statusLabel}</span>
+        ${actions}
+      </div>`;
+    }).join("");
+
+    // ✅ زر الطي/الفرد يعكس الحالة الحالية
+    const toggleIcon = collapsedDays[date] ? "▲" : "▼";
+    
+    col.innerHTML = `<div class='day-head'><span>📅 ${date}</span><div class='head-actions'>
+      <span class='head-btn add' onclick='event.stopPropagation(); addSlotToDate("${date}")' title='إضافة'>+</span>
+      <span class='head-btn' onclick='event.stopPropagation(); toggleDay("${date}")' title='طي/فرد'>${toggleIcon}</span>
+      <span class='head-btn del' onclick='event.stopPropagation(); deleteDay("${date}")' title='حذف'>✕</span>
+    </div></div><div class='day-body' id='body-${date}'><div class='day-money'>💰 ${dayTotal} ج.م</div>${slotsHTML}</div>`;
+    
+    grid.appendChild(col);
+  });
+  
+  totalBox.innerText = "💰 إجمالي العيادة: " + total + " جنيه";
+};
+
+// ✅ تحسين دالة toggleDay للحفاظ على الحالة
+window.toggleDay = function(date) {
+  // ✅ عكس الحالة الحالية
+  collapsedDays[date] = !collapsedDays[date];
+  
+  // ✅ إعادة الرسم مع الحفاظ على الحالة
+  renderSlots();
+};
+
+window.cancelSlot = async (slotId) => {
+  const slot = cache.find(s => s.id === slotId);
+  if (!slot || !slot.booked) return alert("⚠️ اختر ميعاداً محجوزاً");
+  const patient = slot.patient;
+  if (!confirm("⚠️ تأكيد الإلغاء:\n" + slot.date + " " + slot.time + "\n" + (patient?.name||"") + "\n\nمتأكد؟")) return;
+  try {
+    await updateDoc(doc(db, "slots", slotId), { booked: false, status: "cancelled", patient: null, paid: 0, cancelledAt: serverTimestamp() });
+    showAdminNotification("✅ تم الإلغاء");
+  } catch (err) { alert("❌ خطأ: " + err.message); }
+};
+
+window.addSlotToDate = async (date) => {
+  const time = prompt("📅 أدخل وقت الميعاد الجديد ليوم " + date + "\n(الصيغة: ساعة:دقيقة مثل 14:30)");
+  if (!time) return;
+  if (!/^\d{2}:\d{2}$/.test(time)) return alert("⚠️ الصيغة غير صحيحة. استخدم HH:MM مثل 15:30");
+  const exists = cache.some(s => s.date === date && s.time === time);
+  if (exists) return alert("⚠️ هذا الوقت موجود بالفعل في هذا اليوم");
+  try {
+    await addDoc(slotsRef, { date, time, booked: false, status: "available", patient: null, paid: 0, notes: "تمت إضافته يدوياً", isManual: true, createdAt: serverTimestamp(), updatedAt: serverTimestamp() });
+    showAdminNotification("✅ تم إضافة الميعاد " + time + " ليوم " + date);
+  } catch (err) { alert("❌ فشل الإضافة: " + err.message); }
+};
+
+window.safeLoad = () => {
+  const searchTerm = $("search").value.toLowerCase(), filterValue = $("filter").value;
+  const filtered = cache.filter(slot => {
+    const matchSearch = !searchTerm || slot.patient?.name?.toLowerCase().includes(searchTerm) || slot.time.includes(searchTerm);
+    let matchFilter = true;
+    if (filterValue === "booked") matchFilter = slot.booked === true;
+    else if (filterValue === "free") matchFilter = slot.booked === false;
+    return matchSearch && matchFilter;
+  });
+  const grid = $("daysGrid");
+  grid.innerHTML = "";
+  let days = {};
+  filtered.forEach(d => { if (!d.date) return; if (!days[d.date]) days[d.date] = []; days[d.date].push(d); });
+  Object.keys(days).sort().forEach(date => {
+    let dayTotal = 0;
+    days[date].forEach(s => { if (s.status === "كشف") dayTotal += Number(s.paid||0); });
+    const col = document.createElement("div");
+    col.className = "day-col";
+    col.innerHTML = `<div class='day-head'>${date}</div><div class='day-money'>💰 ${dayTotal} ج.م</div>` +
+      days[date].map(x => `<div class='slot-item ${x.booked?"booked":""}' onclick='selectSlot("${x.id}")'><b>${x.time}</b> - ${x.patient?.name||"متاح"}</div>`).join("");
+    grid.appendChild(col);
+  });
+};
+
+function showAdminNotification(message) {
+  const notif = document.createElement("div");
+  notif.className = "admin-notif";
+  notif.innerHTML = "🔔 " + message;
+  document.body.appendChild(notif);
+  setTimeout(() => notif.remove(), 5000);
+}
+
+window.loadAvailableSlots = function(date) {
+  const select = $("availableSlots");
+  if (!select || !date) return;
+  select.innerHTML = "<option value=''>⏳ جاري التحميل...</option>";
+  select.disabled = true;
+  const daySlots = cache.filter(s => s.date === date);
+  const available = daySlots.filter(s => !s.booked && s.status !== "cancelled");
+  if (available.length > 0) {
+    available.sort((a,b) => a.time.localeCompare(b.time));
+    select.innerHTML = "<option value=''>-- اختر ميعاد متاح --</option>";
+    available.forEach(slot => {
+      const opt = document.createElement("option");
+      opt.value = slot.id;
+      opt.textContent = "🕒 " + slot.time + " - متاح";
+      select.appendChild(opt);
+    });
+    select.disabled = false;
+  } else {
+    select.innerHTML = "<option value='__MANUAL__' selected>⏰ أدخل وقت يدوي</option>";
+    select.disabled = false;
+  }
+};
 
 window.selectSlot = async (id) => {
   activeId = id;
@@ -717,7 +857,6 @@ window.updateSlot = async () => {
   showAdminNotification("✅ تم التعديل");
 };
 
-// ✅ دالة تعديل بيانات الميعاد (جديدة - بسيطة)
 window.editSlotData = async function(slotId) {
   const slot = cache.find(s => s.id === slotId);
   if (!slot) return;
@@ -815,139 +954,8 @@ window.savePatientFromSlot = async (slotId) => {
 function cleanPhone(phone) { const p = phone.replace(/^0+/, '').replace(/\s/g, ''); return p.startsWith('20') ? p : '20' + p; }
 function isSavedPatient(phone) { const clean = cleanPhone(phone); return cache.some(s => s.patient?.phone && cleanPhone(s.patient.phone) === clean && s.is_saved_patient); }
 
-window.renderSlots = function() {
-  const grid = $("daysGrid"), totalBox = $("globalTotal");
-  let days = {}, total = 0;
-  cache.forEach(d => { if (!d.date) return; if (!days[d.date]) days[d.date] = []; days[d.date].push(d); });
-  grid.innerHTML = "";
-
-  Object.keys(days).sort().forEach(date => {
-    let dayTotal = 0;
-    days[date].forEach(s => { if (s.status === "كشف") { dayTotal += Number(s.paid||0); total += Number(s.paid||0); } });
-    const col = document.createElement("div");
-    col.className = "day-col";
-    col.id = "day-" + date;
-    if (collapsedDays[date]) col.classList.add("collapsed");
-
-    const slotsHTML = days[date].sort((a,b)=>a.time.localeCompare(b.time)).map(x => {
-      const isBooked = x.booked && x.status !== "cancelled";
-      const pname = x.patient?.name || "بدون اسم", phone = x.patient?.phone || "";
-      const statusLabel = x.status==="cancelled"?"❌ ملغي":(isBooked?"✅ محجوز":"⭕ متاح");
-      const badgeClass = x.status==="cancelled"?"status-cancel":(isBooked?"status-booked":"status-available");
-      const isSaved = x.is_saved_patient || isSavedPatient(phone);
-      const nameClass = isSaved ? "saved-patient" : "";
-      const savedBadge = isSaved ? '<span style="margin-right:4px;color:#2e7d32;font-size:11px;" title="مريض محفوظ">💾</span>' : "";
-      let actions = "";
-      if (isBooked) {
-        actions = `<div class='action-buttons'>
-          <button onclick='event.stopPropagation();openWhatsApp("${phone}")'>💬</button>
-          ${isSaved ? `<button onclick='event.stopPropagation();window.location.href="patients.html?phone=${phone}"' style='background:#6a1b9a'>📋</button>` : `<button onclick='event.stopPropagation();savePatientFromSlot("${x.id}")' style='background:#2e7d32'>💾</button>`}
-          <button onclick='event.stopPropagation();editSlotData("${x.id}")' style='background:#0ea5e9'>✏️</button>
-          <button onclick='event.stopPropagation();cancelSlot("${x.id}")'>🗑️</button>
-        </div>`;
-      }
-      return `<div class='slot-item ${isBooked?'booked':(x.status==='cancelled'?'cancel':'')}' onclick='selectSlot("${x.id}")'>
-        <span class='slot-time'>${x.time}</span>
-        <span class='slot-name ${nameClass}'>${savedBadge}${pname}</span>
-        <span class='status-badge ${badgeClass}'>${statusLabel}</span>
-        ${actions}
-      </div>`;
-    }).join("");
-
-    col.innerHTML = `<div class='day-head'><span>📅 ${date}</span><div class='head-actions'>
-      <span class='head-btn add' onclick='event.stopPropagation(); addSlotToDate("${date}")' title='إضافة'>+</span>
-      <span class='head-btn' onclick='event.stopPropagation(); toggleDay("${date}")' title='طي/فرد'>${collapsedDays[date] ? "▲" : "▼"}</span>
-      <span class='head-btn del' onclick='event.stopPropagation(); deleteDay("${date}")' title='حذف'>✕</span>
-    </div></div><div class='day-body' id='body-${date}'><div class='day-money'>💰 ${dayTotal} ج.م</div>${slotsHTML}</div>`;
-    grid.appendChild(col);
-  });
-  totalBox.innerText = "💰 إجمالي العيادة: " + total + " جنيه";
-};
-
-window.toggleDay = function(date) {
-  const col = document.getElementById("day-" + date);
-  if (collapsedDays[date]) { collapsedDays[date] = false; col.classList.remove("collapsed"); }
-  else { collapsedDays[date] = true; col.classList.add("collapsed"); }
-  renderSlots();
-};
-
-window.cancelSlot = async (slotId) => {
-  const slot = cache.find(s => s.id === slotId);
-  if (!slot || !slot.booked) return alert("⚠️ اختر ميعاداً محجوزاً");
-  const patient = slot.patient;
-  if (!confirm("⚠️ تأكيد الإلغاء:\n" + slot.date + " " + slot.time + "\n" + (patient?.name||"") + "\n\nمتأكد؟")) return;
-  try {
-    await updateDoc(doc(db, "slots", slotId), { booked: false, status: "cancelled", patient: null, paid: 0, cancelledAt: serverTimestamp() });
-    showAdminNotification("✅ تم الإلغاء");
-  } catch (err) { alert("❌ خطأ: " + err.message); }
-};
-
-window.addSlotToDate = async (date) => {
-  const time = prompt("📅 أدخل وقت الميعاد الجديد ليوم " + date + "\n(الصيغة: ساعة:دقيقة مثل 14:30)");
-  if (!time) return;
-  if (!/^\d{2}:\d{2}$/.test(time)) return alert("⚠️ الصيغة غير صحيحة. استخدم HH:MM مثل 15:30");
-  const exists = cache.some(s => s.date === date && s.time === time);
-  if (exists) return alert("⚠️ هذا الوقت موجود بالفعل في هذا اليوم");
-  try {
-    await addDoc(slotsRef, { date, time, booked: false, status: "available", patient: null, paid: 0, notes: "تمت إضافته يدوياً", isManual: true, createdAt: serverTimestamp(), updatedAt: serverTimestamp() });
-    showAdminNotification("✅ تم إضافة الميعاد " + time + " ليوم " + date);
-  } catch (err) { alert("❌ فشل الإضافة: " + err.message); }
-};
-
-window.safeLoad = () => {
-  const searchTerm = $("search").value.toLowerCase(), filterValue = $("filter").value;
-  const filtered = cache.filter(slot => {
-    const matchSearch = !searchTerm || slot.patient?.name?.toLowerCase().includes(searchTerm) || slot.time.includes(searchTerm);
-    let matchFilter = true;
-    if (filterValue === "booked") matchFilter = slot.booked === true;
-    else if (filterValue === "free") matchFilter = slot.booked === false;
-    return matchSearch && matchFilter;
-  });
-  const grid = $("daysGrid");
-  grid.innerHTML = "";
-  let days = {};
-  filtered.forEach(d => { if (!d.date) return; if (!days[d.date]) days[d.date] = []; days[d.date].push(d); });
-  Object.keys(days).sort().forEach(date => {
-    let dayTotal = 0;
-    days[date].forEach(s => { if (s.status === "كشف") dayTotal += Number(s.paid||0); });
-    const col = document.createElement("div");
-    col.className = "day-col";
-    col.innerHTML = `<div class='day-head'>${date}</div><div class='day-money'>💰 ${dayTotal} ج.م</div>` +
-      days[date].map(x => `<div class='slot-item ${x.booked?"booked":""}' onclick='selectSlot("${x.id}")'><b>${x.time}</b> - ${x.patient?.name||"متاح"}</div>`).join("");
-    grid.appendChild(col);
-  });
-};
-
-function showAdminNotification(message) {
-  const notif = document.createElement("div");
-  notif.className = "admin-notif";
-  notif.innerHTML = "🔔 " + message;
-  document.body.appendChild(notif);
-  setTimeout(() => notif.remove(), 5000);
-}
-
-window.loadAvailableSlots = function(date) {
-  const select = $("availableSlots");
-  if (!select || !date) return;
-  select.innerHTML = "<option value=''>⏳ جاري التحميل...</option>";
-  select.disabled = true;
-  const daySlots = cache.filter(s => s.date === date);
-  const available = daySlots.filter(s => !s.booked && s.status !== "cancelled");
-  if (available.length > 0) {
-    available.sort((a,b) => a.time.localeCompare(b.time));
-    select.innerHTML = "<option value=''>-- اختر ميعاد متاح --</option>";
-    available.forEach(slot => {
-      const opt = document.createElement("option");
-      opt.value = slot.id;
-      opt.textContent = "🕒 " + slot.time + " - متاح";
-      select.appendChild(opt);
-    });
-    select.disabled = false;
-  } else {
-    select.innerHTML = "<option value='__MANUAL__' selected>⏰ أدخل وقت يدوي</option>";
-    select.disabled = false;
-  }
-};
+// ✅ تحميل الطلبات أول مرة
+loadPendingRequests();
 
 console.log("✅ Admin Loaded - Dr. Mona Clinic - Responsive");
 </script>
