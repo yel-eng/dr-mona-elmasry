@@ -127,8 +127,8 @@ footer{text-align:center;padding:20px;color:#64748b}
 .mobile-menu a:hover{background:#f1f5f9;color:var(--primary)}
 
 /* === ميديا كويري واحدة بس للموبايل (أقل من 768 بكسل) === */
-@media(max-width:768px){
-  .navbar{display:none}
+@media(max-width: 767px){  /* ✅ غيرنا 768 لـ 767 عشان اللابتوب مايأثرش */
+  .navbar{display:none}    /* ✅ يخفي الناف بار على الموبايل فقط */
   .menu-toggle{display:flex}
   .hero{padding:80px 5% 40px;min-height:auto}
   .hero-content{flex-direction:column;text-align:center}
