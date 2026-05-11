@@ -24,10 +24,11 @@ body {
 }
 
 /* ✅ القائمة الجانبية - متجاوبة */
+/* ✅ الجديد (يظهر الناف بار على الديسكتوب، ويخفيه على الموبايل) */
 .side-nav { 
   position: fixed; 
   top: 0; 
-  right: -240px;
+  right: 0;  /* <-- ظاهر افتراضيًا على الديسكتوب */
   width: 240px; 
   height: 100vh; 
   background: linear-gradient(180deg, var(--main), var(--main-light)); 
@@ -39,6 +40,7 @@ body {
   transition: right 0.3s ease;
   box-shadow: -5px 0 20px rgba(0,0,0,0.2);
 }
+.side-nav.open { right: 0; }
 .side-nav.open { right: 0; }
 .side-nav .logo { color: #fff; text-align: center; margin-bottom: 20px; font-size: 18px; font-weight: bold; }
 .side-nav a.active { background: var(--white); color: var(--main); font-weight: bold; }
