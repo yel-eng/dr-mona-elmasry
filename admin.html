@@ -331,17 +331,17 @@ input:focus, textarea:focus, select:focus {
 .modal-content { 
   background: var(--white); 
   width: 100%; 
-  max-width: 420px; 
+  max-width: 450px; 
   border-radius: 15px; 
-  padding: 18px 22px; 
+  padding: 20px 25px; 
   max-height: 90vh; 
   overflow: auto; 
   position: relative;
 }
 .modal-close { 
   position: absolute; 
-  top: 10px; 
-  left: 10px; 
+  top: 12px; 
+  left: 12px; 
   width: 30px; 
   height: 30px; 
   border-radius: 50%; 
@@ -354,16 +354,16 @@ input:focus, textarea:focus, select:focus {
   align-items: center; 
   justify-content: center; 
 }
-.modal-title { color: var(--main); text-align: center; margin: 0 0 14px; font-size: 17px; font-weight: 600; }
-.modal-actions { display: flex; gap: 9px; margin-top: 18px; }
+.modal-title { color: var(--main); text-align: center; margin: 0 0 15px; font-size: 18px; font-weight: 600; }
+.modal-actions { display: flex; gap: 10px; margin-top: 20px; }
 .modal-btn { 
   flex: 1; 
-  padding: 11px; 
+  padding: 12px; 
   border: none; 
-  border-radius: 9px; 
+  border-radius: 10px; 
   cursor: pointer; 
   font-weight: 600; 
-  font-size: 13px; 
+  font-size: 14px; 
 }
 .modal-btn-primary { background: var(--main); color: #fff; }
 .modal-btn-cancel { background: var(--danger); color: #fff; }
@@ -510,7 +510,7 @@ window.toggleMenu = function() {
 
 window.logout = () => signOut(auth).then(() => location.href = "login.html");
 
-// ✅ تحميل وعرض طلبات الحجز المعلقة (جديد)
+// ✅ تحميل وعرض طلبات الحجز المعلقة
 async function loadPendingRequests() {
   try {
     const q = query(requestsRef, where("status", "==", "pending"), orderBy("createdAt", "desc"));
@@ -550,18 +550,97 @@ async function loadPendingRequests() {
   }
 }
 
-// ✅ تحويل طلب إلى ميعاد محجوز (جديد)
+// ✅ تحويل طلب إلى ميعاد - مع اختيار من الجدول أو وقت يدوي (التعديل المطلوب)
 window.assignRequestToSlot = async function(requestId, phone, date) {
   const available = cache.filter(s => s.date === date && !s.booked);
-  if (available.length === 0) {
-    return alert("⚠️ لا توجد مواعيد متاحة في هذا اليوم. أضف مواعيد أولاً من قسم 'إضافة يوم'");
+  
+  // ✅ إنشاء المودال
+  const modal = document.createElement("div");
+  modal.className = "modal-overlay";
+  modal.innerHTML = `
+    <div class="modal-content">
+      <button class="modal-close" onclick="this.closest('.modal-overlay').remove()">✕</button>
+      <h3 class="modal-title">📅 تحويل طلب لميعاد</h3>
+      <p style="margin-bottom:15px;color:var(--text-light);font-size:14px;">
+        👤 <strong>${phone}</strong> | 📅 <strong>${date}</strong>
+      </p>
+      
+      ${available.length > 0 ? `
+        <div style="margin-bottom:15px;">
+          <label style="display:block;margin-bottom:8px;font-weight:500;">📋 المواعيد المتاحة في هذا اليوم:</label>
+          <div id="slotOptions" style="max-height:200px;overflow-y:auto;border:1px solid #eee;border-radius:8px;padding:10px;">
+            ${available.map(slot => `
+              <label style="display:flex;align-items:center;gap:8px;padding:8px;margin-bottom:5px;background:#f8f9fa;border-radius:6px;cursor:pointer;">
+                <input type="radio" name="selectedSlot" value="${slot.id}" style="width:16px;height:16px;">
+                <span>🕒 ${slot.time} - متاح</span>
+              </label>
+            `).join('')}
+          </div>
+        </div>
+        <div style="text-align:center;margin:10px 0;color:var(--text-light);font-size:12px;">─ أو ─</div>
+      ` : ''}
+      
+      <div style="margin-bottom:15px;">
+        <label style="display:block;margin-bottom:8px;font-weight:500;">⏰ إدخال وقت يدوي (لو مفيش مواعيد أو عايزة وقت جديد):</label>
+        <input type="time" id="manualTime" style="width:100%;padding:10px;border:1px solid #ddd;border-radius:8px;font-size:14px;" value="18:00">
+        <p style="font-size:11px;color:var(--text-light);margin-top:5px;">💡 لو اختاري وقت جديد، هينشأ ميعاد تلقائي في هذا اليوم</p>
+      </div>
+      
+      <div class="modal-actions">
+        <button class="modal-btn modal-btn-primary" onclick="confirmAssignRequest('${requestId}', '${phone}', '${date}')">✅ تأكيد التحويل</button>
+        <button class="modal-btn modal-btn-cancel" onclick="this.closest('.modal-overlay').remove()">إلغاء</button>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(modal);
+  
+  modal.onclick = function(e) {
+    if (e.target === modal) modal.remove();
+  };
+};
+
+// ✅ دالة تأكيد التحويل (تُستدعى من داخل المودال) - جديدة
+window.confirmAssignRequest = async function(requestId, phone, date) {
+  const selectedSlotId = document.querySelector('input[name="selectedSlot"]:checked')?.value;
+  const manualTime = document.getElementById("manualTime")?.value;
+  
+  let slotIdToUse = null;
+  let isNewSlot = false;
+  
+  if (selectedSlotId) {
+    slotIdToUse = selectedSlotId;
+  } else if (manualTime && /^\d{2}:\d{2}$/.test(manualTime)) {
+    const existing = cache.find(s => s.date === date && s.time === manualTime && !s.booked);
+    if (existing) {
+      slotIdToUse = existing.id;
+    } else {
+      try {
+        const newSlot = await addDoc(slotsRef, {
+          date: date,
+          time: manualTime,
+          booked: false,
+          status: "available",
+          patient: null,
+          paid: 0,
+          notes: "تم إنشاؤه تلقائيًا من طلب معلق",
+          isManual: true,
+          createdAt: serverTimestamp(),
+          updatedAt: serverTimestamp()
+        });
+        slotIdToUse = newSlot.id;
+        isNewSlot = true;
+        showAdminNotification("✅ تم إنشاء ميعاد جديد: " + manualTime);
+      } catch (err) {
+        alert("❌ فشل إنشاء الميعاد: " + err.message);
+        return;
+      }
+    }
+  } else {
+    return alert("⚠️ اختاري ميعاد من القائمة أو أدخلي وقت صحيح (مثال: 18:30)");
   }
   
-  const slot = available[0];
-  if (!confirm(`تحويل الطلب إلى الميعاد: ${date} - ${slot.time} ؟`)) return;
-  
   try {
-    await updateDoc(doc(db, "slots", slot.id), {
+    await updateDoc(doc(db, "slots", slotIdToUse), {
       booked: true,
       status: "booked",
       patient: { name: "طلب معلق", phone: phone },
@@ -570,18 +649,23 @@ window.assignRequestToSlot = async function(requestId, phone, date) {
     
     await updateDoc(doc(db, "requests", requestId), {
       status: "assigned",
-      assignedSlotId: slot.id,
+      assignedSlotId: slotIdToUse,
+      assignedTime: isNewSlot ? manualTime : null,
       updatedAt: serverTimestamp()
     });
     
-    showAdminNotification("✅ تم تحويل الطلب إلى ميعاد محجوز");
+    const modal = document.querySelector(".modal-overlay");
+    if (modal) modal.remove();
+    
+    showAdminNotification("✅ تم تحويل الطلب بنجاح" + (isNewSlot ? " + إنشاء ميعاد جديد" : ""));
     loadPendingRequests();
+    
   } catch (err) {
     alert("❌ فشل التحويل: " + err.message);
   }
 };
 
-// ✅ تجاهل طلب (جديد)
+// ✅ تجاهل طلب
 window.deleteRequest = async function(requestId) {
   if (!confirm("هل أنتِ متأكدة من تجاهل هذا الطلب؟")) return;
   try {
@@ -601,7 +685,7 @@ onSnapshot(slotsRef, (snap) => {
   cache = [];
   snap.forEach(d => cache.push({ id: d.id, ...d.data() }));
   renderSlots();
-  loadPendingRequests(); // ← تحميل الطلبات مع كل تحديث
+  loadPendingRequests();
 });
 
 // ✅ تحميل الطلبات أول مرة
