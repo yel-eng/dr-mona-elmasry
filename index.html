@@ -33,19 +33,18 @@ body.loaded{opacity:1;visibility:visible;transition:opacity 0.5s ease-in}
   box-shadow: 0 4px 10px rgba(0,0,0,0.2);
   white-space: nowrap;
 }
-
 .login-btn:hover {
   transform: translateY(-2px);
   box-shadow: 0 6px 15px rgba(0,0,0,0.3);
 }
 
-/* === زرار القائمة للموبايل === */
+/* === زرار القائمة للموبايل (تعريف واحد بس) === */
 .menu-toggle {
   display: none;
   position: fixed;
   top: 15px;
-  right: 15px; /* ✅ الزرار ده هيفضل يمين */
-  z-index: 10001; /* ✅ أعلى من زرار الدخول */
+  right: 15px;
+  z-index: 10001;
   background: #fff;
   color: var(--primary);
   border: 2px solid var(--primary);
@@ -59,24 +58,6 @@ body.loaded{opacity:1;visibility:visible;transition:opacity 0.5s ease-in}
   box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
 
-/* === تعديل خاص للموبايل === */
-@media (max-width: 768px) {
-  .login-btn {
-    top: 15px;
-    left: 15px !important;  /* ✅ نقلناه للشمال */
-    right: auto !important; /* ✅ ألغينا اليمين */
-    padding: 6px 12px;
-    font-size: 12px;
-    border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-  }
-  
-  .menu-toggle {
-    display: flex;
-    right: 15px; /* ✅ يمين */
-    left: auto !important; /* ✅ مش شمال */
-  }
-}
 /* ✅ الهيرو مع خلفية شفافة */
 .hero{
   position:relative;
@@ -87,18 +68,16 @@ body.loaded{opacity:1;visibility:visible;transition:opacity 0.5s ease-in}
   align-items:center;
   overflow:hidden;
 }
-/* ✅ طبقة الخلفية الشفافة (div حقيقي عشان نقدر نتحكم فيه) */
 .hero-bg-layer {
   position: absolute;
   top: 0; left: 0; right: 0; bottom: 0;
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  opacity: 0.08; /* ✅ شفافية عالية جداً (8% فقط) */
+  opacity: 0.08;
   z-index: 0;
   pointer-events: none;
 }
-/* ✅ محتوى الهيرو فوق الخلفية */
 .hero > *:not(.hero-bg-layer) { position: relative; z-index: 2; }
 
 .navbar{position:absolute;top:20px;left:50%;transform:translateX(-50%);background:#fff;padding:12px 20px;border-radius:50px;display:flex;gap:20px;box-shadow:0 10px 30px rgba(0,0,0,0.08);flex-wrap:wrap;justify-content:center;z-index:100}
@@ -141,14 +120,13 @@ footer{text-align:center;padding:20px;color:#64748b}
 .book-btn:hover{transform:translateY(-2px);box-shadow:0 10px 20px rgba(0,0,0,0.1)}
 .section-hidden{display:none!important}
 
-/* === إضافات الموبايل فقط === */
-.menu-toggle{display:none;position:fixed;top:15px;right:15px;z-index:1001;background:#fff;color:var(--primary);border:2px solid var(--primary);width:44px;height:44px;border-radius:10px;font-size:20px;cursor:pointer;align-items:center;justify-content:center;box-shadow:0 4px 12px rgba(0,0,0,0.1)}
+/* === القائمة المنبثقة للموبايل === */
 .mobile-menu{display:none;position:fixed;top:70px;right:15px;background:#fff;padding:15px;border-radius:15px;box-shadow:0 10px 30px rgba(0,0,0,0.15);z-index:1000;min-width:200px;flex-direction:column;gap:8px}
 .mobile-menu.active{display:flex}
 .mobile-menu a{text-decoration:none;color:var(--dark);font-weight:500;font-size:14px;padding:10px 15px;border-radius:8px;transition:0.2s}
 .mobile-menu a:hover{background:#f1f5f9;color:var(--primary)}
 
-/* === ميديا كويري للموبايل (أقل من 768 بكسل) === */
+/* === ميديا كويري واحدة بس للموبايل (أقل من 768 بكسل) === */
 @media(max-width:768px){
   .navbar{display:none}
   .menu-toggle{display:flex}
@@ -173,7 +151,20 @@ footer{text-align:center;padding:20px;color:#64748b}
   .map{padding:30px 5%}
   .map iframe{height:250px}
   .wa{width:50px;height:50px;font-size:22px;bottom:15px;right:15px}
+  
+  /* ✅ تعديل الزرار للموبايل: نقلناه للشمال */
+  .login-btn {
+    top: 15px !important;
+    left: 15px !important;
+    right: auto !important;
+    padding: 6px 12px;
+    font-size: 12px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  }
 }
+
+/* === ميديا كويري للشاشات الصغيرة جداً (أقل من 480 بكسل) === */
 @media(max-width:480px){
   .hero-text h1{font-size:28px}
   .hero-img img{width:200px}
@@ -185,11 +176,6 @@ footer{text-align:center;padding:20px;color:#64748b}
   .cta{padding:25px 15px}
   .call-btn,.wa-btn{width:100%;text-align:center}
 }
-
-
-
-}
-
 </style>
 </head>
 <body>
@@ -307,31 +293,18 @@ async function loadAndApplySettings() {
     if (!settingsDoc.exists()) { applyDefaults(); return; }
     const s = settingsDoc.data();
     
-    // 🎨 الألوان
-    if (s.primary_color) { 
-      document.documentElement.style.setProperty('--primary', s.primary_color); 
-      document.documentElement.style.setProperty('--primary-dark', s.primary_color + 'dd'); 
-    }
+    if (s.primary_color) { document.documentElement.style.setProperty('--primary', s.primary_color); document.documentElement.style.setProperty('--primary-dark', s.primary_color + 'dd'); }
     if (s.bg_color) document.documentElement.style.setProperty('--bg', s.bg_color);
-    
-    // 🏷️ النصوص الأساسية
-    if (s.clinic_name) { 
-      document.title = s.clinic_name + " - نظام الحجز"; 
-      document.querySelectorAll('[data-setting="clinic_name"]').forEach(el => el.textContent = s.clinic_name); 
-    }
+    if (s.clinic_name) { document.title = s.clinic_name + " - نظام الحجز"; document.querySelectorAll('[data-setting="clinic_name"]').forEach(el => el.textContent = s.clinic_name); }
     if (s.doctor_name) document.querySelectorAll('[data-setting="doctor_name"]').forEach(el => el.textContent = s.doctor_name);
     if (s.doctor_title) document.querySelectorAll('[data-setting="doctor_title"]').forEach(el => el.textContent = s.doctor_title);
     
-    // نصوص الهيرو
     var el;
     if (s.hero_title && (el=document.querySelector('[data-setting="hero_title"]'))) el.textContent = s.hero_title;
     if (s.hero_desc && (el=document.querySelector('[data-setting="hero_desc"]'))) el.textContent = s.hero_desc;
-    
-    // نصوص قسم عن الدكتور
     if (s.about_heading && (el=document.querySelector('[data-setting="about_heading"]'))) el.textContent = s.about_heading;
     if (s.about_text && (el=document.querySelector('[data-setting="about_text"]'))) el.textContent = s.about_text;
     
-    // 🎯 CTA
     var ctaTitle = (s.cta && s.cta.title) ? s.cta.title : (s.cta_title || "");
     var ctaDesc = (s.cta && s.cta.desc) ? s.cta.desc : (s.cta_desc || "");
     var ctaHours = (s.cta && s.cta.working_hours) ? s.cta.working_hours : (s.working_hours || "");
@@ -341,16 +314,13 @@ async function loadAndApplySettings() {
     if (ctaHours && (el=document.querySelector('[data-setting="working_hours"]'))) el.innerHTML = ctaHours;
     if (ctaBadge && (el=document.querySelector('[data-setting="cta_badge"]'))) el.textContent = ctaBadge;
     
-    // التواصل
     if (s.address && (el=document.querySelector('[data-setting="address"]'))) el.textContent = s.address;
     if (s.contact_note && (el=document.querySelector('[data-setting="contact_note"]'))) el.textContent = s.contact_note;
     if (s.footer_text) document.getElementById('footer-text').textContent = s.footer_text;
     
-    // 🖼️ الصور (مهم جداً - فصلناهم)
-    if (s.hero_image) document.getElementById('hero-image').src = s.hero_image; // صورة د. منى في الهيرو
-    if (s.doctor_image) document.getElementById('doctor-image').src = s.doctor_image; // صورة د. منى في قسم "عن الدكتورة"
+    if (s.hero_image) document.getElementById('hero-image').src = s.hero_image;
+    if (s.doctor_image) document.getElementById('doctor-image').src = s.doctor_image;
     
-    // 📞 أرقام التواصل
     if (s.phone_number) document.getElementById('phone-link').href = "tel:" + s.phone_number;
     if (s.whatsapp_number) {
       var waNum = s.whatsapp_number.replace(/^0+/,'').replace(/\s/g,'');
@@ -358,20 +328,13 @@ async function loadAndApplySettings() {
       document.getElementById('whatsapp-link').href = "https://wa.me/" + fullWa;
       document.getElementById('wa-float').href = "https://wa.me/" + fullWa;
     }
-    
-    // 🗺️ الخريطة
     if (s.map_url) document.getElementById('map-frame').src = s.map_url;
     
-    // 🖼️ خلفية الهيرو الشفافة (الحل النهائي - div حقيقي)
     if (s.hero_bg) {
       var bgLayer = document.getElementById('heroBgLayer');
-      if (bgLayer) { 
-        // نطبق الخلفية مباشرة على الـ div الحقيقي
-        bgLayer.style.backgroundImage = `url('${s.hero_bg}')`;
-      }
+      if (bgLayer) { bgLayer.style.backgroundImage = `url('${s.hero_bg}')`; }
     }
     
-    // 🔗 الناف بار + القائمة المنبثقة للموبايل
     if (s.navbar_links && s.navbar_links.length > 0) {
       var navbar = document.getElementById('navbar'); navbar.innerHTML = "";
       var mobileMenu = document.getElementById('mobileMenu'); if (mobileMenu) mobileMenu.innerHTML = "";
@@ -384,7 +347,6 @@ async function loadAndApplySettings() {
       }
     }
     
-    // 🃏 الكروت
     if (s.cards && s.cards.length > 0) {
       var cardsSection = document.getElementById('cards-section'); cardsSection.innerHTML = "";
       for (var i = 0; i < s.cards.length; i++) {
@@ -393,7 +355,6 @@ async function loadAndApplySettings() {
       }
     }
     
-    // 🖼️ الجاليري
     if (s.gallery_images && s.gallery_images.length > 0) {
       var track = document.getElementById('gallery-track'); var imagesHtml = "";
       for (var i = 0; i < s.gallery_images.length; i++) imagesHtml += '<img src="' + s.gallery_images[i] + '" alt="صورة" loading="lazy" onerror="this.src=\'https://via.placeholder.com/250x200?text=Image\'">';
@@ -401,7 +362,6 @@ async function loadAndApplySettings() {
       if (s.gallery_auto_scroll !== false) { track.style.animation = 'scroll 30s linear infinite'; } else { track.style.animation = 'none'; track.style.overflowX = 'auto'; track.style.padding = '10px 0'; }
     }
     
-    // 👁️ إخفاء الأقسام
     if (s.sections) {
       if (s.sections.hero === false) document.getElementById('hero-section').classList.add('section-hidden');
       if (s.sections.cards === false) document.getElementById('cards-section').classList.add('section-hidden');
@@ -419,36 +379,23 @@ async function loadAndApplySettings() {
 }
 
 function applyDefaults() {
-  // ✅ القيم الافتراضية الصحيحة لعيادة تخاطب
   document.documentElement.style.setProperty('--primary', '#1d4ed8');
   document.documentElement.style.setProperty('--bg', '#f8fafc');
-  
-  // الصور
   document.getElementById('hero-image').src = "https://i.pravatar.cc/320?img=5";
   document.getElementById('doctor-image').src = "https://i.pravatar.cc/320?img=9";
-  
-  // التواصل
   document.getElementById('phone-link').href = "tel:01211538334";
   document.getElementById('whatsapp-link').href = "https://wa.me/201211538334";
   document.getElementById('wa-float').href = "https://wa.me/201211538334";
-  
-  // الخريطة
   document.getElementById('map-frame').src = "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d109143.5476075848!2d29.85589339887508!3d31.21564550000001!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14f5c50223400001%3A0x500c3b4e7c186c0!2sAlexandria%2C%20Alexandria%20Governorate!5e0!3m2!1sen!2seg!4v1689898989898!5m2!1sen!2seg";
   
-  // الناف بار
   var navbar = document.getElementById('navbar');
   navbar.innerHTML = '<a href="#">الرئيسية</a><a href="#doctor">عن الدكتورة</a><a href="#media">المكتبة</a><a href="#contact">تواصل</a>';
   
   var mobileMenu = document.getElementById('mobileMenu');
   if (mobileMenu) mobileMenu.innerHTML = '<a href="#">الرئيسية</a><a href="#doctor">عن الدكتورة</a><a href="#media">المكتبة</a><a href="#contact">تواصل</a>';
   
-  // ✅ الكروت الصحيحة لعيادة تخاطب
   var cardsSection = document.getElementById('cards-section');
-  cardsSection.innerHTML = `
-    <div class="card"><div class="icon">🗣️</div><h3>جلسات تخاطب فردية</h3></div>
-    <div class="card"><div class="icon">👨‍👩‍👧‍👦</div><h3>دعم أسري وتوعوي</h3></div>
-    <div class="card"><div class="icon">🎯</div><h3>خطط علاج مخصصة</h3></div>
-  `;
+  cardsSection.innerHTML = `<div class="card"><div class="icon">🗣️</div><h3>جلسات تخاطب فردية</h3></div><div class="card"><div class="icon">👨‍👩‍👧‍👦</div><h3>دعم أسري وتوعوي</h3></div><div class="card"><div class="icon">🎯</div><h3>خطط علاج مخصصة</h3></div>`;
   
   document.body.classList.add('loaded');
 }
