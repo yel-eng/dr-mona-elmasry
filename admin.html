@@ -472,6 +472,9 @@ window.db = db;
 
 const $ = (id) => document.getElementById(id);
 let cache = [], activeId = null, editSession = {}, collapsedDays = {};
+// ✅ متغيرات جديدة لحفظ تاريخ ووقت الميعاد المختار للتعديل
+let editSlotDate = "", editSlotTime = "";
+
 const slotsRef = collection(db, "slots");
 const requestsRef = collection(db, "requests");
 const patientsRef = collection(db, "patients");
@@ -718,7 +721,7 @@ window.renderSlots = function(preservedCollapsed = null) {
       const badgeClass = x.status==="cancelled"?"status-cancel":(isBooked?"status-booked":"status-available");
       const isSaved = x.is_saved_patient || isSavedPatient(phone);
       const nameClass = isSaved ? "saved-patient" : "";
-      const savedBadge = isSaved ? '<span style="margin-right:4px;color:#2e7d32;font-size:11px;" title="مريض محفوظ">💾</span>' : "";
+      const savedBadge = isSaved ? '<span style="margin-right:4px;color:#2e7d32;font-size:11px;" title="مريض محفوظ">💾</span>' : '';
       
       let actions = "";
       if (isBooked) {
@@ -851,11 +854,18 @@ window.selectSlot = async (id) => {
   $("pPaid").value = d.paid || 0;
   $("pStatus").value = d.status || "حجز";
   $("targetTime").innerText = d.date + " - " + d.time;
+  
+  // ✅ حفظ التاريخ والوقت الحاليين للميعاد المختار لاستخدامهم في التحديث
+  editSlotDate = d.date || "";
+  editSlotTime = d.time || "";
 };
 
 window.updateSlot = async () => {
   if (!activeId) return alert("اختاري ميعاداً أولاً");
   await updateDoc(doc(db, "slots", activeId), {
+    // ✅ إضافة التاريخ والوقت للتحديث لضمان انتقال الميعاد لمكانه الصحيح
+    date: editSlotDate,
+    time: editSlotTime,
     booked: $("pName").value.trim() !== "",
     status: $("pStatus").value,
     paid: Number($("pPaid").value || 0),
