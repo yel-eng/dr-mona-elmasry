@@ -78,7 +78,8 @@ body.loaded{opacity:1;visibility:visible;transition:opacity 0.5s ease-in}
   z-index: 0;
   pointer-events: none;
 }
-.hero > *:not(.hero-bg-layer) { position: relative; z-index: 2; }
+/* ✅ التعديل الوحيد: استثناء الناف بار من القاعدة العامة */
+.hero > *:not(.hero-bg-layer):not(.navbar) { position: relative; z-index: 2; }
 
 .navbar{position:absolute;top:20px;left:50%;transform:translateX(-50%);background:#fff;padding:12px 20px;border-radius:50px;display:flex;gap:20px;box-shadow:0 10px 30px rgba(0,0,0,0.08);flex-wrap:wrap;justify-content:center;z-index:100}
 .navbar a{text-decoration:none;color:var(--dark);font-weight:500;font-size:14px;padding:5px 10px}
