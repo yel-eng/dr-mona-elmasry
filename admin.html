@@ -659,23 +659,30 @@ onSnapshot(slotsRef, (snap) => {
   cache = [];
   snap.forEach(d => cache.push({ id: d.id, ...d.data() }));
   
-  // ✅ حفظ حالة الطي/الفرد قبل إعادة الرسم
-  const preservedCollapsed = { ...collapsedDays };
+  // ✅ حفظ حالة الطي/الفرد قبل إعادة الرسم (فقط للأيام الموجودة حاليًا)
+  const preservedCollapsed = {};
+  Object.keys(collapsedDays).forEach(date => {
+    // نحفظ الحالة فقط إذا كان اليوم لا يزال موجودًا في البيانات الجديدة
+    if (cache.some(s => s.date === date)) {
+      preservedCollapsed[date] = collapsedDays[date];
+    }
+  });
   
   renderSlots(preservedCollapsed);
   loadPendingRequests();
 });
 
-// ✅ تحسين دالة renderSlots لقبول حالة محفوظة
+// ✅ تحسين دالة renderSlots لقبول حالة محفوظة وترتيب المواعيد بشكل صحيح
 window.renderSlots = function(preservedCollapsed = null) {
-  // ✅ إذا كانت هناك حالة محفوظة، نستخدمها
+  // ✅ إذا كانت هناك حالة محفوظة، ندمجها مع الحالة الحالية
   if (preservedCollapsed) {
-    collapsedDays = preservedCollapsed;
+    Object.assign(collapsedDays, preservedCollapsed);
   }
   
   const grid = $("daysGrid"), totalBox = $("globalTotal");
   let days = {}, total = 0;
   
+  // ✅ تجميع المواعيد حسب التاريخ
   cache.forEach(d => { 
     if (!d.date) return; 
     if (!days[d.date]) days[d.date] = []; 
@@ -684,6 +691,7 @@ window.renderSlots = function(preservedCollapsed = null) {
   
   grid.innerHTML = "";
 
+  // ✅ ترتيب الأيام تصاعديًا (من الأقدم للأحدث)
   Object.keys(days).sort().forEach(date => {
     let dayTotal = 0;
     days[date].forEach(s => { 
@@ -702,7 +710,8 @@ window.renderSlots = function(preservedCollapsed = null) {
       col.classList.add("collapsed");
     }
 
-    const slotsHTML = days[date].sort((a,b)=>a.time.localeCompare(b.time)).map(x => {
+    // ✅ ترتيب المواعيد داخل اليوم حسب الوقت
+    const slotsHTML = days[date].sort((a,b) => a.time.localeCompare(b.time)).map(x => {
       const isBooked = x.booked && x.status !== "cancelled";
       const pname = x.patient?.name || "بدون اسم", phone = x.patient?.phone || "";
       const statusLabel = x.status==="cancelled"?"❌ ملغي":(isBooked?"✅ محجوز":"⭕ متاح");
