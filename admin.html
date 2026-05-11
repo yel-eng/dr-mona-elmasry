@@ -550,11 +550,10 @@ async function loadPendingRequests() {
   }
 }
 
-// ✅ تحويل طلب إلى ميعاد - مع اختيار من الجدول أو وقت يدوي (التعديل المطلوب)
+// ✅ تحويل طلب إلى ميعاد - مع اختيار من الجدول أو وقت يدوي (مُصلَح)
 window.assignRequestToSlot = async function(requestId, phone, date) {
   const available = cache.filter(s => s.date === date && !s.booked);
   
-  // ✅ إنشاء المودال
   const modal = document.createElement("div");
   modal.className = "modal-overlay";
   modal.innerHTML = `
@@ -581,9 +580,10 @@ window.assignRequestToSlot = async function(requestId, phone, date) {
       ` : ''}
       
       <div style="margin-bottom:15px;">
-        <label style="display:block;margin-bottom:8px;font-weight:500;">⏰ إدخال وقت يدوي (لو مفيش مواعيد أو عايزة وقت جديد):</label>
-        <input type="time" id="manualTime" style="width:100%;padding:10px;border:1px solid #ddd;border-radius:8px;font-size:14px;" value="18:00">
-        <p style="font-size:11px;color:var(--text-light);margin-top:5px;">💡 لو اختاري وقت جديد، هينشأ ميعاد تلقائي في هذا اليوم</p>
+        <label style="display:block;margin-bottom:8px;font-weight:500;">⏰ إدخال وقت يدوي (ميعاد واحد فقط):</label>
+        <!-- ✅ التعديل 1: إضافة display:block و z-index لضمان الظهور -->
+        <input type="time" id="manualTime" style="width:100%;padding:10px;border:1px solid #ddd;border-radius:8px;font-size:14px;display:block;z-index:1;" value="18:00">
+        <p style="font-size:11px;color:var(--text-light);margin-top:5px;">💡 هينشأ ميعاد واحد فقط في هذا الوقت</p>
       </div>
       
       <div class="modal-actions">
@@ -599,7 +599,7 @@ window.assignRequestToSlot = async function(requestId, phone, date) {
   };
 };
 
-// ✅ دالة تأكيد التحويل (تُستدعى من داخل المودال) - جديدة
+// ✅ دالة تأكيد التحويل - لا تنشئ إلا ميعاد واحد فقط
 window.confirmAssignRequest = async function(requestId, phone, date) {
   const selectedSlotId = document.querySelector('input[name="selectedSlot"]:checked')?.value;
   const manualTime = document.getElementById("manualTime")?.value;
@@ -614,6 +614,7 @@ window.confirmAssignRequest = async function(requestId, phone, date) {
     if (existing) {
       slotIdToUse = existing.id;
     } else {
+      // ✅ إنشاء ميعاد واحد فقط (وليس يوم كامل)
       try {
         const newSlot = await addDoc(slotsRef, {
           date: date,
@@ -622,21 +623,21 @@ window.confirmAssignRequest = async function(requestId, phone, date) {
           status: "available",
           patient: null,
           paid: 0,
-          notes: "تم إنشاؤه تلقائيًا من طلب معلق",
+          notes: "تم إنشاؤه من طلب معلق",
           isManual: true,
           createdAt: serverTimestamp(),
           updatedAt: serverTimestamp()
         });
         slotIdToUse = newSlot.id;
         isNewSlot = true;
-        showAdminNotification("✅ تم إنشاء ميعاد جديد: " + manualTime);
+        showAdminNotification("✅ تم إنشاء ميعاد: " + manualTime);
       } catch (err) {
         alert("❌ فشل إنشاء الميعاد: " + err.message);
         return;
       }
     }
   } else {
-    return alert("⚠️ اختاري ميعاد من القائمة أو أدخلي وقت صحيح (مثال: 18:30)");
+    return alert("⚠️ اختاري ميعاد أو أدخلي وقت صحيح");
   }
   
   try {
@@ -650,14 +651,13 @@ window.confirmAssignRequest = async function(requestId, phone, date) {
     await updateDoc(doc(db, "requests", requestId), {
       status: "assigned",
       assignedSlotId: slotIdToUse,
-      assignedTime: isNewSlot ? manualTime : null,
       updatedAt: serverTimestamp()
     });
     
     const modal = document.querySelector(".modal-overlay");
     if (modal) modal.remove();
     
-    showAdminNotification("✅ تم تحويل الطلب بنجاح" + (isNewSlot ? " + إنشاء ميعاد جديد" : ""));
+    showAdminNotification("✅ تم التحويل بنجاح");
     loadPendingRequests();
     
   } catch (err) {
@@ -715,6 +715,39 @@ window.updateSlot = async () => {
   });
   activeId = null;
   showAdminNotification("✅ تم التعديل");
+};
+
+// ✅ دالة تعديل بيانات الميعاد (جديدة - بسيطة)
+window.editSlotData = async function(slotId) {
+  const slot = cache.find(s => s.id === slotId);
+  if (!slot) return;
+  
+  const name = prompt("تعديل الاسم:", slot.patient?.name || "");
+  if (name === null) return;
+  
+  const phone = prompt("تعديل الهاتف:", slot.patient?.phone || "");
+  if (phone === null) return;
+  
+  const notes = prompt("تعديل الملاحظات:", slot.patient?.notes || "");
+  if (notes === null) return;
+  
+  const paid = prompt("تعديل المبلغ:", slot.paid || 0);
+  if (paid === null) return;
+  
+  const status = prompt("تعديل الحالة (حجز/كشف/ملغي):", slot.status || "حجز");
+  if (status === null) return;
+  
+  try {
+    await updateDoc(doc(db, "slots", slotId), {
+      patient: { name: name || "", phone: phone || "", notes: notes || "" },
+      paid: Number(paid) || 0,
+      status: status || "حجز",
+      updatedAt: serverTimestamp()
+    });
+    showAdminNotification("✅ تم تعديل البيانات");
+  } catch (err) {
+    alert("❌ فشل التعديل: " + err.message);
+  }
 };
 
 window.createDaySlots = async () => {
@@ -806,9 +839,11 @@ window.renderSlots = function() {
       const savedBadge = isSaved ? '<span style="margin-right:4px;color:#2e7d32;font-size:11px;" title="مريض محفوظ">💾</span>' : "";
       let actions = "";
       if (isBooked) {
+        // ✅ التعديل 2: إضافة زر تعديل ✏️
         actions = `<div class='action-buttons'>
           <button onclick='event.stopPropagation();openWhatsApp("${phone}")'>💬</button>
           ${isSaved ? `<button onclick='event.stopPropagation();window.location.href="patients.html?phone=${phone}"' style='background:#6a1b9a'>📋</button>` : `<button onclick='event.stopPropagation();savePatientFromSlot("${x.id}")' style='background:#2e7d32'>💾</button>`}
+          <button onclick='event.stopPropagation();editSlotData("${x.id}")' style='background:#0ea5e9'>✏️</button>
           <button onclick='event.stopPropagation();cancelSlot("${x.id}")'>🗑️</button>
         </div>`;
       }
