@@ -18,8 +18,8 @@ body.loaded{opacity:1;visibility:visible;transition:opacity 0.5s ease-in}
 .login-btn {
   position: fixed;
   top: 20px;
-  right: 20px; /* هنا مكانه الأصلي يمين */
-  left: auto;  /* تأكيد إنه مش شمال */
+  right: 20px;
+  left: auto;
   z-index: 10000;
   background: linear-gradient(135deg, var(--primary), var(--primary-dark));
   color: #fff;
@@ -39,16 +39,42 @@ body.loaded{opacity:1;visibility:visible;transition:opacity 0.5s ease-in}
   box-shadow: 0 6px 15px rgba(0,0,0,0.3);
 }
 
+/* === زرار القائمة للموبايل === */
+.menu-toggle {
+  display: none;
+  position: fixed;
+  top: 15px;
+  right: 15px; /* ✅ الزرار ده هيفضل يمين */
+  z-index: 10001; /* ✅ أعلى من زرار الدخول */
+  background: #fff;
+  color: var(--primary);
+  border: 2px solid var(--primary);
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  font-size: 20px;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
 /* === تعديل خاص للموبايل === */
 @media (max-width: 768px) {
   .login-btn {
     top: 15px;
-    left: 15px !important;  /* ✅ هنا السر: نقلناه للشمال */
-    right: auto !important; /* ✅ وألغينا حقه في اليمين */
+    left: 15px !important;  /* ✅ نقلناه للشمال */
+    right: auto !important; /* ✅ ألغينا اليمين */
     padding: 6px 12px;
     font-size: 12px;
     border-radius: 8px;
     box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  }
+  
+  .menu-toggle {
+    display: flex;
+    right: 15px; /* ✅ يمين */
+    left: auto !important; /* ✅ مش شمال */
   }
 }
 /* ✅ الهيرو مع خلفية شفافة */
