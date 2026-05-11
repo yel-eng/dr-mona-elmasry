@@ -87,10 +87,10 @@ body {
   white-space: nowrap;
 }
 
-/* ✅ الشبكة الرئيسية - التعديل الجوهري */
+/* ✅ الشبكة الرئيسية */
 .admin-grid { 
   display: grid; 
-  grid-template-columns: 320px 1fr; /* ✅ عمود فورم + عمود محتوى */
+  grid-template-columns: 320px 1fr;
   gap: 15px; 
   margin-top: 60px;
   align-items: start;
@@ -444,8 +444,15 @@ input:focus, textarea:focus, select:focus {
     </div>
   </div>
   
-  <!-- العمود الأيسر: إضافة يوم + جدول الأيام -->
+  <!-- العمود الأيسر: طلبات الحجز + إضافة يوم + جدول الأيام -->
   <div class="main-panel">
+    
+    <!-- ✅ قسم عرض طلبات الحجز المعلقة (جديد) -->
+    <div class="card" id="requestsCard" style="display:none;">
+      <h3>📋 طلبات حجز جديدة <span id="requestsCount" style="background:var(--danger);color:#fff;padding:2px 8px;border-radius:10px;font-size:11px;margin-right:5px;">0</span></h3>
+      <div id="requestsList" style="max-height:250px;overflow-y:auto;"></div>
+    </div>
+    
     <div class="card">
       <h3>📅 إضافة يوم</h3>
       <input type="date" id="slotDate">
@@ -503,11 +510,102 @@ window.toggleMenu = function() {
 
 window.logout = () => signOut(auth).then(() => location.href = "login.html");
 
+// ✅ تحميل وعرض طلبات الحجز المعلقة (جديد)
+async function loadPendingRequests() {
+  try {
+    const q = query(requestsRef, where("status", "==", "pending"), orderBy("createdAt", "desc"));
+    const snap = await getDocs(q);
+    const list = $("requestsList");
+    const card = $("requestsCard");
+    const count = $("requestsCount");
+    
+    if (snap.empty) {
+      card.style.display = "none";
+      return;
+    }
+    
+    card.style.display = "block";
+    count.textContent = snap.size;
+    list.innerHTML = "";
+    
+    snap.forEach(docSnap => {
+      const req = docSnap.data();
+      const item = document.createElement("div");
+      item.style.cssText = "background:#fff3e0;padding:10px;border-radius:8px;margin-bottom:8px;border-right:3px solid var(--warning);font-size:13px;";
+      item.innerHTML = `
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;">
+          <strong>👤 ${req.name}</strong>
+          <span style="font-size:11px;color:var(--text-light)">${new Date(req.createdAt?.seconds*1000).toLocaleDateString('ar-EG')}</span>
+        </div>
+        <div>📞 ${req.phone} | 📅 ${req.date}</div>
+        <div style="margin-top:8px;display:flex;gap:5px;">
+          <button class="btn" style="padding:6px 10px;font-size:11px;background:var(--success);" onclick="assignRequestToSlot('${docSnap.id}', '${req.phone}', '${req.date}')">✅ تحويل لميعاد</button>
+          <button class="btn" style="padding:6px 10px;font-size:11px;background:var(--danger);" onclick="deleteRequest('${docSnap.id}')">🗑️ تجاهل</button>
+        </div>
+      `;
+      list.appendChild(item);
+    });
+  } catch (err) {
+    console.error("❌ Load requests error:", err);
+  }
+}
+
+// ✅ تحويل طلب إلى ميعاد محجوز (جديد)
+window.assignRequestToSlot = async function(requestId, phone, date) {
+  const available = cache.filter(s => s.date === date && !s.booked);
+  if (available.length === 0) {
+    return alert("⚠️ لا توجد مواعيد متاحة في هذا اليوم. أضف مواعيد أولاً من قسم 'إضافة يوم'");
+  }
+  
+  const slot = available[0];
+  if (!confirm(`تحويل الطلب إلى الميعاد: ${date} - ${slot.time} ؟`)) return;
+  
+  try {
+    await updateDoc(doc(db, "slots", slot.id), {
+      booked: true,
+      status: "booked",
+      patient: { name: "طلب معلق", phone: phone },
+      updatedAt: serverTimestamp()
+    });
+    
+    await updateDoc(doc(db, "requests", requestId), {
+      status: "assigned",
+      assignedSlotId: slot.id,
+      updatedAt: serverTimestamp()
+    });
+    
+    showAdminNotification("✅ تم تحويل الطلب إلى ميعاد محجوز");
+    loadPendingRequests();
+  } catch (err) {
+    alert("❌ فشل التحويل: " + err.message);
+  }
+};
+
+// ✅ تجاهل طلب (جديد)
+window.deleteRequest = async function(requestId) {
+  if (!confirm("هل أنتِ متأكدة من تجاهل هذا الطلب؟")) return;
+  try {
+    await updateDoc(doc(db, "requests", requestId), {
+      status: "dismissed",
+      updatedAt: serverTimestamp()
+    });
+    showAdminNotification("✅ تم تجاهل الطلب");
+    loadPendingRequests();
+  } catch (err) {
+    alert("❌ فشل الحذف: " + err.message);
+  }
+};
+
+// ✅ Listener للمواعيد + تحميل الطلبات
 onSnapshot(slotsRef, (snap) => {
   cache = [];
   snap.forEach(d => cache.push({ id: d.id, ...d.data() }));
   renderSlots();
+  loadPendingRequests(); // ← تحميل الطلبات مع كل تحديث
 });
+
+// ✅ تحميل الطلبات أول مرة
+loadPendingRequests();
 
 window.selectSlot = async (id) => {
   activeId = id;
