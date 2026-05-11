@@ -12,23 +12,21 @@
   --shadow: 0 4px 16px rgba(0,0,0,0.06); --shadow-hover: 0 8px 24px rgba(0,0,0,0.1);
   --radius: 14px; --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
-* { box-sizing: border-box; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
 body { 
   font-family: 'Segoe UI', Tahoma, Arial, sans-serif; 
   background: var(--bg); 
-  margin: 0; 
-  padding: 15px; 
-  overflow-x: hidden; 
   color: var(--text);
-  padding-right: 229px;
+  padding: 15px 15px 15px 255px; /* ✅ يسار: 240 ناف بار + 15 فجوة */
+  overflow-x: hidden; 
+  line-height: 1.5;
 }
 
-/* ✅ القائمة الجانبية - متجاوبة */
-/* ✅ الجديد (يظهر الناف بار على الديسكتوب، ويخفيه على الموبايل) */
+/* ✅ القائمة الجانبية - ثابتة على الديسكتوب */
 .side-nav { 
   position: fixed; 
   top: 0; 
-  right: 0;  /* <-- ظاهر افتراضيًا على الديسكتوب */
+  right: 0;
   width: 240px; 
   height: 100vh; 
   background: linear-gradient(180deg, var(--main), var(--main-light)); 
@@ -37,11 +35,8 @@ body {
   flex-direction: column; 
   gap: 15px; 
   z-index: 1000; 
-  transition: right 0.3s ease;
   box-shadow: -5px 0 20px rgba(0,0,0,0.2);
 }
-.side-nav.open { right: 0; }
-.side-nav.open { right: 0; }
 .side-nav .logo { color: #fff; text-align: center; margin-bottom: 20px; font-size: 18px; font-weight: bold; }
 .side-nav a.active { background: var(--white); color: var(--main); font-weight: bold; }
 .side-nav a.disabled { opacity: 0.5; pointer-events: none; }
@@ -76,7 +71,7 @@ body {
   box-shadow: 0 4px 12px rgba(0,0,0,0.15);
 }
 
-/* زر العودة للموقع */
+/* زر العودة */
 .back-to-site {
   position: fixed;
   top: 15px;
@@ -92,12 +87,21 @@ body {
   white-space: nowrap;
 }
 
-/* الشبكة */
+/* ✅ الشبكة الرئيسية - التعديل الجوهري */
 .admin-grid { 
   display: grid; 
-  grid-template-columns: 1fr;
+  grid-template-columns: 320px 1fr; /* ✅ عمود فورم + عمود محتوى */
   gap: 15px; 
   margin-top: 60px;
+  align-items: start;
+}
+
+/* ✅ تثبيت فورم الحجز عند السكرول */
+.side-panel {
+  position: sticky;
+  top: 75px;
+  height: fit-content;
+  z-index: 10;
 }
 
 /* البطاقات */
@@ -108,7 +112,7 @@ body {
   box-shadow: var(--shadow); 
   margin-bottom: 15px; 
 }
-.card h3 { margin: 0 0 15px; color: var(--main); font-size: 18px; }
+.card h3 { margin: 0 0 15px; color: var(--main); font-size: 18px; border-bottom: 1px solid #eee; padding-bottom: 10px; }
 
 /* الحقول */
 input, textarea, select { 
@@ -119,6 +123,7 @@ input, textarea, select {
   border-radius: 10px; 
   font-size: 14px; 
   box-sizing: border-box;
+  background: #fff;
 }
 input:focus, textarea:focus, select:focus {
   border-color: var(--main);
@@ -140,7 +145,7 @@ input:focus, textarea:focus, select:focus {
   font-size: 14px;
   font-weight: 500;
 }
-.btn:hover { background: var(--main-light); }
+.btn:hover { background: var(--main-light); transform: translateY(-1px); }
 
 /* إجمالي العيادة */
 .total-box { 
@@ -199,6 +204,7 @@ input:focus, textarea:focus, select:focus {
   justify-content: center; 
   transition: 0.2s; 
   font-size: 13px; 
+  border: none;
 }
 .head-btn:hover { background: rgba(255,255,255,0.35); }
 .head-btn.del:hover { background: var(--danger); }
@@ -251,7 +257,7 @@ input:focus, textarea:focus, select:focus {
 .slot-item.booked { border-right-color: var(--success); background: #f1f8e9; }
 .slot-item.cancel { border-right-color: var(--danger); background: #ffebee; opacity: 0.85; }
 .slot-time { font-weight: 600; color: var(--main); }
-.slot-name { flex: 1; margin: 0 7px; color: var(--text); min-width: 90px; }
+.slot-name { flex: 1; margin: 0 7px; color: var(--text); min-width: 90px; word-break: break-word; }
 .slot-name.saved-patient { color: #2e7d32 !important; font-weight: 600; }
 .status-badge { 
   font-size: 10px; 
@@ -363,12 +369,16 @@ input:focus, textarea:focus, select:focus {
 .modal-btn-cancel { background: var(--danger); color: #fff; }
 
 /* ✅ ميديا كويري للموبايل */
-@media (max-width: 768px) {
-  body { padding: 12px; }
+@media (max-width: 900px) {
+  body { padding: 12px; padding-right: 12px; }
   .menu-toggle { display: flex; }
-  .side-nav { right: -240px; }
+  .side-nav { right: -240px; transition: right 0.3s ease; }
   .side-nav.open { right: 0; }
-  .admin-grid { margin-top: 70px; }
+  .admin-grid { 
+    grid-template-columns: 1fr; 
+    margin-top: 70px; 
+  }
+  .side-panel { position: static; }
   .back-to-site { font-size: 12px; padding: 9px 14px; }
   .card { padding: 16px; }
   .card h3 { font-size: 17px; }
@@ -409,7 +419,10 @@ input:focus, textarea:focus, select:focus {
 
 <div class="total-box" id="globalTotal">💰 إجمالي العيادة: 0</div>
 
+<!-- ✅ الشبكة: عمودين على الديسكتوب، عمود واحد على الموبايل -->
 <div class="admin-grid">
+  
+  <!-- العمود الأيمن: فورم بيانات الحجز -->
   <div class="side-panel">
     <div class="card">
       <h3>👤 بيانات الحجز</h3>
@@ -430,6 +443,8 @@ input:focus, textarea:focus, select:focus {
       <select id="filter" onchange="safeLoad()"><option value="all">الكل</option><option value="booked">محجوز</option><option value="free">متاح</option></select>
     </div>
   </div>
+  
+  <!-- العمود الأيسر: إضافة يوم + جدول الأيام -->
   <div class="main-panel">
     <div class="card">
       <h3>📅 إضافة يوم</h3>
@@ -444,6 +459,7 @@ input:focus, textarea:focus, select:focus {
     </div>
     <div id="daysGrid" class="days-row"></div>
   </div>
+  
 </div>
 
 <script type="module">
@@ -481,7 +497,6 @@ onAuthStateChanged(auth, (user) => {
   }
 });
 
-// ✅ تبديل القائمة على الموبايل
 window.toggleMenu = function() {
   document.getElementById('sideNav').classList.toggle('open');
 };
