@@ -13,16 +13,17 @@
   --radius: 14px; --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* ✅ تصميم الديسكتوب - ثابت لا يتغير */
 body {
   font-family: 'Segoe UI', Tahoma, Arial, sans-serif;
   background: var(--bg);
   color: var(--text);
   padding: 20px;
-  margin-right: 240px;
+  margin-right: 240px; /* ✅ مساحة ثابتة للناف بار */
   line-height: 1.6;
 }
 
-/* ✅ القائمة الجانبية - ثابتة على الديسكتوب */
 .side-nav { 
   position: fixed; 
   top: 0; 
@@ -51,9 +52,8 @@ body {
 }
 .side-nav a:hover { background: rgba(255,255,255,0.15); }
 
-/* ✅ زر القائمة للموبايل */
 .menu-toggle {
-  display: none;
+  display: none; /* ✅ مخفي على الديسكتوب */
   position: fixed;
   top: 15px;
   right: 15px;
@@ -71,7 +71,6 @@ body {
   box-shadow: 0 4px 12px rgba(0,0,0,0.15);
 }
 
-/* زر العودة */
 .back-to-site {
   position: fixed;
   top: 15px;
@@ -87,16 +86,14 @@ body {
   white-space: nowrap;
 }
 
-/* ✅ الشبكة الرئيسية */
 .admin-grid { 
   display: grid; 
-  grid-template-columns: 320px 1fr;
+  grid-template-columns: 320px 1fr; /* ✅ عمودين ثابتين على الديسكتوب */
   gap: 15px; 
   margin-top: 60px;
   align-items: start;
 }
 
-/* ✅ تثبيت فورم الحجز عند السكرول */
 .side-panel {
   position: sticky;
   top: 75px;
@@ -104,7 +101,6 @@ body {
   z-index: 10;
 }
 
-/* البطاقات */
 .card { 
   background: var(--white); 
   padding: 18px; 
@@ -114,7 +110,6 @@ body {
 }
 .card h3 { margin: 0 0 15px; color: var(--main); font-size: 18px; border-bottom: 1px solid #eee; padding-bottom: 10px; }
 
-/* الحقول */
 input, textarea, select { 
   width: 100%; 
   padding: 11px; 
@@ -131,7 +126,6 @@ input:focus, textarea:focus, select:focus {
   box-shadow: 0 0 0 3px rgba(26,35,126,0.1);
 }
 
-/* الأزرار */
 .btn { 
   background: var(--main); 
   color: white; 
@@ -147,7 +141,6 @@ input:focus, textarea:focus, select:focus {
 }
 .btn:hover { background: var(--main-light); transform: translateY(-1px); }
 
-/* إجمالي العيادة */
 .total-box { 
   background: #c8e6c9; 
   padding: 12px; 
@@ -160,7 +153,6 @@ input:focus, textarea:focus, select:focus {
   font-size: 15px;
 }
 
-/* أيام المواعيد */
 .days-row { 
   display: grid; 
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); 
@@ -168,7 +160,6 @@ input:focus, textarea:focus, select:focus {
   padding: 5px 0; 
 }
 
-/* كارت اليوم */
 .day-col { 
   background: var(--white); 
   border-radius: var(--radius); 
@@ -181,7 +172,6 @@ input:focus, textarea:focus, select:focus {
 .day-col:hover { box-shadow: var(--shadow-hover); transform: translateY(-2px); }
 .day-col.collapsed { box-shadow: none; transform: none; background: transparent; }
 
-/* رأس اليوم */
 .day-head { 
   background: linear-gradient(135deg, var(--main), var(--main-light)); 
   color: white; 
@@ -210,7 +200,6 @@ input:focus, textarea:focus, select:focus {
 .head-btn.del:hover { background: var(--danger); }
 .head-btn.add:hover { background: #43a047; }
 
-/* جسم اليوم */
 .day-body { 
   padding: 12px; 
   background: var(--white); 
@@ -225,7 +214,6 @@ input:focus, textarea:focus, select:focus {
   overflow: hidden; 
 }
 
-/* شارة المال */
 .day-money { 
   background: #fff8e1; 
   color: var(--warning); 
@@ -238,7 +226,6 @@ input:focus, textarea:focus, select:focus {
   border: 1px solid #ffe082; 
 }
 
-/* المواعيد */
 .slot-item { 
   padding: 10px; 
   margin-bottom: 7px; 
@@ -268,7 +255,6 @@ input:focus, textarea:focus, select:focus {
   color: #1976d2; 
 }
 
-/* أزرار الإجراءات */
 .action-buttons { 
   display: flex; 
   gap: 5px; 
@@ -293,7 +279,6 @@ input:focus, textarea:focus, select:focus {
 .action-buttons button:nth-child(3) { background: var(--danger); }
 .action-buttons button:nth-child(4) { background: #6a1b9a; }
 
-/* الإشعار */
 .admin-notif { 
   position: fixed; 
   top: 20px; 
@@ -314,7 +299,6 @@ input:focus, textarea:focus, select:focus {
 @keyframes slideIn { from { transform: translateX(-50%) translateY(-25px); opacity: 0; } to { transform: translateX(-50%) translateY(0); opacity: 1; } }
 @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }
 
-/* المودال */
 .modal-overlay { 
   position: fixed; 
   top: 0; 
@@ -368,17 +352,35 @@ input:focus, textarea:focus, select:focus {
 .modal-btn-primary { background: var(--main); color: #fff; }
 .modal-btn-cancel { background: var(--danger); color: #fff; }
 
-/* ✅ ميديا كويري للموبايل */
+/* ✅ ميديا كويري للموبايل - فقط هنا نغير التصميم */
 @media (max-width: 900px) {
-  body { padding: 12px; padding-right: 12px; }
+  /* ✅ إعادة ضبط الجسم للموبايل */
+  body { 
+    padding: 12px; 
+    padding-right: 12px; 
+    margin-right: 0; /* ✅ إزالة الهامش الثابت */
+  }
+  
+  /* ✅ إظهار زر الهامبرغر */
   .menu-toggle { display: flex; }
-  .side-nav { right: -240px; transition: right 0.3s ease; }
+  
+  /* ✅ إخفاء الناف بار افتراضيًا */
+  .side-nav { 
+    right: -240px; 
+    transition: right 0.3s ease; 
+  }
   .side-nav.open { right: 0; }
+  
+  /* ✅ عمود واحد للمحتوى */
   .admin-grid { 
     grid-template-columns: 1fr; 
     margin-top: 70px; 
   }
+  
+  /* ✅ إلغاء التثبيت للموبايل */
   .side-panel { position: static; }
+  
+  /* ✅ تحسينات للعناصر */
   .back-to-site { font-size: 12px; padding: 9px 14px; }
   .card { padding: 16px; }
   .card h3 { font-size: 17px; }
@@ -550,9 +552,9 @@ async function loadPendingRequests() {
   }
 }
 
-// ✅ تحويل طلب إلى ميعاد - مع إمكانية تغيير التاريخ (التعديل المطلوب)
-window.assignRequestToSlot = async function(requestId, phone, originalDate) {
-  const available = cache.filter(s => s.date === originalDate && !s.booked);
+// ✅ تحويل طلب إلى ميعاد - مع اختيار من الجدول أو وقت يدوي (مُصلَح)
+window.assignRequestToSlot = async function(requestId, phone, date) {
+  const available = cache.filter(s => s.date === date && !s.booked);
   
   const modal = document.createElement("div");
   modal.className = "modal-overlay";
@@ -561,14 +563,8 @@ window.assignRequestToSlot = async function(requestId, phone, originalDate) {
       <button class="modal-close" onclick="this.closest('.modal-overlay').remove()">✕</button>
       <h3 class="modal-title">📅 تحويل طلب لميعاد</h3>
       <p style="margin-bottom:15px;color:var(--text-light);font-size:14px;">
-        👤 <strong>${phone}</strong> | 📅 <strong>${originalDate}</strong>
+        👤 <strong>${phone}</strong> | 📅 <strong>${date}</strong>
       </p>
-      
-      <!-- ✅ التعديل: إضافة حقل لتغيير التاريخ -->
-      <div style="margin-bottom:15px;">
-        <label style="display:block;margin-bottom:8px;font-weight:500;">📅 اختر تاريخ جديد (اختياري):</label>
-        <input type="date" id="modalDate" style="width:100%;padding:10px;border:1px solid #ddd;border-radius:8px;font-size:14px;display:block;" value="${originalDate}">
-      </div>
       
       ${available.length > 0 ? `
         <div style="margin-bottom:15px;">
@@ -587,12 +583,12 @@ window.assignRequestToSlot = async function(requestId, phone, originalDate) {
       
       <div style="margin-bottom:15px;">
         <label style="display:block;margin-bottom:8px;font-weight:500;">⏰ إدخال وقت يدوي (ميعاد واحد فقط):</label>
-        <input type="time" id="manualTime" style="width:100%;padding:10px;border:1px solid #ddd;border-radius:8px;font-size:14px;display:block;" value="18:00">
+        <input type="time" id="manualTime" style="width:100%;padding:10px;border:1px solid #ddd;border-radius:8px;font-size:14px;display:block;z-index:1;" value="18:00">
         <p style="font-size:11px;color:var(--text-light);margin-top:5px;">💡 هينشأ ميعاد واحد فقط في هذا الوقت</p>
       </div>
       
       <div class="modal-actions">
-        <button class="modal-btn modal-btn-primary" onclick="confirmAssignRequest('${requestId}', '${phone}')">✅ تأكيد التحويل</button>
+        <button class="modal-btn modal-btn-primary" onclick="confirmAssignRequest('${requestId}', '${phone}', '${date}')">✅ تأكيد التحويل</button>
         <button class="modal-btn modal-btn-cancel" onclick="this.closest('.modal-overlay').remove()">إلغاء</button>
       </div>
     </div>
@@ -604,48 +600,46 @@ window.assignRequestToSlot = async function(requestId, phone, originalDate) {
   };
 };
 
-// ✅ دالة تأكيد التحويل - مع دعم التاريخ الجديد
-window.confirmAssignRequest = async function(requestId, phone) {
-  // ✅ قراءة التاريخ الجديد من المودال (لو اتغير)
-  const newDate = document.getElementById("modalDate")?.value;
+// ✅ دالة تأكيد التحويل - لا تنشئ إلا ميعاد واحد فقط
+window.confirmAssignRequest = async function(requestId, phone, date) {
+  const selectedSlotId = document.querySelector('input[name="selectedSlot"]:checked')?.value;
   const manualTime = document.getElementById("manualTime")?.value;
   
-  if (!newDate || !manualTime || !/^\d{2}:\d{2}$/.test(manualTime)) {
-    return alert("⚠️ أكملِ البيانات: التاريخ والوقت مطلوبان");
-  }
-  
-  // ✅ البحث عن ميعاد موجود بالتاريخ الجديد والوقت
-  const existing = cache.find(s => s.date === newDate && s.time === manualTime && !s.booked);
   let slotIdToUse = null;
   let isNewSlot = false;
   
-  if (existing) {
-    slotIdToUse = existing.id;
-  } else {
-    // ✅ إنشاء ميعاد جديد إذا لم يوجد
-    try {
-      const newSlot = await addDoc(slotsRef, {
-        date: newDate,
-        time: manualTime,
-        booked: false,
-        status: "available",
-        patient: null,
-        paid: 0,
-        notes: "تم إنشاؤه من طلب معلق",
-        isManual: true,
-        createdAt: serverTimestamp(),
-        updatedAt: serverTimestamp()
-      });
-      slotIdToUse = newSlot.id;
-      isNewSlot = true;
-      showAdminNotification("✅ تم إنشاء ميعاد: " + newDate + " " + manualTime);
-    } catch (err) {
-      alert("❌ فشل إنشاء الميعاد: " + err.message);
-      return;
+  if (selectedSlotId) {
+    slotIdToUse = selectedSlotId;
+  } else if (manualTime && /^\d{2}:\d{2}$/.test(manualTime)) {
+    const existing = cache.find(s => s.date === date && s.time === manualTime && !s.booked);
+    if (existing) {
+      slotIdToUse = existing.id;
+    } else {
+      try {
+        const newSlot = await addDoc(slotsRef, {
+          date: date,
+          time: manualTime,
+          booked: false,
+          status: "available",
+          patient: null,
+          paid: 0,
+          notes: "تم إنشاؤه من طلب معلق",
+          isManual: true,
+          createdAt: serverTimestamp(),
+          updatedAt: serverTimestamp()
+        });
+        slotIdToUse = newSlot.id;
+        isNewSlot = true;
+        showAdminNotification("✅ تم إنشاء ميعاد: " + manualTime);
+      } catch (err) {
+        alert("❌ فشل إنشاء الميعاد: " + err.message);
+        return;
+      }
     }
+  } else {
+    return alert("⚠️ اختاري ميعاد أو أدخلي وقت صحيح");
   }
   
-  // ✅ تنفيذ التحويل
   try {
     await updateDoc(doc(db, "slots", slotIdToUse), {
       booked: true,
@@ -657,12 +651,9 @@ window.confirmAssignRequest = async function(requestId, phone) {
     await updateDoc(doc(db, "requests", requestId), {
       status: "assigned",
       assignedSlotId: slotIdToUse,
-      assignedDate: newDate,
-      assignedTime: manualTime,
       updatedAt: serverTimestamp()
     });
     
-    // إغلاق المودال
     const modal = document.querySelector(".modal-overlay");
     if (modal) modal.remove();
     
@@ -726,7 +717,7 @@ window.updateSlot = async () => {
   showAdminNotification("✅ تم التعديل");
 };
 
-// ✅ دالة تعديل بيانات الميعاد
+// ✅ دالة تعديل بيانات الميعاد (جديدة - بسيطة)
 window.editSlotData = async function(slotId) {
   const slot = cache.find(s => s.id === slotId);
   if (!slot) return;
