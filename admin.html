@@ -152,7 +152,6 @@ input:focus, textarea:focus, select:focus {
   font-size: 15px;
 }
 
-/* ✅ تم التعديل: تحويل الشبكة لأعمدة مستقلة (Masonry Layout) */
 .days-row { 
   column-count: 3;
   column-gap: 14px;
@@ -354,7 +353,6 @@ input:focus, textarea:focus, select:focus {
 .modal-btn-primary { background: var(--main); color: #fff; }
 .modal-btn-cancel { background: var(--danger); color: #fff; }
 
-/* ✅ ميديا كويري للموبايل والتابلت */
 @media (max-width: 1100px) { .days-row { column-count: 2; } }
 @media (max-width: 900px) {
   body { padding: 12px; padding-right: 12px; margin-right: 0; }
@@ -406,7 +404,6 @@ input:focus, textarea:focus, select:focus {
       <input id="pName" placeholder="الاسم">
       <div id="historyBox" style="background:#e3f2fd;padding:7px;border-radius:7px;margin-top:5px;font-size:12px;display:none;"></div>
       <select id="availableSlots"><option value="">اختر ميعاد متاح</option></select>
-      <!-- ✅ حقل الوقت اليدوي الجديد (مخفي افتراضياً ويظهر فقط عند الحاجة) -->
       <input type="time" id="manualSlotTime" style="display:none; margin-top:5px;" placeholder="⏰ أدخل الوقت يدوياً">
       <input type="date" id="requestDate" onchange="loadAvailableSlots(this.value)">
       <input id="pPhone" placeholder="الهاتف">
@@ -659,7 +656,6 @@ window.safeLoad = () => {
 };
 function showAdminNotification(message) { const notif = document.createElement("div"); notif.className = "admin-notif"; notif.innerHTML = "🔔 " + message; document.body.appendChild(notif); setTimeout(() => notif.remove(), 5000); }
 
-// ✅✅✅ تم التعديل: إظهار/إخفاء حقل الوقت يدوياً بناءً على توفر المواعيد ✅✅✅
 window.loadAvailableSlots = function(date) {
   const select = $("availableSlots");
   const manualInput = $("manualSlotTime");
@@ -709,7 +705,6 @@ window.selectSlot = async (id) => {
   $("manualSlotTime").value = "";
 };
 
-// ✅✅✅ تم التعديل: قراءة الوقت من الحقل الظاهر بدلاً من prompt() ✅✅✅
 window.updateSlot = async () => {
   if (!activeId) return alert("اختاري ميعاداً أولاً");
   const newName = $("pName").value.trim();
@@ -793,16 +788,31 @@ window.openWhatsApp = (phone) => {
   let wa = phone.replace(/^0+/,"").replace(/\s+/g,""); if (!wa.startsWith("20")) wa = "20" + wa;
   window.open("https://wa.me/" + wa + "?text=" + encodeURIComponent("مرحباً د/ منى، بخصوص موعد المريض..."), "_blank");
 };
+
+// ✅✅✅ تم الإصلاح: تصحيح خطأ Syntax الذي كان يوقف السكربت ويخفي الجداول ✅✅✅
 window.savePatientFromSlot = async (slotId) => {
-  const slot = cache.find(s => s.id === slotId); if (!slot || !slot.patient?.phone) return alert("⚠️ لا توجد بيانات مريض");
+  const slot = cache.find(s => s.id === slotId); 
+  if (!slot || !slot.patient?.phone) return alert("⚠️ لا توجد بيانات مريض");
   const phone = cleanPhone(slot.patient.phone);
   try {
-    const q = query(patientsRef, where("phone", "==, phone)), snap = await getDocs(q); let patientId;
-    if (snap.empty) { const newPatient = { name: slot.patient.name, phone, created_at: serverTimestamp(), updated_at: serverTimestamp(), sessions: [{ date: slot.date, time: slot.time, notes: slot.patient.notes || "", slot_id: slotId }] }; const docRef = await addDoc(patientsRef, newPatient); patientId = docRef.id; showAdminNotification("✅ تم إنشاء ملف لـ " + slot.patient.name); } 
-    else { patientId = snap.docs[0].id; await updateDoc(doc(db, "patients", patientId), { sessions: arrayUnion({ date: slot.date, time: slot.time, notes: slot.patient.notes || "", slot_id: slotId }), updated_at: serverTimestamp() }); showAdminNotification("✅ أضيفت جلسة لـ " + slot.patient.name); }
-    await updateDoc(doc(db, "slots", slotId), { patient_id: patientId, is_saved_patient: true }); renderSlots();
+    const q = query(patientsRef, where("phone", "==", phone));
+    const snap = await getDocs(q); 
+    let patientId;
+    if (snap.empty) { 
+      const newPatient = { name: slot.patient.name, phone, created_at: serverTimestamp(), updated_at: serverTimestamp(), sessions: [{ date: slot.date, time: slot.time, notes: slot.patient.notes || "", slot_id: slotId }] }; 
+      const docRef = await addDoc(patientsRef, newPatient); 
+      patientId = docRef.id; 
+      showAdminNotification("✅ تم إنشاء ملف لـ " + slot.patient.name); 
+    } else { 
+      patientId = snap.docs[0].id; 
+      await updateDoc(doc(db, "patients", patientId), { sessions: arrayUnion({ date: slot.date, time: slot.time, notes: slot.patient.notes || "", slot_id: slotId }), updated_at: serverTimestamp() }); 
+      showAdminNotification("✅ أضيفت جلسة لـ " + slot.patient.name); 
+    }
+    await updateDoc(doc(db, "slots", slotId), { patient_id: patientId, is_saved_patient: true }); 
+    renderSlots();
   } catch (err) { console.error("❌ Save patient error:", err); alert("❌ خطأ: " + err.message); }
 };
+
 function cleanPhone(phone) { const p = phone.replace(/^0+/, '').replace(/\s/g, ''); return p.startsWith('20') ? p : '20' + p; }
 function isSavedPatient(phone) { const clean = cleanPhone(phone); return cache.some(s => s.patient?.phone && cleanPhone(s.patient.phone) === clean && s.is_saved_patient); }
 
