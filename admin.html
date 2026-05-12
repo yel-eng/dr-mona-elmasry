@@ -404,7 +404,13 @@ input:focus, textarea:focus, select:focus {
       <input id="pName" placeholder="الاسم">
       <div id="historyBox" style="background:#e3f2fd;padding:7px;border-radius:7px;margin-top:5px;font-size:12px;display:none;"></div>
       <select id="availableSlots"><option value="">اختر ميعاد متاح</option></select>
-      <input type="time" id="manualSlotTime" style="display:none; margin-top:5px;" placeholder="⏰ أدخل الوقت يدوياً">
+      
+      <!-- ✅ تم الإصلاح: صندوق واضح يظهر تلقائياً عند اختيار يوم فارغ -->
+      <div id="manualTimeWrapper" style="display:none; margin-top:8px; background:#fff3e0; padding:10px; border-radius:10px; border:1px solid #ffe082;">
+        <label style="font-size:13px; color:var(--warning); font-weight:500; margin-bottom:5px; display:block;">⏰ أدخل وقت الموعد يدوياً لهذا اليوم:</label>
+        <input type="time" id="manualSlotTime" value="18:00" style="width:100%; padding:10px; border:1px solid #ddd; border-radius:8px; font-size:14px; background:#fff;">
+      </div>
+
       <input type="date" id="requestDate" onchange="loadAvailableSlots(this.value)">
       <input id="pPhone" placeholder="الهاتف">
       <textarea id="pNotes" placeholder="ملاحظات" rows="2"></textarea>
@@ -656,13 +662,14 @@ window.safeLoad = () => {
 };
 function showAdminNotification(message) { const notif = document.createElement("div"); notif.className = "admin-notif"; notif.innerHTML = "🔔 " + message; document.body.appendChild(notif); setTimeout(() => notif.remove(), 5000); }
 
+// ✅✅✅ تم التعديل: إظهار/إخفاء الصندوق الكامل بدلاً من الحقل فقط ✅✅✅
 window.loadAvailableSlots = function(date) {
   const select = $("availableSlots");
-  const manualInput = $("manualSlotTime");
+  const manualWrapper = $("manualTimeWrapper");
   if (!select || !date) return;
   select.innerHTML = "<option value=''>⏳ جاري التحميل...</option>";
   select.disabled = true;
-  if(manualInput) manualInput.style.display = "none";
+  if(manualWrapper) manualWrapper.style.display = "none";
 
   const daySlots = cache.filter(s => s.date === date);
   const available = daySlots.filter(s => !s.booked && s.status !== "cancelled");
@@ -679,9 +686,9 @@ window.loadAvailableSlots = function(date) {
   } else {
     select.innerHTML = "<option value='__MANUAL__' selected>⏰ أدخل وقت يدوي</option>";
     select.disabled = false;
-    if(manualInput) {
-      manualInput.style.display = "block";
-      manualInput.value = "18:00";
+    if(manualWrapper) {
+      manualWrapper.style.display = "block";
+      $("manualSlotTime").value = "18:00";
     }
   }
 };
@@ -701,8 +708,8 @@ window.selectSlot = async (id) => {
   editSlotTime = d.time || "";
   $("requestDate").value = "";
   $("availableSlots").innerHTML = "<option value=''>اختر ميعاد متاح (للنقل فقط)</option>";
-  $("manualSlotTime").style.display = "none";
-  $("manualSlotTime").value = "";
+  $("manualTimeWrapper").style.display = "none";
+  $("manualSlotTime").value = "18:00";
 };
 
 window.updateSlot = async () => {
@@ -725,7 +732,7 @@ window.updateSlot = async () => {
     else if (selectedNewSlotId === '__MANUAL__' && newDate) {
       const manualTime = $("manualSlotTime")?.value;
       if (!manualTime || !/^\d{2}:\d{2}$/.test(manualTime)) {
-        return alert("⚠️ يرجى إدخال الوقت يدوياً في الحقل الظاهر بصيغة HH:MM");
+        return alert("⚠️ يرجى اختيار الوقت من الحقل البرتقالي الظاهر أدناه");
       }
       const newSlotRef = await addDoc(slotsRef, {
         date: newDate, time: manualTime, booked: false, status: "available", patient: null, paid: 0, notes: "تم إنشاؤه عند نقل موعد", isManual: true, createdAt: serverTimestamp(), updatedAt: serverTimestamp()
@@ -748,7 +755,7 @@ window.updateSlot = async () => {
     $("pPaid").value = ""; $("pStatus").value = "حجز";
     $("targetTime").innerText = "اختر ميعاداً";
     $("availableSlots").value = ""; $("requestDate").value = "";
-    $("manualSlotTime").style.display = "none"; $("manualSlotTime").value = "";
+    $("manualTimeWrapper").style.display = "none"; $("manualSlotTime").value = "18:00";
     editSlotDate = ""; editSlotTime = "";
   } catch (err) {
     alert("❌ فشل الحفظ: " + err.message);
@@ -789,7 +796,6 @@ window.openWhatsApp = (phone) => {
   window.open("https://wa.me/" + wa + "?text=" + encodeURIComponent("مرحباً د/ منى، بخصوص موعد المريض..."), "_blank");
 };
 
-// ✅✅✅ تم الإصلاح: تصحيح خطأ Syntax الذي كان يوقف السكربت ويخفي الجداول ✅✅✅
 window.savePatientFromSlot = async (slotId) => {
   const slot = cache.find(s => s.id === slotId); 
   if (!slot || !slot.patient?.phone) return alert("⚠️ لا توجد بيانات مريض");
