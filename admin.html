@@ -355,9 +355,7 @@ input:focus, textarea:focus, select:focus {
 .modal-btn-cancel { background: var(--danger); color: #fff; }
 
 /* ✅ ميديا كويري للموبايل والتابلت */
-@media (max-width: 1100px) {
-  .days-row { column-count: 2; }
-}
+@media (max-width: 1100px) { .days-row { column-count: 2; } }
 @media (max-width: 900px) {
   body { padding: 12px; padding-right: 12px; margin-right: 0; }
   .menu-toggle { display: flex; }
@@ -376,9 +374,7 @@ input:focus, textarea:focus, select:focus {
   .btn { padding: 11px; font-size: 14px; }
   input, textarea, select { padding: 10px; font-size: 14px; }
 }
-@media (max-width: 600px) {
-  .days-row { column-count: 1; }
-}
+@media (max-width: 600px) { .days-row { column-count: 1; } }
 @media (max-width: 480px) {
   .slot-item { flex-direction: column; align-items: flex-start; gap: 5px; }
   .action-buttons { justify-content: flex-start; }
@@ -410,6 +406,8 @@ input:focus, textarea:focus, select:focus {
       <input id="pName" placeholder="الاسم">
       <div id="historyBox" style="background:#e3f2fd;padding:7px;border-radius:7px;margin-top:5px;font-size:12px;display:none;"></div>
       <select id="availableSlots"><option value="">اختر ميعاد متاح</option></select>
+      <!-- ✅ حقل الوقت اليدوي الجديد (مخفي افتراضياً ويظهر فقط عند الحاجة) -->
+      <input type="time" id="manualSlotTime" style="display:none; margin-top:5px;" placeholder="⏰ أدخل الوقت يدوياً">
       <input type="date" id="requestDate" onchange="loadAvailableSlots(this.value)">
       <input id="pPhone" placeholder="الهاتف">
       <textarea id="pNotes" placeholder="ملاحظات" rows="2"></textarea>
@@ -519,20 +517,16 @@ window.assignRequestToSlot = async function(requestId, phone, initialDate) {
       <button class="modal-close" onclick="this.closest('.modal-overlay').remove()">✕</button>
       <h3 class="modal-title">📅 تحويل طلب لميعاد</h3>
       <p style="margin-bottom:10px;color:var(--text-light);font-size:14px;">👤 <strong>${phone}</strong></p>
-
       <div style="margin-bottom:15px;">
         <label style="display:block;margin-bottom:5px;font-weight:500;">📅 اختر تاريخ الموعد (يمكنك تغيير اليوم):</label>
         <input type="date" id="modalRequestDate" value="${initialDate}" style="width:100%;padding:10px;border:1px solid #ddd;border-radius:8px;">
       </div>
-
       <div id="modalSlotsContainer" style="margin-bottom:15px;"></div>
-
       <div style="margin-bottom:15px;">
         <label style="display:block;margin-bottom:8px;font-weight:500;">⏰ أو إدخال وقت يدوي:</label>
         <input type="time" id="manualTime" style="width:100%;padding:10px;border:1px solid #ddd;border-radius:8px;font-size:14px;" value="18:00">
         <p style="font-size:11px;color:var(--text-light);margin-top:5px;">💡 سينشأ ميعاد جديد في التاريخ المختار بالأعلى</p>
       </div>
-
       <div class="modal-actions">
         <button class="modal-btn modal-btn-primary" onclick="confirmAssignRequest('${requestId}', '${phone}')">✅ تأكيد التحويل</button>
         <button class="modal-btn modal-btn-cancel" onclick="this.closest('.modal-overlay').remove()">إلغاء</button>
@@ -561,72 +555,32 @@ window.assignRequestToSlot = async function(requestId, phone, initialDate) {
   };
 
   loadModalSlots(initialDate);
-  document.getElementById("modalRequestDate").addEventListener("change", function() {
-    loadModalSlots(this.value);
-  });
+  document.getElementById("modalRequestDate").addEventListener("change", function() { loadModalSlots(this.value); });
 };
 
 window.confirmAssignRequest = async function(requestId, phone) {
   const selectedDate = document.getElementById("modalRequestDate")?.value;
   if (!selectedDate) return alert("⚠️ يرجى اختيار تاريخ أولاً");
-
   const selectedSlotId = document.querySelector('input[name="selectedSlot"]:checked')?.value;
   const manualTime = document.getElementById("manualTime")?.value;
-
   let slotIdToUse = null, isNewSlot = false;
-
-  if (selectedSlotId) {
-    slotIdToUse = selectedSlotId;
-  } else if (manualTime && /^\d{2}:\d{2}$/.test(manualTime)) {
+  if (selectedSlotId) slotIdToUse = selectedSlotId;
+  else if (manualTime && /^\d{2}:\d{2}$/.test(manualTime)) {
     const existing = cache.find(s => s.date === selectedDate && s.time === manualTime && !s.booked);
-    if (existing) {
-      slotIdToUse = existing.id;
-    } else {
+    if (existing) slotIdToUse = existing.id;
+    else {
       try {
-        const newSlot = await addDoc(slotsRef, {
-          date: selectedDate,
-          time: manualTime,
-          booked: false,
-          status: "available",
-          patient: null,
-          paid: 0,
-          notes: "تم إنشاؤه من طلب معلق",
-          isManual: true,
-          createdAt: serverTimestamp(),
-          updatedAt: serverTimestamp()
-        });
-        slotIdToUse = newSlot.id;
-        isNewSlot = true;
-        showAdminNotification("✅ تم إنشاء ميعاد: " + manualTime);
-      } catch (err) {
-        alert("❌ فشل إنشاء الميعاد: " + err.message);
-        return;
-      }
+        const newSlot = await addDoc(slotsRef, { date: selectedDate, time: manualTime, booked: false, status: "available", patient: null, paid: 0, notes: "تم إنشاؤه من طلب معلق", isManual: true, createdAt: serverTimestamp(), updatedAt: serverTimestamp() });
+        slotIdToUse = newSlot.id; isNewSlot = true; showAdminNotification("✅ تم إنشاء ميعاد: " + manualTime);
+      } catch (err) { alert("❌ فشل إنشاء الميعاد: " + err.message); return; }
     }
-  } else {
-    return alert("⚠️ اختاري ميعاد من القائمة أو أدخلي وقت يدوي صحيح");
-  }
-
+  } else return alert("⚠️ اختاري ميعاد من القائمة أو أدخلي وقت يدوي صحيح");
   try {
-    await updateDoc(doc(db, "slots", slotIdToUse), {
-      booked: true,
-      status: "booked",
-      patient: { name: "طلب معلق", phone: phone },
-      updatedAt: serverTimestamp()
-    });
-
-    await updateDoc(doc(db, "requests", requestId), {
-      status: "assigned",
-      assignedSlotId: slotIdToUse,
-      updatedAt: serverTimestamp()
-    });
-
+    await updateDoc(doc(db, "slots", slotIdToUse), { booked: true, status: "booked", patient: { name: "طلب معلق", phone: phone }, updatedAt: serverTimestamp() });
+    await updateDoc(doc(db, "requests", requestId), { status: "assigned", assignedSlotId: slotIdToUse, updatedAt: serverTimestamp() });
     document.querySelector(".modal-overlay")?.remove();
-    showAdminNotification("✅ تم التحويل بنجاح ليوم " + selectedDate);
-    loadPendingRequests();
-  } catch (err) {
-    alert("❌ فشل التحويل: " + err.message);
-  }
+    showAdminNotification("✅ تم التحويل بنجاح ليوم " + selectedDate); loadPendingRequests();
+  } catch (err) { alert("❌ فشل التحويل: " + err.message); }
 };
 
 window.deleteRequest = async function(requestId) {
@@ -705,17 +659,35 @@ window.safeLoad = () => {
 };
 function showAdminNotification(message) { const notif = document.createElement("div"); notif.className = "admin-notif"; notif.innerHTML = "🔔 " + message; document.body.appendChild(notif); setTimeout(() => notif.remove(), 5000); }
 
+// ✅✅✅ تم التعديل: إظهار/إخفاء حقل الوقت يدوياً بناءً على توفر المواعيد ✅✅✅
 window.loadAvailableSlots = function(date) {
-  const select = $("availableSlots"); if (!select || !date) return;
-  select.innerHTML = "<option value=''>⏳ جاري التحميل...</option>"; select.disabled = true;
+  const select = $("availableSlots");
+  const manualInput = $("manualSlotTime");
+  if (!select || !date) return;
+  select.innerHTML = "<option value=''>⏳ جاري التحميل...</option>";
+  select.disabled = true;
+  if(manualInput) manualInput.style.display = "none";
+
   const daySlots = cache.filter(s => s.date === date);
   const available = daySlots.filter(s => !s.booked && s.status !== "cancelled");
   if (available.length > 0) {
     available.sort((a,b) => a.time.localeCompare(b.time));
     select.innerHTML = "<option value=''>-- اختر ميعاد متاح --</option>";
-    available.forEach(slot => { const opt = document.createElement("option"); opt.value = slot.id; opt.textContent = "🕒 " + slot.time + " - متاح"; select.appendChild(opt); });
+    available.forEach(slot => {
+      const opt = document.createElement("option");
+      opt.value = slot.id;
+      opt.textContent = "🕒 " + slot.time + " - متاح";
+      select.appendChild(opt);
+    });
     select.disabled = false;
-  } else { select.innerHTML = "<option value='__MANUAL__' selected>⏰ أدخل وقت يدوي</option>"; select.disabled = false; }
+  } else {
+    select.innerHTML = "<option value='__MANUAL__' selected>⏰ أدخل وقت يدوي</option>";
+    select.disabled = false;
+    if(manualInput) {
+      manualInput.style.display = "block";
+      manualInput.value = "18:00";
+    }
+  }
 };
 
 window.selectSlot = async (id) => {
@@ -723,24 +695,23 @@ window.selectSlot = async (id) => {
   const snap = await getDoc(doc(db, "slots", id));
   if (!snap.exists()) return;
   const d = snap.data();
-  
   $("pName").value = d.patient?.name || "";
   $("pPhone").value = d.patient?.phone || "";
   $("pNotes").value = d.patient?.notes || "";
   $("pPaid").value = d.paid || 0;
   $("pStatus").value = d.status || "حجز";
   $("targetTime").innerText = d.date + " - " + d.time;
-  
   editSlotDate = d.date || "";
   editSlotTime = d.time || "";
-  
   $("requestDate").value = "";
   $("availableSlots").innerHTML = "<option value=''>اختر ميعاد متاح (للنقل فقط)</option>";
+  $("manualSlotTime").style.display = "none";
+  $("manualSlotTime").value = "";
 };
 
+// ✅✅✅ تم التعديل: قراءة الوقت من الحقل الظاهر بدلاً من prompt() ✅✅✅
 window.updateSlot = async () => {
   if (!activeId) return alert("اختاري ميعاداً أولاً");
-  
   const newName = $("pName").value.trim();
   const newPhone = $("pPhone").value.trim();
   const newNotes = $("pNotes").value.trim();
@@ -748,78 +719,42 @@ window.updateSlot = async () => {
   const newStatus = $("pStatus").value;
   const selectedNewSlotId = $("availableSlots").value;
   const newDate = $("requestDate").value;
-  
   const patientData = { name: newName, phone: newPhone, notes: newNotes };
   const isBooked = newName !== "";
-  
   try {
     let targetSlotId = activeId;
     let isNewSlotCreated = false;
-    
     if (selectedNewSlotId && selectedNewSlotId !== activeId && selectedNewSlotId !== '__MANUAL__') {
       targetSlotId = selectedNewSlotId;
     } 
     else if (selectedNewSlotId === '__MANUAL__' && newDate) {
-      const manualTime = prompt("⏰ أدخل وقت الموعد الجديد (مثال: 18:30):");
+      const manualTime = $("manualSlotTime")?.value;
       if (!manualTime || !/^\d{2}:\d{2}$/.test(manualTime)) {
-        return alert("⚠️ الوقت غير صحيح. استخدم صيغة HH:MM");
+        return alert("⚠️ يرجى إدخال الوقت يدوياً في الحقل الظاهر بصيغة HH:MM");
       }
       const newSlotRef = await addDoc(slotsRef, {
-        date: newDate,
-        time: manualTime,
-        booked: false,
-        status: "available",
-        patient: null,
-        paid: 0,
-        notes: "تم إنشاؤه عند نقل موعد",
-        isManual: true,
-        createdAt: serverTimestamp(),
-        updatedAt: serverTimestamp()
+        date: newDate, time: manualTime, booked: false, status: "available", patient: null, paid: 0, notes: "تم إنشاؤه عند نقل موعد", isManual: true, createdAt: serverTimestamp(), updatedAt: serverTimestamp()
       });
       targetSlotId = newSlotRef.id;
       isNewSlotCreated = true;
     }
-    
     if (targetSlotId !== activeId) {
       const newSlotRef = doc(db, "slots", targetSlotId);
       const oldSlotRef = doc(db, "slots", activeId);
-      
-      await updateDoc(newSlotRef, {
-        booked: isBooked,
-        status: isBooked ? newStatus : "available",
-        paid: isBooked ? newPaid : 0,
-        patient: isBooked ? patientData : null,
-        updatedAt: serverTimestamp()
-      });
-      
-      await updateDoc(oldSlotRef, {
-        booked: false,
-        status: "available",
-        paid: 0,
-        patient: null,
-        updatedAt: serverTimestamp()
-      });
-      
+      await updateDoc(newSlotRef, { booked: isBooked, status: isBooked ? newStatus : "available", paid: isBooked ? newPaid : 0, patient: isBooked ? patientData : null, updatedAt: serverTimestamp() });
+      await updateDoc(oldSlotRef, { booked: false, status: "available", paid: 0, patient: null, updatedAt: serverTimestamp() });
       showAdminNotification(isNewSlotCreated ? "✅ تم إنشاء ميعاد جديد ونقل المريض بنجاح" : "✅ تم نقل الموعد بنجاح");
-    } 
-    else {
-      await updateDoc(doc(db, "slots", activeId), {
-        booked: isBooked,
-        status: isBooked ? newStatus : "available",
-        paid: isBooked ? newPaid : 0,
-        patient: isBooked ? patientData : null,
-        updatedAt: serverTimestamp()
-      });
+    } else {
+      await updateDoc(doc(db, "slots", activeId), { booked: isBooked, status: isBooked ? newStatus : "available", paid: isBooked ? newPaid : 0, patient: isBooked ? patientData : null, updatedAt: serverTimestamp() });
       showAdminNotification("✅ تم تعديل البيانات");
     }
-    
     activeId = null;
     $("pName").value = ""; $("pPhone").value = ""; $("pNotes").value = "";
     $("pPaid").value = ""; $("pStatus").value = "حجز";
     $("targetTime").innerText = "اختر ميعاداً";
     $("availableSlots").value = ""; $("requestDate").value = "";
+    $("manualSlotTime").style.display = "none"; $("manualSlotTime").value = "";
     editSlotDate = ""; editSlotTime = "";
-    
   } catch (err) {
     alert("❌ فشل الحفظ: " + err.message);
     console.error(err);
@@ -862,7 +797,7 @@ window.savePatientFromSlot = async (slotId) => {
   const slot = cache.find(s => s.id === slotId); if (!slot || !slot.patient?.phone) return alert("⚠️ لا توجد بيانات مريض");
   const phone = cleanPhone(slot.patient.phone);
   try {
-    const q = query(patientsRef, where("phone", "==", phone)), snap = await getDocs(q); let patientId;
+    const q = query(patientsRef, where("phone", "==, phone)), snap = await getDocs(q); let patientId;
     if (snap.empty) { const newPatient = { name: slot.patient.name, phone, created_at: serverTimestamp(), updated_at: serverTimestamp(), sessions: [{ date: slot.date, time: slot.time, notes: slot.patient.notes || "", slot_id: slotId }] }; const docRef = await addDoc(patientsRef, newPatient); patientId = docRef.id; showAdminNotification("✅ تم إنشاء ملف لـ " + slot.patient.name); } 
     else { patientId = snap.docs[0].id; await updateDoc(doc(db, "patients", patientId), { sessions: arrayUnion({ date: slot.date, time: slot.time, notes: slot.patient.notes || "", slot_id: slotId }), updated_at: serverTimestamp() }); showAdminNotification("✅ أضيفت جلسة لـ " + slot.patient.name); }
     await updateDoc(doc(db, "slots", slotId), { patient_id: patientId, is_saved_patient: true }); renderSlots();
