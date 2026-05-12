@@ -24,84 +24,38 @@ body {
 }
 
 .side-nav { 
-  position: fixed; 
-  top: 0; 
-  right: 0;
-  width: 240px; 
-  height: 100vh; 
+  position: fixed; top: 0; right: 0; width: 240px; height: 100vh; 
   background: linear-gradient(180deg, var(--main), var(--main-light)); 
-  padding: 25px 15px; 
-  display: flex; 
-  flex-direction: column; 
-  gap: 15px; 
-  z-index: 1000; 
-  box-shadow: -5px 0 20px rgba(0,0,0,0.2);
+  padding: 25px 15px; display: flex; flex-direction: column; gap: 15px; 
+  z-index: 1000; box-shadow: -5px 0 20px rgba(0,0,0,0.2);
 }
 .side-nav .logo { color: #fff; text-align: center; margin-bottom: 20px; font-size: 18px; font-weight: bold; }
 .side-nav a.active { background: var(--white); color: var(--main); font-weight: bold; }
 .side-nav a.disabled { opacity: 0.5; pointer-events: none; }
 .side-nav a { 
-  text-decoration: none; 
-  color: #fff; 
-  padding: 12px; 
-  border-radius: 10px; 
-  transition: var(--transition); 
-  font-size: 15px; 
-  white-space: nowrap;
+  text-decoration: none; color: #fff; padding: 12px; border-radius: 10px; 
+  transition: var(--transition); font-size: 15px; white-space: nowrap;
 }
 .side-nav a:hover { background: rgba(255,255,255,0.15); }
 
 .menu-toggle {
-  display: none;
-  position: fixed;
-  top: 15px;
-  right: 15px;
-  z-index: 1001;
-  background: var(--main);
-  color: #fff;
-  border: none;
-  width: 44px;
-  height: 44px;
-  border-radius: 10px;
-  font-size: 20px;
-  cursor: pointer;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  display: none; position: fixed; top: 15px; right: 15px; z-index: 1001;
+  background: var(--main); color: #fff; border: none; width: 44px; height: 44px;
+  border-radius: 10px; font-size: 20px; cursor: pointer; align-items: center;
+  justify-content: center; box-shadow: 0 4px 12px rgba(0,0,0,0.15);
 }
 
 .back-to-site {
-  position: fixed;
-  top: 15px;
-  left: 15px;
-  text-decoration: none;
-  color: #fff;
+  position: fixed; top: 15px; left: 15px; text-decoration: none; color: #fff;
   background: linear-gradient(135deg, var(--main), var(--main-light));
-  padding: 10px 16px;
-  border-radius: 10px;
-  font-size: 13px;
-  z-index: 999;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-  white-space: nowrap;
+  padding: 10px 16px; border-radius: 10px; font-size: 13px; z-index: 999;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15); white-space: nowrap;
 }
 
-.admin-grid { 
-  display: grid; 
-  grid-template-columns: 320px 1fr;
-  gap: 15px; 
-  margin-top: 60px;
-  align-items: start;
-}
-
+.admin-grid { display: grid; grid-template-columns: 320px 1fr; gap: 15px; margin-top: 60px; align-items: start; }
 .side-panel { position: sticky; top: 75px; height: fit-content; z-index: 10; }
 
-.card { 
-  background: var(--white); 
-  padding: 18px; 
-  border-radius: var(--radius); 
-  box-shadow: var(--shadow); 
-  margin-bottom: 15px; 
-}
+.card { background: var(--white); padding: 18px; border-radius: var(--radius); box-shadow: var(--shadow); margin-bottom: 15px; }
 .card h3 { margin: 0 0 15px; color: var(--main); font-size: 18px; border-bottom: 1px solid #eee; padding-bottom: 10px; }
 
 input, textarea, select { 
@@ -118,7 +72,7 @@ input:focus, textarea:focus, select:focus { border-color: var(--main); outline: 
   background: #c8e6c9; padding: 12px; margin: 10px 0 15px; text-align: center; font-weight: bold; border-radius: 10px; color: var(--success); border: 1px solid #a5d6a7; font-size: 15px;
 }
 
-.days-row { column-count: 3; column-gap: 14px; padding: 5px 0; }
+.days-row { column-count: 3; column-gap: 14px; padding: 5px 0; min-height: 100px; }
 .day-col { 
   background: var(--white); border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; transition: box-shadow var(--transition), transform var(--transition); display: flex; flex-direction: column; break-inside: avoid; page-break-inside: avoid; margin-bottom: 14px; width: 100%;
 }
@@ -136,14 +90,10 @@ input:focus, textarea:focus, select:focus { border-color: var(--main); outline: 
 .head-btn.del:hover { background: var(--danger); }
 .head-btn.add:hover { background: #43a047; }
 
-.day-body { 
-  padding: 12px; background: var(--white); transition: max-height 0.35s ease, padding 0.3s ease, opacity 0.3s ease; max-height: 1200px; opacity: 1; 
-}
+.day-body { padding: 12px; background: var(--white); transition: max-height 0.35s ease, padding 0.3s ease, opacity 0.3s ease; max-height: 1200px; opacity: 1; }
 .day-col.collapsed .day-body { max-height: 0; padding: 0 12px; opacity: 0; overflow: hidden; }
 
-.day-money { 
-  background: #fff8e1; color: var(--warning); padding: 9px; text-align: center; font-weight: 600; border-radius: 9px; margin-bottom: 12px; font-size: 13px; border: 1px solid #ffe082; 
-}
+.day-money { background: #fff8e1; color: var(--warning); padding: 9px; text-align: center; font-weight: 600; border-radius: 9px; margin-bottom: 12px; font-size: 13px; border: 1px solid #ffe082; }
 
 .slot-item { 
   padding: 10px; margin-bottom: 7px; background: #f8f9fa; border-radius: 9px; cursor: pointer; border-right: 4px solid transparent; transition: 0.2s; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; font-size: 13px;
@@ -157,9 +107,7 @@ input:focus, textarea:focus, select:focus { border-color: var(--main); outline: 
 .status-badge { font-size: 10px; padding: 3px 6px; border-radius: 5px; font-weight: 500; background: #e3f2fd; color: #1976d2; }
 
 .action-buttons { display: flex; gap: 5px; flex-wrap: wrap; margin-top: 5px; width: 100%; justify-content: flex-end; }
-.action-buttons button { 
-  background: var(--whatsapp); color: white; border: none; padding: 4px 8px; border-radius: 5px; font-size: 10px; cursor: pointer; transition: 0.2s; font-weight: 500; min-width: 45px;
-}
+.action-buttons button { background: var(--whatsapp); color: white; border: none; padding: 4px 8px; border-radius: 5px; font-size: 10px; cursor: pointer; transition: 0.2s; font-weight: 500; min-width: 45px; }
 .action-buttons button:nth-child(2) { background: var(--warning); }
 .action-buttons button:nth-child(3) { background: var(--danger); }
 .action-buttons button:nth-child(4) { background: #6a1b9a; }
@@ -178,6 +126,9 @@ input:focus, textarea:focus, select:focus { border-color: var(--main); outline: 
 .modal-btn { flex: 1; padding: 12px; border: none; border-radius: 10px; cursor: pointer; font-weight: 600; font-size: 14px; }
 .modal-btn-primary { background: var(--main); color: #fff; }
 .modal-btn-cancel { background: var(--danger); color: #fff; }
+
+.empty-state { text-align: center; padding: 40px 20px; color: var(--text-light); font-size: 15px; grid-column: 1 / -1; }
+.loading-state { text-align: center; padding: 30px; color: var(--main); font-weight: 500; grid-column: 1 / -1; }
 
 @media (max-width: 1100px) { .days-row { column-count: 2; } }
 @media (max-width: 900px) {
@@ -253,6 +204,10 @@ input:focus, textarea:focus, select:focus { border-color: var(--main); outline: 
       <h3>📋 طلبات حجز جديدة <span id="requestsCount" style="background:var(--danger);color:#fff;padding:2px 8px;border-radius:10px;font-size:11px;margin-right:5px;">0</span></h3>
       <div id="requestsList" style="max-height:250px;overflow-y:auto;"></div>
     </div>
+    <div class="card" style="display:flex; justify-content:space-between; align-items:center; gap:10px;">
+      <h3 style="margin:0; border:none; padding:0; flex:1;">📅 إدارة الجدول</h3>
+      <button class="btn" style="width:auto; padding:8px 14px; margin:0; background:#0ea5e9;" onclick="forceRefresh()">🔄 تحديث</button>
+    </div>
     <div class="card">
       <h3>📅 إضافة يوم</h3>
       <input type="date" id="slotDate">
@@ -264,7 +219,7 @@ input:focus, textarea:focus, select:focus { border-color: var(--main); outline: 
       <input type="number" id="slotDuration" value="30">
       <button class="btn" onclick="createDaySlots()">توليد المواعيد</button>
     </div>
-    <div id="daysGrid" class="days-row"></div>
+    <div id="daysGrid" class="days-row"><div class="loading-state">⏳ جاري تحميل المواعيد من قاعدة البيانات...</div></div>
   </div>
 </div>
 
@@ -292,6 +247,7 @@ window.db = db;
 const $ = (id) => document.getElementById(id);
 let cache = [], activeId = null, editSession = {}, collapsedDays = {};
 let editSlotDate = "", editSlotTime = "";
+let unsubscribeSlots = null;
 
 const slotsRef = collection(db, "slots");
 const requestsRef = collection(db, "requests");
@@ -414,24 +370,43 @@ window.deleteRequest = async function(requestId) {
   catch (err) { alert("❌ فشل الحذف: " + err.message); }
 };
 
-// ✅✅✅ تم الإصلاح: إضافة معالجة أخطاء لمنع تعطل السكربت وصمت الاختفاء ✅✅✅
-onSnapshot(slotsRef, (snap) => {
-  cache = []; snap.forEach(d => cache.push({ id: d.id, ...d.data() }));
+// ✅✅✅ تم التأمين: مستمع آمن مع تتبع وحالة تحميل ✅✅✅
+unsubscribeSlots = onSnapshot(slotsRef, (snap) => {
+  console.log("📥 Snapshot received:", snap.size, "documents");
+  cache = []; 
+  snap.forEach(d => cache.push({ id: d.id, ...d.data() }));
+  
   const preservedCollapsed = {};
-  Object.keys(collapsedDays).forEach(date => { if (cache.some(s => s.date === date)) preservedCollapsed[date] = collapsedDays[date]; });
-  renderSlots(preservedCollapsed); loadPendingRequests();
+  Object.keys(collapsedDays).forEach(date => { 
+    if (cache.some(s => s.date === date)) preservedCollapsed[date] = collapsedDays[date]; 
+  });
+  
+  renderSlots(preservedCollapsed); 
+  loadPendingRequests();
 }, (error) => {
   console.error("❌ Firestore Snapshot Error:", error);
-  alert("⚠️ فشل تحميل البيانات. تأكد من اتصال الإنترنت أو صلاحيات قاعدة البيانات.\nالخطأ: " + error.message);
+  const grid = $("daysGrid");
+  if(grid) grid.innerHTML = `<div class="empty-state" style="color:var(--danger);">⚠️ فشل تحميل البيانات. تأكد من اتصال الإنترنت أو صلاحيات قاعدة البيانات.<br><small>${error.message}</small></div>`;
 });
 
 window.renderSlots = function(preservedCollapsed = null) {
+  const grid = $("daysGrid");
+  if (!grid) return;
+  
   try {
     if (preservedCollapsed) Object.assign(collapsedDays, preservedCollapsed);
-    const grid = $("daysGrid"), totalBox = $("globalTotal");
+    const totalBox = $("globalTotal");
     let days = {}, total = 0;
+    
     cache.forEach(d => { if (!d.date) return; if (!days[d.date]) days[d.date] = []; days[d.date].push(d); });
     grid.innerHTML = "";
+    
+    if (cache.length === 0) {
+      grid.innerHTML = `<div class="empty-state">📭 لا توجد مواعيد مسجلة حالياً.<br>استخدم نموذج "إضافة يوم" لإنشاء جدول جديد.</div>`;
+      totalBox.innerText = "💰 إجمالي العيادة: 0 جنيه";
+      return;
+    }
+    
     Object.keys(days).sort().forEach(date => {
       let dayTotal = 0;
       days[date].forEach(s => { if (s.status === "كشف") { dayTotal += Number(s.paid||0); total += Number(s.paid||0); } });
@@ -456,8 +431,23 @@ window.renderSlots = function(preservedCollapsed = null) {
     totalBox.innerText = "💰 إجمالي العيادة: " + total + " جنيه";
   } catch (err) {
     console.error("❌ Render Error:", err);
-    $("daysGrid").innerHTML = `<p style="color:var(--danger);text-align:center;padding:20px;">⚠️ حدث خطأ أثناء عرض الجدول: ${err.message}</p>`;
+    grid.innerHTML = `<div class="empty-state" style="color:var(--danger);">⚠️ حدث خطأ أثناء عرض الجدول: ${err.message}</div>`;
   }
+};
+
+window.forceRefresh = function() {
+  const grid = $("daysGrid");
+  if(grid) grid.innerHTML = `<div class="loading-state">🔄 جاري إعادة تحميل البيانات...</div>`;
+  if (unsubscribeSlots) unsubscribeSlots();
+  setTimeout(() => {
+    unsubscribeSlots = onSnapshot(slotsRef, (snap) => {
+      console.log("🔄 Refreshed Snapshot:", snap.size, "docs");
+      cache = []; snap.forEach(d => cache.push({ id: d.id, ...d.data() }));
+      renderSlots(); loadPendingRequests();
+    }, (err) => {
+      if(grid) grid.innerHTML = `<div class="empty-state" style="color:var(--danger);">⚠️ فشل التحديث: ${err.message}</div>`;
+    });
+  }, 500);
 };
 
 window.toggleDay = function(date) { collapsedDays[date] = !collapsedDays[date]; renderSlots(); };
@@ -484,6 +474,10 @@ window.safeLoad = () => {
   });
   const grid = $("daysGrid"); grid.innerHTML = ""; let days = {};
   filtered.forEach(d => { if (!d.date) return; if (!days[d.date]) days[d.date] = []; days[d.date].push(d); });
+  if (filtered.length === 0) {
+    grid.innerHTML = `<div class="empty-state">🔍 لا توجد نتائج مطابقة للبحث أو الفلتر المختار.</div>`;
+    return;
+  }
   Object.keys(days).sort().forEach(date => {
     let dayTotal = 0; days[date].forEach(s => { if (s.status === "كشف") dayTotal += Number(s.paid||0); });
     const col = document.createElement("div"); col.className = "day-col";
@@ -649,7 +643,6 @@ window.savePatientFromSlot = async (slotId) => {
   } catch (err) { console.error("❌ Save patient error:", err); alert("❌ خطأ: " + err.message); }
 };
 
-// ✅✅✅ تم الإصلاح النهائي: حماية الدوال من القيم الفارغة لمنع تعطل السكربت ✅✅✅
 function cleanPhone(phone) {
   if (!phone) return "";
   const p = String(phone).replace(/^0+/, '').replace(/\s/g, '');
