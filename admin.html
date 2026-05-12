@@ -275,14 +275,20 @@ async function loadPendingRequests() {
       const req = docSnap.data();
       const item = document.createElement("div");
       item.style.cssText = "background:#fff3e0;padding:10px;border-radius:8px;margin-bottom:8px;border-right:3px solid var(--warning);font-size:13px;";
+      
+      // ✅ تأمين النصوص لمنع كسر الـ HTML أو الجافاسكريبت
+      const safeName = (req.name || "زائر").replace(/'/g, "\\'").replace(/"/g, '&quot;');
+      const safePhone = (req.phone || "").replace(/'/g, "\\'").replace(/"/g, '&quot;');
+      const safeNotes = (req.notes || "").replace(/'/g, "\\'").replace(/"/g, '&quot;');
+      
       item.innerHTML = `
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;">
-          <strong>👤 ${req.name}</strong>
+          <strong>👤 ${req.name || "زائر"}</strong>
           <span style="font-size:11px;color:var(--text-light)">${new Date(req.createdAt?.seconds*1000).toLocaleDateString('ar-EG')}</span>
         </div>
         <div>📞 ${req.phone} | 📅 ${req.date}</div>
         <div style="margin-top:8px;display:flex;gap:5px;">
-          <button class="btn" style="padding:6px 10px;font-size:11px;background:var(--success);" onclick="assignRequestToSlot('${docSnap.id}', '${req.phone}', '${req.date}')">✅ تحويل لميعاد</button>
+          <button class="btn" style="padding:6px 10px;font-size:11px;background:var(--success);" onclick="assignRequestToSlot('${docSnap.id}', '${safeName}', '${safePhone}', '${req.date}', '${safeNotes}')">✅ تحويل لميعاد</button>
           <button class="btn" style="padding:6px 10px;font-size:11px;background:var(--danger);" onclick="deleteRequest('${docSnap.id}')">🗑️ تجاهل</button>
         </div>`;
       list.appendChild(item);
@@ -290,14 +296,22 @@ async function loadPendingRequests() {
   } catch (err) { console.error("❌ Load requests error:", err); }
 }
 
-window.assignRequestToSlot = async function(requestId, phone, initialDate) {
+// ✅✅✅ تم الإصلاح: استقبال البيانات الحقيقية وتخزينها في المودال ✅✅✅
+window.assignRequestToSlot = async function(requestId, name, phone, initialDate, notes) {
   const modal = document.createElement("div");
   modal.className = "modal-overlay";
   modal.innerHTML = `
     <div class="modal-content">
       <button class="modal-close" onclick="this.closest('.modal-overlay').remove()">✕</button>
       <h3 class="modal-title">📅 تحويل طلب لميعاد</h3>
-      <p style="margin-bottom:10px;color:var(--text-light);font-size:14px;">👤 <strong>${phone}</strong></p>
+      <p style="margin-bottom:10px;color:var(--text-light);font-size:14px;">👤 <strong>${name}</strong> | 📞 ${phone}</p>
+      
+      <!-- ✅ حقول مخفية لحفظ بيانات المريض الأصلية ومنع استبدالها -->
+      <input type="hidden" id="modalRequestId" value="${requestId}">
+      <input type="hidden" id="modalReqName" value="${name}">
+      <input type="hidden" id="modalReqPhone" value="${phone}">
+      <input type="hidden" id="modalReqNotes" value="${notes}">
+
       <div style="margin-bottom:15px;">
         <label style="display:block;margin-bottom:5px;font-weight:500;">📅 اختر تاريخ الموعد (يمكنك تغيير اليوم):</label>
         <input type="date" id="modalRequestDate" value="${initialDate}" style="width:100%;padding:10px;border:1px solid #ddd;border-radius:8px;">
@@ -309,7 +323,7 @@ window.assignRequestToSlot = async function(requestId, phone, initialDate) {
         <p style="font-size:11px;color:var(--text-light);margin-top:5px;">💡 سينشأ ميعاد جديد في التاريخ المختار بالأعلى</p>
       </div>
       <div class="modal-actions">
-        <button class="modal-btn modal-btn-primary" onclick="confirmAssignRequest('${requestId}', '${phone}')">✅ تأكيد التحويل</button>
+        <button class="modal-btn modal-btn-primary" onclick="confirmAssignRequest()">✅ تأكيد التحويل</button>
         <button class="modal-btn modal-btn-cancel" onclick="this.closest('.modal-overlay').remove()">إلغاء</button>
       </div>
     </div>`;
@@ -339,12 +353,20 @@ window.assignRequestToSlot = async function(requestId, phone, initialDate) {
   document.getElementById("modalRequestDate").addEventListener("change", function() { loadModalSlots(this.value); });
 };
 
-window.confirmAssignRequest = async function(requestId, phone) {
+// ✅✅✅ تم الإصلاح: قراءة البيانات الحقيقية وكتابتها في الميعاد بدل "طلب معلق" ✅✅✅
+window.confirmAssignRequest = async function() {
+  const requestId = document.getElementById("modalRequestId")?.value;
+  const reqName = document.getElementById("modalReqName")?.value;
+  const reqPhone = document.getElementById("modalReqPhone")?.value;
+  const reqNotes = document.getElementById("modalReqNotes")?.value;
   const selectedDate = document.getElementById("modalRequestDate")?.value;
+  
   if (!selectedDate) return alert("⚠️ يرجى اختيار تاريخ أولاً");
+  
   const selectedSlotId = document.querySelector('input[name="selectedSlot"]:checked')?.value;
   const manualTime = document.getElementById("manualTime")?.value;
   let slotIdToUse = null, isNewSlot = false;
+  
   if (selectedSlotId) slotIdToUse = selectedSlotId;
   else if (manualTime && /^\d{2}:\d{2}$/.test(manualTime)) {
     const existing = cache.find(s => s.date === selectedDate && s.time === manualTime && !s.booked);
@@ -356,11 +378,25 @@ window.confirmAssignRequest = async function(requestId, phone) {
       } catch (err) { alert("❌ فشل إنشاء الميعاد: " + err.message); return; }
     }
   } else return alert("⚠️ اختاري ميعاد من القائمة أو أدخلي وقت يدوي صحيح");
+  
   try {
-    await updateDoc(doc(db, "slots", slotIdToUse), { booked: true, status: "booked", patient: { name: "طلب معلق", phone: phone }, updatedAt: serverTimestamp() });
-    await updateDoc(doc(db, "requests", requestId), { status: "assigned", assignedSlotId: slotIdToUse, updatedAt: serverTimestamp() });
+    // ✅ استخدام اسم المريض الحقيقي وملاحظاته بدل "طلب معلق"
+    await updateDoc(doc(db, "slots", slotIdToUse), { 
+      booked: true, 
+      status: "booked", 
+      patient: { name: reqName, phone: reqPhone, notes: reqNotes || "" }, 
+      updatedAt: serverTimestamp() 
+    });
+    
+    await updateDoc(doc(db, "requests", requestId), { 
+      status: "assigned", 
+      assignedSlotId: slotIdToUse, 
+      updatedAt: serverTimestamp() 
+    });
+    
     document.querySelector(".modal-overlay")?.remove();
-    showAdminNotification("✅ تم التحويل بنجاح ليوم " + selectedDate); loadPendingRequests();
+    showAdminNotification(`✅ تم تحويل موعد ${reqName} بنجاح ليوم ${selectedDate}`); 
+    loadPendingRequests();
   } catch (err) { alert("❌ فشل التحويل: " + err.message); }
 };
 
@@ -370,19 +406,12 @@ window.deleteRequest = async function(requestId) {
   catch (err) { alert("❌ فشل الحذف: " + err.message); }
 };
 
-// ✅✅✅ تم التأمين: مستمع آمن مع تتبع وحالة تحميل ✅✅✅
 unsubscribeSlots = onSnapshot(slotsRef, (snap) => {
   console.log("📥 Snapshot received:", snap.size, "documents");
-  cache = []; 
-  snap.forEach(d => cache.push({ id: d.id, ...d.data() }));
-  
+  cache = []; snap.forEach(d => cache.push({ id: d.id, ...d.data() }));
   const preservedCollapsed = {};
-  Object.keys(collapsedDays).forEach(date => { 
-    if (cache.some(s => s.date === date)) preservedCollapsed[date] = collapsedDays[date]; 
-  });
-  
-  renderSlots(preservedCollapsed); 
-  loadPendingRequests();
+  Object.keys(collapsedDays).forEach(date => { if (cache.some(s => s.date === date)) preservedCollapsed[date] = collapsedDays[date]; });
+  renderSlots(preservedCollapsed); loadPendingRequests();
 }, (error) => {
   console.error("❌ Firestore Snapshot Error:", error);
   const grid = $("daysGrid");
@@ -392,21 +421,17 @@ unsubscribeSlots = onSnapshot(slotsRef, (snap) => {
 window.renderSlots = function(preservedCollapsed = null) {
   const grid = $("daysGrid");
   if (!grid) return;
-  
   try {
     if (preservedCollapsed) Object.assign(collapsedDays, preservedCollapsed);
     const totalBox = $("globalTotal");
     let days = {}, total = 0;
-    
     cache.forEach(d => { if (!d.date) return; if (!days[d.date]) days[d.date] = []; days[d.date].push(d); });
     grid.innerHTML = "";
-    
     if (cache.length === 0) {
       grid.innerHTML = `<div class="empty-state">📭 لا توجد مواعيد مسجلة حالياً.<br>استخدم نموذج "إضافة يوم" لإنشاء جدول جديد.</div>`;
       totalBox.innerText = "💰 إجمالي العيادة: 0 جنيه";
       return;
     }
-    
     Object.keys(days).sort().forEach(date => {
       let dayTotal = 0;
       days[date].forEach(s => { if (s.status === "كشف") { dayTotal += Number(s.paid||0); total += Number(s.paid||0); } });
