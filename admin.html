@@ -264,6 +264,9 @@ onAuthStateChanged(auth, (user) => {
 window.toggleMenu = function() { document.getElementById('sideNav').classList.toggle('open'); };
 window.logout = () => signOut(auth).then(() => location.href = "login.html");
 
+// ✅✅✅ دالة فحص موحدة لمنع تكرار المواعيد نهائيًا ✅✅✅
+window.slotExists = (date, time) => cache.some(s => s.date === date && s.time === time);
+
 async function loadPendingRequests() {
   try {
     const q = query(requestsRef, where("status", "==", "pending"), orderBy("createdAt", "desc"));
@@ -275,12 +278,9 @@ async function loadPendingRequests() {
       const req = docSnap.data();
       const item = document.createElement("div");
       item.style.cssText = "background:#fff3e0;padding:10px;border-radius:8px;margin-bottom:8px;border-right:3px solid var(--warning);font-size:13px;";
-      
-      // ✅ تأمين النصوص لمنع كسر الـ HTML أو الجافاسكريبت
       const safeName = (req.name || "زائر").replace(/'/g, "\\'").replace(/"/g, '&quot;');
       const safePhone = (req.phone || "").replace(/'/g, "\\'").replace(/"/g, '&quot;');
       const safeNotes = (req.notes || "").replace(/'/g, "\\'").replace(/"/g, '&quot;');
-      
       item.innerHTML = `
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;">
           <strong>👤 ${req.name || "زائر"}</strong>
@@ -296,7 +296,6 @@ async function loadPendingRequests() {
   } catch (err) { console.error("❌ Load requests error:", err); }
 }
 
-// ✅✅✅ تم الإصلاح: استقبال البيانات الحقيقية وتخزينها في المودال ✅✅✅
 window.assignRequestToSlot = async function(requestId, name, phone, initialDate, notes) {
   const modal = document.createElement("div");
   modal.className = "modal-overlay";
@@ -305,13 +304,10 @@ window.assignRequestToSlot = async function(requestId, name, phone, initialDate,
       <button class="modal-close" onclick="this.closest('.modal-overlay').remove()">✕</button>
       <h3 class="modal-title">📅 تحويل طلب لميعاد</h3>
       <p style="margin-bottom:10px;color:var(--text-light);font-size:14px;">👤 <strong>${name}</strong> | 📞 ${phone}</p>
-      
-      <!-- ✅ حقول مخفية لحفظ بيانات المريض الأصلية ومنع استبدالها -->
       <input type="hidden" id="modalRequestId" value="${requestId}">
       <input type="hidden" id="modalReqName" value="${name}">
       <input type="hidden" id="modalReqPhone" value="${phone}">
       <input type="hidden" id="modalReqNotes" value="${notes}">
-
       <div style="margin-bottom:15px;">
         <label style="display:block;margin-bottom:5px;font-weight:500;">📅 اختر تاريخ الموعد (يمكنك تغيير اليوم):</label>
         <input type="date" id="modalRequestDate" value="${initialDate}" style="width:100%;padding:10px;border:1px solid #ddd;border-radius:8px;">
@@ -353,7 +349,6 @@ window.assignRequestToSlot = async function(requestId, name, phone, initialDate,
   document.getElementById("modalRequestDate").addEventListener("change", function() { loadModalSlots(this.value); });
 };
 
-// ✅✅✅ تم الإصلاح: قراءة البيانات الحقيقية وكتابتها في الميعاد بدل "طلب معلق" ✅✅✅
 window.confirmAssignRequest = async function() {
   const requestId = document.getElementById("modalRequestId")?.value;
   const reqName = document.getElementById("modalReqName")?.value;
@@ -367,11 +362,18 @@ window.confirmAssignRequest = async function() {
   const manualTime = document.getElementById("manualTime")?.value;
   let slotIdToUse = null, isNewSlot = false;
   
-  if (selectedSlotId) slotIdToUse = selectedSlotId;
-  else if (manualTime && /^\d{2}:\d{2}$/.test(manualTime)) {
-    const existing = cache.find(s => s.date === selectedDate && s.time === manualTime && !s.booked);
-    if (existing) slotIdToUse = existing.id;
-    else {
+  if (selectedSlotId) {
+    slotIdToUse = selectedSlotId;
+  } else if (manualTime && /^\d{2}:\d{2}$/.test(manualTime)) {
+    // ✅ فحص ذكي: إذا الوقت موجود ومتاح نستخدمه، إذا محجوز نمنع التكرار
+    const existing = cache.find(s => s.date === selectedDate && s.time === manualTime);
+    if (existing) {
+      if (!existing.booked && existing.status !== "cancelled") {
+        slotIdToUse = existing.id;
+      } else {
+        return alert("⚠️ هذا الوقت محجوز أو موجود بالفعل. اختر وقتاً آخر.");
+      }
+    } else {
       try {
         const newSlot = await addDoc(slotsRef, { date: selectedDate, time: manualTime, booked: false, status: "available", patient: null, paid: 0, notes: "تم إنشاؤه من طلب معلق", isManual: true, createdAt: serverTimestamp(), updatedAt: serverTimestamp() });
         slotIdToUse = newSlot.id; isNewSlot = true; showAdminNotification("✅ تم إنشاء ميعاد: " + manualTime);
@@ -380,20 +382,10 @@ window.confirmAssignRequest = async function() {
   } else return alert("⚠️ اختاري ميعاد من القائمة أو أدخلي وقت يدوي صحيح");
   
   try {
-    // ✅ استخدام اسم المريض الحقيقي وملاحظاته بدل "طلب معلق"
     await updateDoc(doc(db, "slots", slotIdToUse), { 
-      booked: true, 
-      status: "booked", 
-      patient: { name: reqName, phone: reqPhone, notes: reqNotes || "" }, 
-      updatedAt: serverTimestamp() 
+      booked: true, status: "booked", patient: { name: reqName, phone: reqPhone, notes: reqNotes || "" }, updatedAt: serverTimestamp() 
     });
-    
-    await updateDoc(doc(db, "requests", requestId), { 
-      status: "assigned", 
-      assignedSlotId: slotIdToUse, 
-      updatedAt: serverTimestamp() 
-    });
-    
+    await updateDoc(doc(db, "requests", requestId), { status: "assigned", assignedSlotId: slotIdToUse, updatedAt: serverTimestamp() });
     document.querySelector(".modal-overlay")?.remove();
     showAdminNotification(`✅ تم تحويل موعد ${reqName} بنجاح ليوم ${selectedDate}`); 
     loadPendingRequests();
@@ -483,13 +475,15 @@ window.cancelSlot = async (slotId) => {
   try { await updateDoc(doc(db, "slots", slotId), { booked: false, status: "cancelled", patient: null, paid: 0, cancelledAt: serverTimestamp() }); showAdminNotification("✅ تم الإلغاء"); } 
   catch (err) { alert("❌ خطأ: " + err.message); }
 };
+
 window.addSlotToDate = async (date) => {
   const time = prompt("📅 أدخل وقت الميعاد الجديد ليوم " + date + "\n(الصيغة: ساعة:دقيقة مثل 14:30)");
   if (!time) return; if (!/^\d{2}:\d{2}$/.test(time)) return alert("⚠️ الصيغة غير صحيحة. استخدم HH:MM مثل 15:30");
-  if (cache.some(s => s.date === date && s.time === time)) return alert("⚠️ هذا الوقت موجود بالفعل في هذا اليوم");
+  if (slotExists(date, time)) return alert("⚠️ هذا الوقت موجود بالفعل في هذا اليوم. اختر وقتاً آخر.");
   try { await addDoc(slotsRef, { date, time, booked: false, status: "available", patient: null, paid: 0, notes: "تمت إضافته يدوياً", isManual: true, createdAt: serverTimestamp(), updatedAt: serverTimestamp() }); showAdminNotification("✅ تم إضافة الميعاد " + time + " ليوم " + date); } 
   catch (err) { alert("❌ فشل الإضافة: " + err.message); }
 };
+
 window.safeLoad = () => {
   const searchTerm = $("search").value.toLowerCase(), filterValue = $("filter").value;
   const filtered = cache.filter(slot => {
@@ -583,6 +577,10 @@ window.updateSlot = async () => {
       if (!manualTime || !/^\d{2}:\d{2}$/.test(manualTime)) {
         return alert("⚠️ يرجى اختيار الوقت من الحقل البرتقالي الظاهر أدناه");
       }
+      // ✅ فحص صارم لمنع التكرار عند النقل اليدوي
+      if (slotExists(newDate, manualTime)) {
+        return alert("⚠️ هذا الوقت موجود بالفعل في اليوم المختار. يرجى اختيار وقت آخر أو استخدام ميعاد متاح من القائمة.");
+      }
       const newSlotRef = await addDoc(slotsRef, {
         date: newDate, time: manualTime, booked: false, status: "available", patient: null, paid: 0, notes: "تم إنشاؤه عند نقل موعد", isManual: true, createdAt: serverTimestamp(), updatedAt: serverTimestamp()
       });
@@ -622,13 +620,25 @@ window.editSlotData = async function(slotId) {
   try { await updateDoc(doc(db, "slots", slotId), { patient: { name: name || "", phone: phone || "", notes: notes || "" }, paid: Number(paid) || 0, status: status || "حجز", updatedAt: serverTimestamp() }); showAdminNotification("✅ تم تعديل البيانات"); } 
   catch (err) { alert("❌ فشل التعديل: " + err.message); }
 };
+
+// ✅✅✅ تم الإصلاح: تخطي الأوقات الموجودة مسبقًا عند توليد اليوم ✅✅✅
 window.createDaySlots = async () => {
   const date = $("slotDate").value, start = $("startTime").value, end = $("endTime").value, duration = Number($("slotDuration").value);
   if (!date || !start || !end) return alert("اكمل البيانات");
-  let time = new Date(date + "T" + start), endTime = new Date(date + "T" + end), count = 0;
-  while (time < endTime) { await addDoc(slotsRef, { date: String(date), time: time.toTimeString().slice(0,5), booked: false, status: "available", patient: null, paid: 0, notes: "", createdAt: serverTimestamp() }); time.setMinutes(time.getMinutes() + duration); count++; }
-  showAdminNotification("✅ تم إنشاء " + count + " ميعاد ليوم " + date);
+  let time = new Date(date + "T" + start), endTime = new Date(date + "T" + end), count = 0, skipped = 0;
+  while (time < endTime) {
+    const timeStr = time.toTimeString().slice(0,5);
+    if (!slotExists(date, timeStr)) {
+      await addDoc(slotsRef, { date: String(date), time: timeStr, booked: false, status: "available", patient: null, paid: 0, notes: "", createdAt: serverTimestamp() });
+      count++;
+    } else {
+      skipped++;
+    }
+    time.setMinutes(time.getMinutes() + duration);
+  }
+  showAdminNotification(`✅ تم إنشاء ${count} ميعاد ليوم ${date} ${skipped > 0 ? `(تم تخطي ${skipped} ميعاد موجود مسبقاً)` : ''}`);
 };
+
 window.deleteDay = async (date) => {
   if (!confirm("حذف اليوم؟")) return;
   const q = query(slotsRef, where("date", "==", date)), snap = await getDocs(q), batch = writeBatch(db);
